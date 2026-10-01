@@ -4,27 +4,41 @@
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-  const escapeHTML = (v='') => String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const escapeHTML = (v = '') => String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const loadJSON = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
+  const FS_SCHEMA = '2';
+  const makeEmptyFS = () => ({
+    '/': { type: 'dir' },
+    '/home': { type: 'dir' },
+    '/home/user': { type: 'dir' }
+  });
+
+  let initialFS;
+  if (localStorage.getItem('pocketvm.fs.schema') !== FS_SCHEMA) {
+    initialFS = makeEmptyFS();
+    localStorage.setItem('pocketvm.fs', JSON.stringify(initialFS));
+    localStorage.setItem('pocketvm.fs.schema', FS_SCHEMA);
+  } else {
+    initialFS = loadJSON('pocketvm.fs', makeEmptyFS());
+  }
 
   const state = {
     z: 20,
     windows: new Map(),
     terminalCounter: 0,
     theme: localStorage.getItem('pocketvm.theme') || 'blue',
-    history: JSON.parse(localStorage.getItem('pocketvm.history') || '[]'),
-    fs: JSON.parse(localStorage.getItem('pocketvm.fs') || 'null') || {
-      '/': { type: 'dir' },
-      '/home': { type: 'dir' },
-      '/home/guest': { type: 'dir' },
-      '/home/guest/Documents': { type: 'dir' },
-      '/home/guest/Downloads': { type: 'dir' },
-      '/home/guest/Desktop': { type: 'dir' },
-      '/home/guest/readme.txt': { type: 'file', content: 'Welcome to PocketVM!\n\nTry: help\nTry: neofetch\nTry: curl.exe ascii.live/rick\n' },
-      '/home/guest/Documents/ideas.txt': { type: 'file', content: 'Things to build next:\n- Proper terminal commands\n- Optional WASM Linux backend\n- More tiny desktop apps\n' },
-      '/etc': { type: 'dir' },
-      '/etc/hostname': { type: 'file', content: 'pocketvm' },
-    }
+    auth: loadJSON('pocketvm.auth', null),
+    user: loadJSON('pocketvm.user', { name: 'Guest', avatar: '' }),
+    wallpaper: loadJSON('pocketvm.wallpaper', { type: 'preset', value: 'aurora', dataUrl: '' }),
+    fs: initialFS
   };
 
   const themes = {
@@ -34,6 +48,23 @@
     mono: ['#e7edf6', '#8794a8']
   };
 
+  const wallpapers = {
+    aurora: 'radial-gradient(circle at 25% 20%, rgba(65,102,255,.48), transparent 34%), radial-gradient(circle at 75% 65%, rgba(80,53,170,.48), transparent 32%), radial-gradient(circle at 60% 20%, rgba(0,190,255,.2), transparent 27%), linear-gradient(145deg,#090f1e 0%,#101a36 55%,#070b15 100%)',
+    dusk: 'radial-gradient(circle at 20% 25%, rgba(255,125,105,.34), transparent 32%), radial-gradient(circle at 78% 68%, rgba(139,92,246,.42), transparent 36%), linear-gradient(145deg,#1b1020,#13152e 58%,#080b14)',
+    ocean: 'radial-gradient(circle at 30% 22%, rgba(45,212,191,.26), transparent 33%), radial-gradient(circle at 72% 70%, rgba(14,165,233,.36), transparent 35%), linear-gradient(145deg,#06151b,#082f49 55%,#07111a)',
+    graphite: 'radial-gradient(circle at 32% 25%, rgba(255,255,255,.11), transparent 28%), radial-gradient(circle at 70% 70%, rgba(148,163,184,.12), transparent 31%), linear-gradient(145deg,#090b0f,#181b21 58%,#07080b)'
+  };
+
+  function saveJSON(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (err) {
+      console.warn(`PocketVM could not save ${key}`, err);
+      return false;
+    }
+  }
+
   function applyTheme(name) {
     const t = themes[name] || themes.blue;
     state.theme = name;
@@ -41,10 +72,60 @@
     document.documentElement.style.setProperty('--accent', t[0]);
     document.documentElement.style.setProperty('--accent-2', t[1]);
   }
+
+  function applyWallpaper() {
+    const el = $('#desktop-wallpaper');
+    if (!el) return;
+    el.classList.toggle('custom-wallpaper', state.wallpaper.type === 'custom' && !!state.wallpaper.dataUrl);
+    if (state.wallpaper.type === 'custom' && state.wallpaper.dataUrl) {
+      el.style.background = `linear-gradient(rgba(4,8,16,.14), rgba(4,8,16,.18)), url("${state.wallpaper.dataUrl}") center / cover no-repeat`;
+    } else {
+      const key = wallpapers[state.wallpaper.value] ? state.wallpaper.value : 'aurora';
+      el.style.background = wallpapers[key];
+    }
+  }
+
+  function initials(name) {
+    const parts = String(name || 'Guest').trim().split(/\s+/).filter(Boolean);
+    return (parts.slice(0, 2).map(p => p[0]).join('') || 'G').toUpperCase();
+  }
+
+  function shellUser() {
+    const cleaned = String(state.user.name || 'guest').toLowerCase().replace(/[^a-z0-9_-]+/g, '').slice(0, 18);
+    return cleaned || 'guest';
+  }
+
+  function paintAvatar(el) {
+    if (!el) return;
+    if (state.user.avatar) {
+      el.innerHTML = `<img src="${state.user.avatar}" alt="" />`;
+    } else {
+      el.textContent = initials(state.user.name);
+    }
+  }
+
+  function renderUserChrome() {
+    $('#start-user-name').textContent = state.user.name || 'Guest';
+    paintAvatar($('#start-avatar'));
+    paintAvatar($('#auth-avatar'));
+    syncOpenTerminalsUser();
+  }
+
+  function syncOpenTerminalsUser() {
+    for (const win of state.windows.values()) {
+      if (!win.term) continue;
+      win.term.env.USER = shellUser();
+      updatePrompt(win.term);
+    }
+  }
+
   applyTheme(state.theme);
 
-  function persistFS() { localStorage.setItem('pocketvm.fs', JSON.stringify(state.fs)); }
-  function norm(path, cwd='/home/guest') {
+  function persistFS() {
+    return saveJSON('pocketvm.fs', state.fs);
+  }
+
+  function norm(path, cwd = '/home/user') {
     if (!path) return cwd;
     const full = path.startsWith('/') ? path : `${cwd}/${path}`;
     const parts = [];
@@ -54,32 +135,59 @@
     }
     return '/' + parts.join('/');
   }
-  function parentPath(path) { const n = norm(path); return n === '/' ? '/' : n.slice(0, n.lastIndexOf('/')) || '/'; }
-  function basename(path) { const n = norm(path); return n === '/' ? '/' : n.slice(n.lastIndexOf('/') + 1); }
+
+  function parentPath(path) {
+    const n = norm(path);
+    return n === '/' ? '/' : n.slice(0, n.lastIndexOf('/')) || '/';
+  }
+
+  function basename(path) {
+    const n = norm(path);
+    return n === '/' ? '/' : n.slice(n.lastIndexOf('/') + 1);
+  }
+
   function children(path) {
     const p = norm(path);
-    return Object.keys(state.fs).filter(k => k !== p && parentPath(k) === p).sort((a,b) => {
+    return Object.keys(state.fs).filter(k => k !== p && parentPath(k) === p).sort((a, b) => {
       const ad = state.fs[a].type === 'dir', bd = state.fs[b].type === 'dir';
       return ad === bd ? a.localeCompare(b) : ad ? -1 : 1;
     });
   }
 
+  function allowedFileName(name) {
+    return /\.(txt|html)$/i.test(String(name || ''));
+  }
+
+  function setWindowTitle(win, title, icon) {
+    $('.window-name', win.el).textContent = title;
+    if (icon) $('.window-icon', win.el).textContent = icon;
+    const btn = $(`.task-app[data-window-id="${CSS.escape(win.id)}"]`);
+    if (btn) $('.task-label', btn).textContent = title;
+  }
+
   const apps = {
     terminal: { name: 'Terminal', icon: '›_', width: 790, height: 500, singleton: false, build: buildTerminal },
-    files: { name: 'Files', icon: '▤', width: 760, height: 500, singleton: true, build: buildFiles },
+    files: { name: 'Files', icon: '▤', width: 790, height: 520, singleton: true, build: buildFiles },
     notes: { name: 'Notes', icon: '✎', width: 680, height: 480, singleton: true, build: buildNotes },
+    editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: buildEditor },
+    browser: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: buildBrowser },
     monitor: { name: 'System Monitor', icon: '⌁', width: 620, height: 470, singleton: true, build: buildMonitor },
-    settings: { name: 'Settings', icon: '⚙', width: 570, height: 460, singleton: true, build: buildSettings },
-    about: { name: 'About PocketVM', icon: 'ⓘ', width: 500, height: 390, singleton: true, build: buildAbout }
+    settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
+    about: { name: 'About PocketVM', icon: 'ⓘ', width: 500, height: 410, singleton: true, build: buildAbout }
   };
 
-  function openApp(appId, options={}) {
+  function openApp(appId, options = {}) {
     const app = apps[appId];
     if (!app) return;
     if (app.singleton) {
       const existing = [...state.windows.values()].find(w => w.appId === appId);
-      if (existing) { restoreWindow(existing.id); focusWindow(existing.id); return existing; }
+      if (existing) {
+        restoreWindow(existing.id);
+        focusWindow(existing.id);
+        return existing;
+      }
     }
+
     const id = `${appId}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     const el = $('#window-template').content.firstElementChild.cloneNode(true);
     el.dataset.windowId = id;
@@ -93,8 +201,8 @@
     const win = { id, appId, el, content, maximized: false, beforeMax: null };
     state.windows.set(id, win);
     wireWindow(win);
-    app.build(win, options);
     addTaskbarButton(win);
+    app.build(win, options);
     focusWindow(id);
     if (matchMedia('(max-width: 620px)').matches) maximizeWindow(id);
     return win;
@@ -115,11 +223,14 @@
     bar.addEventListener('dblclick', () => toggleMaximize(id));
     bar.addEventListener('pointerdown', e => {
       if (e.target.closest('.window-actions') || win.maximized) return;
-      e.preventDefault(); focusWindow(id);
+      e.preventDefault();
+      focusWindow(id);
       const rect = el.getBoundingClientRect();
       const startX = e.clientX, startY = e.clientY;
       const left = rect.left, top = rect.top;
-      el.style.transform = 'none'; el.style.left = `${left}px`; el.style.top = `${top}px`;
+      el.style.transform = 'none';
+      el.style.left = `${left}px`;
+      el.style.top = `${top}px`;
       bar.setPointerCapture(e.pointerId);
       const move = ev => {
         const maxX = innerWidth - Math.min(160, el.offsetWidth);
@@ -127,14 +238,20 @@
         el.style.left = `${clamp(left + ev.clientX - startX, -el.offsetWidth + 120, maxX)}px`;
         el.style.top = `${clamp(top + ev.clientY - startY, 0, maxY)}px`;
       };
-      const up = () => { bar.removeEventListener('pointermove', move); bar.removeEventListener('pointerup', up); };
-      bar.addEventListener('pointermove', move); bar.addEventListener('pointerup', up);
+      const up = () => {
+        bar.removeEventListener('pointermove', move);
+        bar.removeEventListener('pointerup', up);
+      };
+      bar.addEventListener('pointermove', move);
+      bar.addEventListener('pointerup', up);
     });
 
     const handle = $('.resize-handle', el);
     handle.addEventListener('pointerdown', e => {
       if (win.maximized) return;
-      e.preventDefault(); e.stopPropagation(); focusWindow(id);
+      e.preventDefault();
+      e.stopPropagation();
+      focusWindow(id);
       const rect = el.getBoundingClientRect();
       const sx = e.clientX, sy = e.clientY, sw = rect.width, sh = rect.height;
       handle.setPointerCapture(e.pointerId);
@@ -142,14 +259,19 @@
         el.style.width = `${clamp(sw + ev.clientX - sx, 290, innerWidth - rect.left)}px`;
         el.style.height = `${clamp(sh + ev.clientY - sy, 210, innerHeight - 60 - rect.top)}px`;
       };
-      const up = () => { handle.removeEventListener('pointermove', move); handle.removeEventListener('pointerup', up); };
-      handle.addEventListener('pointermove', move); handle.addEventListener('pointerup', up);
+      const up = () => {
+        handle.removeEventListener('pointermove', move);
+        handle.removeEventListener('pointerup', up);
+      };
+      handle.addEventListener('pointermove', move);
+      handle.addEventListener('pointerup', up);
     });
   }
 
   function addTaskbarButton(win) {
     const btn = document.createElement('button');
-    btn.className = 'task-app'; btn.dataset.windowId = win.id;
+    btn.className = 'task-app';
+    btn.dataset.windowId = win.id;
     btn.innerHTML = `<span>${escapeHTML(apps[win.appId].icon)}</span><span class="task-label">${escapeHTML(apps[win.appId].name)}</span>`;
     btn.addEventListener('click', () => {
       if (win.el.classList.contains('minimized')) restoreWindow(win.id);
@@ -158,20 +280,63 @@
     });
     $('#taskbar-apps').appendChild(btn);
   }
+
   function focusWindow(id) {
-    const win = state.windows.get(id); if (!win) return;
+    const win = state.windows.get(id);
+    if (!win) return;
     $$('.window').forEach(w => w.classList.remove('focused'));
     $$('.task-app').forEach(b => b.classList.remove('active'));
-    win.el.classList.remove('minimized'); win.el.classList.add('focused'); win.el.style.zIndex = ++state.z;
+    win.el.classList.remove('minimized');
+    win.el.classList.add('focused');
+    win.el.style.zIndex = ++state.z;
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.classList.add('active');
-    if (win.appId === 'terminal') $('.term-input', win.el)?.focus({preventScroll:true});
   }
-  function closeWindow(id) { const win = state.windows.get(id); if (!win) return; win.cleanup?.(); win.el.remove(); $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.remove(); state.windows.delete(id); }
-  function minimizeWindow(id) { const win = state.windows.get(id); if (!win) return; win.el.classList.add('minimized'); win.el.classList.remove('focused'); $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.classList.remove('active'); }
-  function restoreWindow(id) { const win = state.windows.get(id); if (!win) return; win.el.classList.remove('minimized'); focusWindow(id); }
-  function toggleMaximize(id) { const w = state.windows.get(id); if (!w) return; w.maximized ? unmaximizeWindow(id) : maximizeWindow(id); }
-  function maximizeWindow(id) { const w = state.windows.get(id); if (!w || w.maximized) return; w.beforeMax = {left:w.el.style.left,top:w.el.style.top,width:w.el.style.width,height:w.el.style.height,transform:w.el.style.transform}; w.el.classList.add('maximized'); w.maximized = true; }
-  function unmaximizeWindow(id) { const w = state.windows.get(id); if (!w || !w.maximized) return; w.el.classList.remove('maximized'); Object.assign(w.el.style, w.beforeMax || {}); w.maximized = false; }
+
+  function closeWindow(id) {
+    const win = state.windows.get(id);
+    if (!win) return;
+    win.cleanup?.();
+    win.el.remove();
+    $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.remove();
+    state.windows.delete(id);
+  }
+
+  function minimizeWindow(id) {
+    const win = state.windows.get(id);
+    if (!win) return;
+    win.el.classList.add('minimized');
+    win.el.classList.remove('focused');
+    $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.classList.remove('active');
+  }
+
+  function restoreWindow(id) {
+    const win = state.windows.get(id);
+    if (!win) return;
+    win.el.classList.remove('minimized');
+    focusWindow(id);
+  }
+
+  function toggleMaximize(id) {
+    const w = state.windows.get(id);
+    if (!w) return;
+    w.maximized ? unmaximizeWindow(id) : maximizeWindow(id);
+  }
+
+  function maximizeWindow(id) {
+    const w = state.windows.get(id);
+    if (!w || w.maximized) return;
+    w.beforeMax = { left: w.el.style.left, top: w.el.style.top, width: w.el.style.width, height: w.el.style.height, transform: w.el.style.transform };
+    w.el.classList.add('maximized');
+    w.maximized = true;
+  }
+
+  function unmaximizeWindow(id) {
+    const w = state.windows.get(id);
+    if (!w || !w.maximized) return;
+    w.el.classList.remove('maximized');
+    Object.assign(w.el.style, w.beforeMax || {});
+    w.maximized = false;
+  }
 
   // ---------- Terminal ----------
   function buildTerminal(win) {
@@ -179,296 +344,1075 @@
     win.content.innerHTML = `
       <div class="terminal">
         <div class="term-toolbar">
-          <button class="term-chip" data-term="clear">Clear</button>
-          <button class="term-chip" data-term="help">Help</button>
-          <button class="term-chip" data-term="rick">curl rick</button>
-          <span style="flex:1"></span><span class="term-chip">local shell</span>
+          <span class="term-chip">PocketVM shell reset</span>
+          <span style="flex:1"></span>
+          <span class="term-chip">1 command</span>
         </div>
         <div class="term-output" role="log" aria-live="polite"></div>
         <div class="term-promptline"><span class="term-prompt"></span><input class="term-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" /></div>
       </div>`;
-    const term = { win, cwd: '/home/guest', env: { USER:'guest', HOME:'/home/guest', SHELL:'pocketsh', TERM:'xterm-256color' }, historyIndex: state.history.length, abortAnimation: false };
+
+    const term = {
+      win,
+      env: { USER: shellUser() }
+    };
     win.term = term;
-    print(term, 'PocketVM Terminal 1.0', 'accent');
-    print(term, 'Type "help" to see commands. Try: curl.exe ascii.live/rick', 'muted');
+    print(term, 'PocketVM Terminal 1.2', 'accent');
+    print(term, 'Available command: null.user', 'muted');
     updatePrompt(term);
+
     const input = $('.term-input', win.el);
-    input.focus();
+    setTimeout(() => input.focus({ preventScroll: true }), 0);
     input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); const cmd = input.value; input.value=''; runLine(term, cmd); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); if (state.history.length) { term.historyIndex = Math.max(0, term.historyIndex - 1); input.value = state.history[term.historyIndex] || ''; queueMicrotask(()=>input.setSelectionRange(input.value.length,input.value.length)); } }
-      else if (e.key === 'ArrowDown') { e.preventDefault(); term.historyIndex = Math.min(state.history.length, term.historyIndex + 1); input.value = state.history[term.historyIndex] || ''; }
-      else if (e.key === 'l' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); clearTerm(term); }
-      else if (e.key === 'c' && (e.ctrlKey || e.metaKey)) { term.abortAnimation = true; print(term, '^C', 'muted'); }
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const line = input.value;
+      input.value = '';
+      runLine(term, line);
     });
-    win.el.addEventListener('pointerdown', e => { if (!e.target.closest('button')) setTimeout(()=>input.focus({preventScroll:true}),0); });
-    $$('[data-term]', win.el).forEach(b => b.addEventListener('click', () => {
-      const v = b.dataset.term;
-      if (v === 'clear') clearTerm(term);
-      if (v === 'help') runLine(term, 'help');
-      if (v === 'rick') runLine(term, 'curl.exe ascii.live/rick');
-    }));
+
+    win.el.addEventListener('pointerdown', e => {
+      if (!e.target.closest('.term-output')) setTimeout(() => input.focus({ preventScroll: true }), 0);
+    });
   }
 
-  function print(term, text='', cls='') {
-    const out = $('.term-output', term.win.el); if (!out) return;
-    const div = document.createElement('div'); div.className = `term-line ${cls}`; div.textContent = text; out.appendChild(div); out.scrollTop = out.scrollHeight; return div;
+  function print(term, text = '', cls = '') {
+    const out = $('.term-output', term.win.el);
+    if (!out) return;
+    const div = document.createElement('div');
+    div.className = `term-line ${cls}`;
+    div.textContent = text;
+    out.appendChild(div);
+    out.scrollTop = out.scrollHeight;
+    return div;
   }
-  function printHTML(term, html='', cls='') {
-    const out = $('.term-output', term.win.el); const div = document.createElement('div'); div.className=`term-line ${cls}`; div.innerHTML=html; out.appendChild(div); out.scrollTop=out.scrollHeight; return div;
+
+  function updatePrompt(term) {
+    $('.term-prompt', term.win.el).textContent = `${term.env.USER}@pocketvm:~$`;
   }
-  function clearTerm(term) { $('.term-output', term.win.el).innerHTML=''; }
-  function updatePrompt(term) { $('.term-prompt', term.win.el).textContent = `guest@pocketvm:${term.cwd.replace('/home/guest','~') || '~'}$`; }
-  function tokenize(s) { const m = s.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || []; return m.map(x => (x[0] === '"' || x[0] === "'") ? x.slice(1,-1) : x); }
-  async function runLine(term, line) {
+
+  function runLine(term, line) {
     const raw = line.trim();
     print(term, `${$('.term-prompt', term.win.el).textContent} ${line}`);
     if (!raw) return;
-    state.history.push(raw); state.history = state.history.slice(-100); term.historyIndex = state.history.length; localStorage.setItem('pocketvm.history', JSON.stringify(state.history));
-    const parts = tokenize(raw); const cmd = (parts.shift() || '').toLowerCase(); const args = parts;
-    term.abortAnimation = true; await sleep(0); term.abortAnimation = false;
-    try { await execute(term, cmd, args, raw); } catch (err) { print(term, `error: ${err.message}`, 'error'); }
-    updatePrompt(term);
-  }
 
-  async function execute(term, cmd, args, raw) {
-    const aliases = { 'curl.exe':'curl', 'dir':'ls', 'cls':'clear', 'type':'cat', 'del':'rm', 'md':'mkdir', 'cd.':'pwd', '?':'help' };
-    cmd = aliases[cmd] || cmd;
-    if (cmd.includes('.exe')) cmd = cmd.replace(/\.exe$/,'');
-    const joined = args.join(' ');
-
-    switch (cmd) {
-      case 'help':
-        print(term, 'PocketVM commands', 'accent');
-        print(term, '  help, clear, echo, history, date, time, whoami, hostname, ver');
-        print(term, '  pwd, cd, ls/dir, tree, cat/type, mkdir, touch, write, rm/del');
-        print(term, '  neofetch, ipconfig, ping, curl/curl.exe, theme, open');
-        print(term, '  calc, uname, env, matrix, reboot, shutdown');
-        print(term, '');
-        print(term, 'Fun: curl.exe ascii.live/rick', 'success');
-        break;
-      case 'clear': clearTerm(term); break;
-      case 'echo': print(term, joined.replace(/%([^%]+)%/g, (_,k)=>term.env[k] ?? '').replace(/\$([A-Za-z_][\w]*)/g,(_,k)=>term.env[k] ?? '')); break;
-      case 'history': state.history.forEach((h,i)=>print(term, `${String(i+1).padStart(3,' ')}  ${h}`)); break;
-      case 'date': print(term, new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})); break;
-      case 'time': print(term, new Date().toLocaleTimeString()); break;
-      case 'whoami': print(term, 'guest'); break;
-      case 'hostname': print(term, 'pocketvm'); break;
-      case 'ver': print(term, 'PocketVM [Version 1.0.0] — browser-native virtual desktop'); break;
-      case 'uname': print(term, args.includes('-a') ? `PocketVM pocketvm 1.0.0 WebKit ${navigator.platform || 'Web'} wasm-js` : 'PocketVM'); break;
-      case 'env': Object.entries(term.env).forEach(([k,v])=>print(term, `${k}=${v}`)); break;
-      case 'pwd': print(term, term.cwd); break;
-      case 'cd': {
-        const p = norm(args[0] || term.env.HOME, term.cwd);
-        if (!state.fs[p]) print(term, `cd: no such file or directory: ${args[0] || ''}`, 'error');
-        else if (state.fs[p].type !== 'dir') print(term, `cd: not a directory: ${args[0]}`, 'error');
-        else term.cwd = p;
-        break;
-      }
-      case 'ls': {
-        let p = term.cwd; const actualArgs = args.filter(a=>!a.startsWith('-')); if (actualArgs[0]) p = norm(actualArgs[0],term.cwd);
-        const node = state.fs[p];
-        if (!node) { print(term, `ls: cannot access '${actualArgs[0] || p}': No such file or directory`, 'error'); break; }
-        if (node.type === 'file') { print(term, basename(p)); break; }
-        for (const k of children(p)) print(term, `${state.fs[k].type === 'dir' ? '📁' : '  '} ${basename(k)}${state.fs[k].type === 'dir' ? '/' : ''}`);
-        break;
-      }
-      case 'tree': {
-        const root = norm(args[0] || term.cwd, term.cwd);
-        if (!state.fs[root] || state.fs[root].type !== 'dir') { print(term, 'tree: directory not found', 'error'); break; }
-        print(term, root);
-        const walk = (p,prefix='',depth=0) => { if(depth>8)return; const c=children(p); c.forEach((k,i)=>{ const last=i===c.length-1; print(term, `${prefix}${last?'└── ':'├── '}${basename(k)}${state.fs[k].type==='dir'?'/':''}`); if(state.fs[k].type==='dir') walk(k,prefix+(last?'    ':'│   '),depth+1); }); };
-        walk(root); break;
-      }
-      case 'cat': {
-        if (!args[0]) { print(term, 'cat: missing file operand', 'error'); break; }
-        const p = norm(args[0],term.cwd), node = state.fs[p];
-        if (!node) print(term, `cat: ${args[0]}: No such file`, 'error');
-        else if (node.type !== 'file') print(term, `cat: ${args[0]}: Is a directory`, 'error');
-        else print(term, node.content || '');
-        break;
-      }
-      case 'mkdir': {
-        if(!args[0]) { print(term,'mkdir: missing operand','error'); break; }
-        const p=norm(args[0],term.cwd); if(state.fs[p]) print(term,`mkdir: ${args[0]}: File exists`,'error');
-        else if(!state.fs[parentPath(p)] || state.fs[parentPath(p)].type!=='dir') print(term,'mkdir: parent directory does not exist','error');
-        else { state.fs[p]={type:'dir'}; persistFS(); print(term,`created ${p}`,'success'); }
-        break;
-      }
-      case 'touch': {
-        if(!args[0]) { print(term,'touch: missing file operand','error'); break; }
-        const p=norm(args[0],term.cwd); if(!state.fs[parentPath(p)]) print(term,'touch: parent directory does not exist','error');
-        else { state.fs[p]=state.fs[p]||{type:'file',content:''}; persistFS(); }
-        break;
-      }
-      case 'write': {
-        if(args.length<2) { print(term,'usage: write <file> <text>','error'); break; }
-        const p=norm(args.shift(),term.cwd); if(!state.fs[parentPath(p)]) print(term,'write: parent directory does not exist','error');
-        else { state.fs[p]={type:'file',content:args.join(' ')}; persistFS(); print(term,`wrote ${p}`,'success'); }
-        break;
-      }
-      case 'rm': {
-        if(!args[0]) { print(term,'rm: missing operand','error'); break; }
-        const p=norm(args[0],term.cwd); if(!state.fs[p]) print(term,'rm: target not found','error');
-        else if(state.fs[p].type==='dir' && children(p).length) print(term,'rm: directory not empty','error');
-        else { delete state.fs[p]; persistFS(); print(term,`removed ${p}`,'success'); }
-        break;
-      }
-      case 'neofetch': neofetch(term); break;
-      case 'ipconfig':
-        print(term, 'PocketVM Network Adapter', 'accent'); print(term, '   Connection . . . . . . . : Browser sandbox'); print(term, '   IPv4 Address. . . . . . . : 127.0.0.1'); print(term, '   Gateway . . . . . . . . . : managed by browser'); break;
-      case 'ping': await fakePing(term,args[0]||'localhost'); break;
-      case 'curl': await curlCommand(term, joined); break;
-      case 'theme': {
-        if (!args[0]) print(term, `themes: ${Object.keys(themes).join(', ')} (current: ${state.theme})`);
-        else if (!themes[args[0]]) print(term, 'theme: unknown theme', 'error');
-        else { applyTheme(args[0]); print(term, `theme changed to ${args[0]}`, 'success'); }
-        break;
-      }
-      case 'open': if (apps[args[0]]) openApp(args[0]); else print(term,`open: try terminal, files, notes, monitor, settings`,'error'); break;
-      case 'calc': {
-        if(!joined){print(term,'usage: calc <expression>','error');break;}
-        if(!/^[0-9+\-*/().%\s]+$/.test(joined)){print(term,'calc: only numbers and arithmetic operators are allowed','error');break;}
-        try{ const v=Function(`"use strict";return (${joined})`)(); print(term,String(v)); }catch{print(term,'calc: invalid expression','error');} break;
-      }
-      case 'matrix': await matrix(term); break;
-      case 'reboot': print(term,'Rebooting PocketVM...','accent'); setTimeout(()=>location.reload(),500); break;
-      case 'shutdown': shutdown(); break;
-      case 'exit': closeWindow(term.win.id); break;
-      default: print(term, `${cmd}: command not found. Type "help".`, 'error');
+    if (raw.toLowerCase() === 'null.user') {
+      print(term, 'Erasing PocketVM local data…', 'error');
+      localStorage.clear();
+      setTimeout(() => location.reload(), 350);
+      return;
     }
-  }
 
-  function neofetch(term) {
-    const ua = navigator.userAgent;
-    const mobile = /iPad|iPhone|Android/i.test(ua) ? 'tablet/mobile browser' : 'desktop browser';
-    const art = [
-      '       ╭────────╮       guest@pocketvm',
-      '    ╭──┤  ◈  ◈  ├──╮    --------------',
-      '   ╱   │   ▄▄   │   ╲   OS: PocketVM 1.0',
-      '  │    ╰────────╯    │  Host: WebKit / Browser',
-      '  │   ╭──────────╮   │  Shell: pocketsh',
-      '   ╲  ╰──────────╯  ╱   Device: ' + mobile,
-      '    ╰──────────────╯    Storage: localStorage'
-    ]; art.forEach((l,i)=>print(term,l,i===0?'accent':''));
-  }
-  async function fakePing(term, host) {
-    print(term, `Pinging ${host} with 32 bytes of data:`);
-    for(let i=0;i<4;i++){ await sleep(260); if(term.abortAnimation)return; const ms=12+Math.floor(Math.random()*55); print(term, `Reply from ${host}: bytes=32 time=${ms}ms TTL=64`); }
-    print(term, `Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)`, 'success');
-  }
-
-  const asciiFrames = [
-`        O/\n       /|\n       / \\\n   never gonna\n   give you up`,
-`       \\O\n        |\\\n       / \\\n   never gonna\n   let you down`,
-`        O\n       /|\\\n       / \\\n    PocketVM\n      edition`,
-`      \\O/\n        |\n       / \\\n      ♪  ♪\n   ascii.live/rick`
-  ];
-  async function asciiRick(term) {
-    const out = $('.term-output', term.win.el);
-    const div = document.createElement('div'); div.className='ascii-frame'; out.appendChild(div);
-    for(let n=0;n<28;n++){ if(term.abortAnimation) break; div.textContent = asciiFrames[n%asciiFrames.length]; out.scrollTop=out.scrollHeight; await sleep(135); }
-    if(!term.abortAnimation) { div.textContent=''; print(term,'[PocketVM local fallback animation — browser-safe 😎]','muted'); }
-  }
-  async function asciiParrot(term) {
-    const frames = ['  🦜\n /|\\\n / \\',' \\🦜\n  |\\\n / \\','  🦜/\n /|\n / \\'];
-    const div=print(term,''); div.className='ascii-frame';
-    for(let n=0;n<24;n++){if(term.abortAnimation)break;div.textContent=frames[n%frames.length];await sleep(120);}
-  }
-  async function curlCommand(term, target) {
-    if(!target){ print(term,'curl: try curl.exe ascii.live/rick','error'); return; }
-    const cleaned = target.replace(/^https?:\/\//,'').replace(/\/$/,'').toLowerCase();
-    if(cleaned === 'ascii.live/rick') { await asciiRick(term); return; }
-    if(cleaned === 'ascii.live/parrot') { await asciiParrot(term); return; }
-    if(cleaned === 'example.com') { print(term,'<!doctype html><title>Example Domain</title><h1>Example Domain</h1>'); return; }
-    print(term, `curl: browser mode blocks arbitrary cross-origin requests for safety/CORS.`, 'error');
-    print(term, `Built-ins: ascii.live/rick, ascii.live/parrot, example.com`, 'muted');
-  }
-  async function matrix(term) {
-    const chars='01アイウエオカキクケコ$#@*';
-    for(let r=0;r<18;r++){ if(term.abortAnimation)break; let s=''; for(let i=0;i<70;i++) s+=chars[Math.floor(Math.random()*chars.length)]; print(term,s,'success'); await sleep(55); }
+    print(term, `${raw}: command not found`, 'error');
   }
 
   // ---------- Files ----------
-  function buildFiles(win, options={}) {
-    let current = options.path || '/home/guest';
-    win.content.innerHTML = `<div class="files-app"><aside class="files-sidebar"></aside><div class="files-main"><div class="files-path"></div><div class="file-grid"></div></div></div>`;
-    const side = $('.files-sidebar',win.el);
-    [['Home','/home/guest'],['Desktop','/home/guest/Desktop'],['Documents','/home/guest/Documents'],['Downloads','/home/guest/Downloads'],['System','/etc']].forEach(([name,p])=>{
-      const b=document.createElement('button');b.textContent=name;b.addEventListener('click',()=>{current=p;render();});side.appendChild(b);
+  function buildFiles(win, options = {}) {
+    let current = options.path || '/home/user';
+    win.content.innerHTML = `
+      <div class="files-app">
+        <aside class="files-sidebar">
+          <button class="active" data-path="/home/user">⌂ Home</button>
+          <div class="files-side-note"><strong>Your files</strong><span>Stored locally on this device.</span></div>
+        </aside>
+        <div class="files-main">
+          <div class="files-toolbar">
+            <div class="files-path"></div>
+            <span class="files-spacer"></span>
+            <button class="soft-btn" data-new="txt">+ Text</button>
+            <button class="soft-btn" data-new="html">+ HTML</button>
+          </div>
+          <div class="file-grid"></div>
+        </div>
+      </div>`;
+
+    $('[data-path="/home/user"]', win.el).addEventListener('click', () => {
+      current = '/home/user';
+      render();
     });
-    function render(){
-      if(!state.fs[current] || state.fs[current].type!=='dir') current='/home/guest';
-      $('.files-path',win.el).textContent=current;
-      $$('.files-sidebar button',win.el).forEach((b,i)=>b.classList.toggle('active',[['Home','/home/guest'],['Desktop','/home/guest/Desktop'],['Documents','/home/guest/Documents'],['Downloads','/home/guest/Downloads'],['System','/etc']][i][1]===current));
-      const grid=$('.file-grid',win.el);grid.innerHTML='';
-      if(current!=='/'){ const up=document.createElement('button');up.className='file-card';up.innerHTML='<span class="ficon">↩</span><span>Up</span>';up.onclick=()=>{current=parentPath(current);render();};grid.appendChild(up); }
-      children(current).forEach(p=>{ const n=state.fs[p]; const b=document.createElement('button');b.className='file-card';b.innerHTML=`<span class="ficon">${n.type==='dir'?'📁':'📄'}</span><span>${escapeHTML(basename(p))}</span>`; b.addEventListener('dblclick',()=>openItem(p)); b.addEventListener('click',()=>{ if(matchMedia('(pointer:coarse)').matches) openItem(p); }); grid.appendChild(b); });
+    $$('[data-new]', win.el).forEach(btn => btn.addEventListener('click', () => showCreateDialog(btn.dataset.new)));
+
+    function render() {
+      if (!state.fs[current] || state.fs[current].type !== 'dir') current = '/home/user';
+      $('.files-path', win.el).textContent = current.replace('/home/user', 'Home') || 'Home';
+      const grid = $('.file-grid', win.el);
+      grid.innerHTML = '';
+      const items = children(current);
+
+      if (current !== '/home/user') {
+        const up = document.createElement('button');
+        up.className = 'file-card up-card';
+        up.innerHTML = '<span class="ficon">↩</span><span>Up</span>';
+        up.addEventListener('click', () => {
+          current = parentPath(current);
+          render();
+        });
+        grid.appendChild(up);
+      }
+
+      if (!items.length && current === '/home/user') {
+        const empty = document.createElement('div');
+        empty.className = 'files-empty';
+        empty.innerHTML = '<div class="empty-icon">◇</div><strong>This folder is empty</strong><span>Create a .txt or .html file to get started.</span>';
+        grid.appendChild(empty);
+        return;
+      }
+
+      items.forEach(p => {
+        const node = state.fs[p];
+        const card = document.createElement('div');
+        card.className = 'file-card-wrap';
+        const icon = node.type === 'dir' ? '📁' : /\.html$/i.test(p) ? '🌐' : '📄';
+        card.innerHTML = `
+          <button class="file-card" aria-label="Open ${escapeHTML(basename(p))}">
+            <span class="ficon">${icon}</span><span>${escapeHTML(basename(p))}</span>
+          </button>
+          <div class="file-mini-actions">
+            ${node.type === 'file' && /\.html$/i.test(p) ? '<button class="file-run" title="Run HTML">▶</button>' : ''}
+            <button class="file-delete" title="Delete">×</button>
+          </div>`;
+        $('.file-card', card).addEventListener('click', () => openItem(p));
+        $('.file-run', card)?.addEventListener('click', e => {
+          e.stopPropagation();
+          openApp('browser', { file:p });
+        });
+        $('.file-delete', card).addEventListener('click', e => {
+          e.stopPropagation();
+          const label = basename(p);
+          if (!confirm(`Delete ${label}?`)) return;
+          if (node.type === 'dir' && children(p).length) {
+            alert('That folder is not empty.');
+            return;
+          }
+          delete state.fs[p];
+          persistFS();
+          render();
+        });
+        grid.appendChild(card);
+      });
     }
-    function openItem(p){ const n=state.fs[p]; if(n.type==='dir'){current=p;render();} else { openApp('notes',{file:p}); } }
+
+    function openItem(p) {
+      const node = state.fs[p];
+      if (!node) return;
+      if (node.type === 'dir') {
+        current = p;
+        render();
+      } else {
+        openApp('editor', { file:p });
+      }
+    }
+
+    function showCreateDialog(kind) {
+      const ext = kind === 'html' ? '.html' : '.txt';
+      const overlay = document.createElement('div');
+      overlay.className = 'dialog-backdrop';
+      overlay.innerHTML = `
+        <form class="mini-dialog">
+          <h3>New ${kind === 'html' ? 'HTML' : 'text'} file</h3>
+          <p>Files are saved to PocketVM on this device.</p>
+          <label>File name<input class="dialog-input" type="text" inputmode="text" autocomplete="off" placeholder="${kind === 'html' ? 'website.html' : 'notes.txt'}" /></label>
+          <div class="dialog-error" aria-live="polite"></div>
+          <div class="dialog-actions"><button type="button" data-cancel>Cancel</button><button type="submit" class="primary-btn">Create</button></div>
+        </form>`;
+      win.content.appendChild(overlay);
+      const input = $('.dialog-input', overlay);
+      setTimeout(() => input.focus(), 0);
+      $('[data-cancel]', overlay).addEventListener('click', () => overlay.remove());
+      overlay.addEventListener('pointerdown', e => {
+        if (e.target === overlay) overlay.remove();
+      });
+      $('form', overlay).addEventListener('submit', e => {
+        e.preventDefault();
+        let name = input.value.trim();
+        const error = $('.dialog-error', overlay);
+        if (!name) {
+          error.textContent = 'Enter a file name.';
+          return;
+        }
+        if (/[\\/:*?"<>|]/.test(name)) {
+          error.textContent = 'That file name contains unsupported characters.';
+          return;
+        }
+        if (!name.toLowerCase().endsWith(ext)) name += ext;
+        if (!allowedFileName(name)) {
+          error.textContent = 'PocketVM currently supports .txt and .html files.';
+          return;
+        }
+        const p = norm(name, current);
+        if (state.fs[p]) {
+          error.textContent = 'A file with that name already exists.';
+          return;
+        }
+        state.fs[p] = { type:'file', content: kind === 'html' ? htmlStarter(name) : '' };
+        persistFS();
+        overlay.remove();
+        render();
+        openApp('editor', { file:p });
+      });
+    }
+
     render();
   }
 
-  function buildNotes(win, options={}) {
-    const file = options.file || '/home/guest/Documents/notes.txt';
-    if(!state.fs[file]) state.fs[file]={type:'file',content:localStorage.getItem('pocketvm.notes')||''};
-    win.content.innerHTML=`<div class="notes-app"><div class="notes-toolbar"><strong>${escapeHTML(basename(file))}</strong><span style="flex:1"></span><span class="note-state">Saved</span></div><textarea class="notes-area" spellcheck="true" placeholder="Write something..."></textarea></div>`;
-    const ta=$('.notes-area',win.el), status=$('.note-state',win.el); ta.value=state.fs[file].content||''; let timer;
-    ta.addEventListener('input',()=>{status.textContent='Saving…';clearTimeout(timer);timer=setTimeout(()=>{state.fs[file]={type:'file',content:ta.value};persistFS();if(file.endsWith('notes.txt'))localStorage.setItem('pocketvm.notes',ta.value);status.textContent='Saved';},250);});
+  function htmlStarter(filename) {
+    const title = basename(filename).replace(/\.html$/i, '') || 'PocketVM Page';
+    return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>${title}</title>\n  <style>\n    body { font-family: system-ui, sans-serif; padding: 32px; }\n  </style>\n</head>\n<body>\n  <h1>Hello from PocketVM 👋</h1>\n  <p>Edit this file, then tap Run.</p>\n  <button onclick="document.body.append(' It works!')">Test JavaScript</button>\n</body>\n</html>`;
   }
 
+  // ---------- Editor + HTML preview ----------
+  function buildEditor(win, options = {}) {
+    const file = options.file;
+    if (!file || !state.fs[file] || state.fs[file].type !== 'file') {
+      win.content.innerHTML = '<div class="app-pad"><h2>File not found</h2></div>';
+      return;
+    }
+    const isHTML = /\.html$/i.test(file);
+    setWindowTitle(win, basename(file), isHTML ? '🌐' : '📄');
+    win.content.innerHTML = `
+      <div class="editor-app ${isHTML ? 'html-editor' : ''}">
+        <div class="editor-toolbar">
+          <strong>${escapeHTML(basename(file))}</strong>
+          <span class="editor-location">${escapeHTML(parentPath(file).replace('/home/user', 'Home'))}</span>
+          <span class="files-spacer"></span>
+          <span class="editor-state">Saved</span>
+          ${isHTML ? '<button class="soft-btn" data-editor-run>▶ Run</button>' : ''}
+          <button class="soft-btn" data-editor-save>Save</button>
+        </div>
+        <textarea class="editor-area" ${isHTML ? 'spellcheck="false" autocapitalize="off" autocorrect="off"' : 'spellcheck="true"'}></textarea>
+      </div>`;
+
+    const area = $('.editor-area', win.el);
+    const status = $('.editor-state', win.el);
+    area.value = state.fs[file].content || '';
+    let timer;
+
+    const save = () => {
+      clearTimeout(timer);
+      if (!state.fs[file]) return;
+      state.fs[file] = { type:'file', content:area.value };
+      if (persistFS()) status.textContent = 'Saved';
+      else status.textContent = 'Save failed';
+    };
+
+    area.addEventListener('input', () => {
+      status.textContent = 'Saving…';
+      clearTimeout(timer);
+      timer = setTimeout(save, 300);
+    });
+    area.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        save();
+      }
+    });
+    $('[data-editor-save]', win.el).addEventListener('click', save);
+    $('[data-editor-run]', win.el)?.addEventListener('click', () => {
+      save();
+      openApp('browser', { file });
+    });
+    win.cleanup = save;
+  }
+
+  function buildBrowser(win, options = {}) {
+    const file = options.file;
+    if (!file || !state.fs[file] || state.fs[file].type !== 'file' || !/\.html$/i.test(file)) {
+      win.content.innerHTML = '<div class="app-pad"><h2>HTML file not found</h2></div>';
+      return;
+    }
+    setWindowTitle(win, `${basename(file)} — Preview`, '◉');
+    win.content.innerHTML = `
+      <div class="browser-app">
+        <div class="browser-toolbar">
+          <div class="browser-address"><span>local://</span>${escapeHTML(basename(file))}</div>
+          <button class="soft-btn" data-preview-edit>Edit</button>
+          <button class="soft-btn" data-preview-refresh>↻ Refresh</button>
+        </div>
+        <div class="browser-safety">Sandboxed local HTML preview · scripts are allowed, but the page cannot access PocketVM itself.</div>
+        <iframe class="html-preview" title="Preview of ${escapeHTML(basename(file))}" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+      </div>`;
+
+    const frame = $('.html-preview', win.el);
+    const refresh = () => {
+      if (!state.fs[file]) return;
+      frame.srcdoc = state.fs[file].content || '';
+    };
+    refresh();
+    $('[data-preview-refresh]', win.el).addEventListener('click', refresh);
+    $('[data-preview-edit]', win.el).addEventListener('click', () => openApp('editor', { file }));
+  }
+
+  // ---------- Notes ----------
+  function buildNotes(win) {
+    win.content.innerHTML = `
+      <div class="notes-app">
+        <div class="notes-toolbar"><strong>Quick Notes</strong><span style="flex:1"></span><span class="note-state">Saved locally</span></div>
+        <textarea class="notes-area" spellcheck="true" placeholder="Write something…"></textarea>
+      </div>`;
+    const ta = $('.notes-area', win.el), status = $('.note-state', win.el);
+    ta.value = localStorage.getItem('pocketvm.notes') || '';
+    let timer;
+    ta.addEventListener('input', () => {
+      status.textContent = 'Saving…';
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        try {
+          localStorage.setItem('pocketvm.notes', ta.value);
+          status.textContent = 'Saved locally';
+        } catch {
+          status.textContent = 'Save failed';
+        }
+      }, 250);
+    });
+  }
+
+  // ---------- System monitor ----------
   function buildMonitor(win) {
-    win.content.innerHTML=`<div class="app-pad"><h2 style="margin-top:0">System Monitor</h2><p style="color:var(--muted)">Live browser-session stats. Values are illustrative where browsers don't expose hardware data.</p><div class="monitor-grid"></div></div>`;
-    const grid=$('.monitor-grid',win.el);
-    const cards=[['CPU','cpu','%'],['Memory','mem','%'],['FPS','fps',''],['Storage','storage',' KB']];
-    cards.forEach(([title,key,unit])=>{const d=document.createElement('div');d.className='metric';d.dataset.metric=key;d.innerHTML=`<small>${title}</small><strong>--${unit}</strong><div class="spark"></div>`;grid.appendChild(d);});
-    let last=performance.now(),frames=0,fps=60,alive=true;
-    const tick=()=>{ if(!alive)return; frames++; const now=performance.now(); if(now-last>800){fps=Math.round(frames*1000/(now-last));frames=0;last=now;} requestAnimationFrame(tick); }; requestAnimationFrame(tick);
-    const interval=setInterval(()=>{
-      const usage = Math.round(18+Math.random()*34), mem=Math.round(30+Math.random()*28), kb=Math.round(JSON.stringify(localStorage).length/1024);
-      const vals={cpu:[usage,'%'],mem:[mem,'%'],fps:[fps,''],storage:[kb,' KB']};
-      for(const [k,[v,u]] of Object.entries(vals)){const c=$(`[data-metric="${k}"]`,win.el);if(!c)continue;$('strong',c).textContent=`${v}${u}`;const spark=$('.spark',c);const i=document.createElement('i');i.style.height=`${clamp(k==='fps'?v: v,8,100)}%`;spark.appendChild(i);while(spark.children.length>18)spark.firstChild.remove();}
-    },700);
-    win.cleanup=()=>{alive=false;clearInterval(interval);};
+    win.content.innerHTML = `<div class="app-pad"><h2 style="margin-top:0">System Monitor</h2><p style="color:var(--muted)">Live browser-session stats. Values are illustrative where browsers don't expose hardware data.</p><div class="monitor-grid"></div></div>`;
+    const grid = $('.monitor-grid', win.el);
+    const cards = [['CPU','cpu','%'], ['Memory','mem','%'], ['FPS','fps',''], ['Storage','storage',' KB']];
+    cards.forEach(([title, key, unit]) => {
+      const d = document.createElement('div');
+      d.className = 'metric';
+      d.dataset.metric = key;
+      d.innerHTML = `<small>${title}</small><strong>--${unit}</strong><div class="spark"></div>`;
+      grid.appendChild(d);
+    });
+
+    let last = performance.now(), frames = 0, fps = 60, alive = true;
+    const tick = () => {
+      if (!alive) return;
+      frames++;
+      const now = performance.now();
+      if (now - last > 800) {
+        fps = Math.round(frames * 1000 / (now - last));
+        frames = 0;
+        last = now;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    const interval = setInterval(() => {
+      const usage = Math.round(18 + Math.random() * 34);
+      const mem = Math.round(30 + Math.random() * 28);
+      let storageBytes = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i) || '';
+        storageBytes += key.length + (localStorage.getItem(key) || '').length;
+      }
+      const kb = Math.round(storageBytes * 2 / 1024);
+      const vals = { cpu:[usage,'%'], mem:[mem,'%'], fps:[fps,''], storage:[kb,' KB'] };
+      for (const [k, [v, u]] of Object.entries(vals)) {
+        const c = $(`[data-metric="${k}"]`, win.el);
+        if (!c) continue;
+        $('strong', c).textContent = `${v}${u}`;
+        const spark = $('.spark', c);
+        const i = document.createElement('i');
+        i.style.height = `${clamp(v, 8, 100)}%`;
+        spark.appendChild(i);
+        while (spark.children.length > 18) spark.firstChild.remove();
+      }
+    }, 700);
+    win.cleanup = () => {
+      alive = false;
+      clearInterval(interval);
+    };
   }
 
+  // ---------- Settings ----------
   function buildSettings(win) {
-    win.content.innerHTML=`<div class="app-pad"><h2 style="margin-top:0">Settings</h2><div class="setting-group"><div class="setting-row"><div><strong>Accent</strong><small>Pick your PocketVM colour</small></div><div class="swatches"></div></div><div class="setting-row"><div><strong>Install as app</strong><small>Safari → Share → Add to Home Screen</small></div><span>↗</span></div></div><div class="setting-group"><div class="setting-row"><div><strong>Reset terminal history</strong><small>Clears saved commands</small></div><button class="term-chip" id="reset-history">Reset</button></div><div class="setting-row"><div><strong>Reset virtual files</strong><small>Refresh the demo filesystem</small></div><button class="term-chip" id="reset-fs">Reset</button></div></div></div>`;
-    const sw=$('.swatches',win.el);Object.entries(themes).forEach(([name,c])=>{const b=document.createElement('button');b.className='swatch';b.title=name;b.style.background=`linear-gradient(135deg,${c[0]},${c[1]})`;b.onclick=()=>applyTheme(name);sw.appendChild(b);});
-    $('#reset-history',win.el).onclick=()=>{state.history=[];localStorage.removeItem('pocketvm.history');};
-    $('#reset-fs',win.el).onclick=()=>{localStorage.removeItem('pocketvm.fs');location.reload();};
+    win.content.innerHTML = `
+      <div class="settings-shell">
+        <aside class="settings-tabs" aria-label="Settings sections">
+          <button data-settings-tab="appearance" class="active"><span>✦</span>Appearance</button>
+          <button data-settings-tab="user"><span>☺</span>User</button>
+          <button data-settings-tab="password"><span>●</span>Password</button>
+          <button data-settings-tab="wallpaper"><span>▧</span>Wallpaper</button>
+          <button data-settings-tab="storage"><span>◫</span>Storage</button>
+        </aside>
+        <section class="settings-page"></section>
+      </div>`;
+
+    const page = $('.settings-page', win.el);
+    let active = 'appearance';
+
+    const selectTab = tab => {
+      active = tab;
+      $$('[data-settings-tab]', win.el).forEach(b => b.classList.toggle('active', b.dataset.settingsTab === tab));
+      renderTab();
+    };
+
+    $$('[data-settings-tab]', win.el).forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.settingsTab)));
+
+    function renderTab() {
+      if (active === 'appearance') renderAppearance();
+      if (active === 'user') renderUser();
+      if (active === 'password') renderPassword();
+      if (active === 'wallpaper') renderWallpaper();
+      if (active === 'storage') renderStorage();
+    }
+
+    function pageHead(title, subtitle) {
+      return `<div class="settings-heading"><h2>${title}</h2><p>${subtitle}</p></div>`;
+    }
+
+    function renderAppearance() {
+      page.innerHTML = pageHead('Appearance', 'Choose the accent used across PocketVM.') + `
+        <div class="setting-group">
+          <div class="setting-row stack-on-small">
+            <div><strong>Accent colour</strong><small>Changes windows, buttons and highlights.</small></div>
+            <div class="swatches"></div>
+          </div>
+          <div class="setting-row"><div><strong>Install as app</strong><small>Safari → Share → Add to Home Screen</small></div><span>↗</span></div>
+        </div>`;
+      const sw = $('.swatches', page);
+      Object.entries(themes).forEach(([name, c]) => {
+        const b = document.createElement('button');
+        b.className = `swatch ${state.theme === name ? 'selected' : ''}`;
+        b.title = name;
+        b.style.background = `linear-gradient(135deg,${c[0]},${c[1]})`;
+        b.addEventListener('click', () => {
+          applyTheme(name);
+          renderAppearance();
+        });
+        sw.appendChild(b);
+      });
+    }
+
+    function renderUser() {
+      page.innerHTML = pageHead('User', 'Create a local profile for this PocketVM installation.') + `
+        <div class="user-card">
+          <div class="settings-avatar avatar"></div>
+          <div class="user-card-copy"><strong>${escapeHTML(state.user.name || 'Guest')}</strong><span>Saved only in this browser</span></div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-row user-name-row">
+            <label class="field-label"><strong>Name</strong><small>Used by the Start menu and terminal prompt.</small></label>
+            <input id="user-name-input" class="settings-input" maxlength="32" value="${escapeHTML(state.user.name || 'Guest')}" />
+          </div>
+          <div class="setting-row stack-on-small">
+            <div><strong>Profile picture</strong><small>JPG, PNG or WebP. PocketVM resizes it before saving.</small></div>
+            <div class="inline-actions"><button class="soft-btn" id="choose-avatar">Choose image</button>${state.user.avatar ? '<button class="soft-btn" id="remove-avatar">Remove</button>' : ''}</div>
+          </div>
+        </div>
+        <div class="settings-footer"><span class="settings-message" aria-live="polite"></span><button class="primary-btn" id="save-user">Save user</button></div>
+        <input class="hidden-file-input" id="avatar-input" type="file" accept="image/*" />`;
+      paintAvatar($('.settings-avatar', page));
+      const msg = $('.settings-message', page);
+
+      $('#save-user', page).addEventListener('click', () => {
+        const value = $('#user-name-input', page).value.trim().slice(0, 32) || 'Guest';
+        state.user.name = value;
+        saveJSON('pocketvm.user', state.user);
+        renderUserChrome();
+        msg.textContent = 'Saved.';
+        $('.user-card-copy strong', page).textContent = value;
+      });
+
+      $('#choose-avatar', page).addEventListener('click', () => $('#avatar-input', page).click());
+      $('#avatar-input', page).addEventListener('change', async e => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        msg.textContent = 'Processing image…';
+        try {
+          state.user.avatar = await imageFileToDataURL(file, 384, 384, 0.84, true);
+          if (!saveJSON('pocketvm.user', state.user)) throw new Error('Not enough browser storage.');
+          renderUserChrome();
+          renderUser();
+        } catch (err) {
+          msg.textContent = err.message || 'Could not use that image.';
+        }
+      });
+      $('#remove-avatar', page)?.addEventListener('click', () => {
+        state.user.avatar = '';
+        saveJSON('pocketvm.user', state.user);
+        renderUserChrome();
+        renderUser();
+      });
+    }
+
+    function renderPassword() {
+      page.innerHTML = pageHead('Password', 'Change the local password for this PocketVM account.') + `
+        <form id="password-form">
+          <div class="setting-group">
+            <div class="setting-row password-row">
+              <label class="field-label"><strong>Current password</strong><small>Required before PocketVM will accept a new password.</small></label>
+              <input id="current-password" class="settings-input" type="password" autocomplete="current-password" />
+            </div>
+            <div class="setting-row password-row">
+              <label class="field-label"><strong>New password</strong><small>Use at least 4 characters.</small></label>
+              <input id="new-password" class="settings-input" type="password" autocomplete="new-password" minlength="4" />
+            </div>
+            <div class="setting-row password-row">
+              <label class="field-label"><strong>Confirm new password</strong><small>Type the new password again.</small></label>
+              <input id="confirm-new-password" class="settings-input" type="password" autocomplete="new-password" minlength="4" />
+            </div>
+          </div>
+          <div class="settings-footer"><span class="settings-message" aria-live="polite"></span><button class="primary-btn" type="submit">Change password</button></div>
+        </form>
+        <p class="privacy-note">The password is stored as a salted hash in this browser. PocketVM is a client-side project, so this login is for local privacy rather than high-security authentication.</p>`;
+
+      const form = $('#password-form', page);
+      const msg = $('.settings-message', page);
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const current = $('#current-password', page).value;
+        const next = $('#new-password', page).value;
+        const confirm = $('#confirm-new-password', page).value;
+        msg.textContent = '';
+        if (!state.auth) {
+          msg.textContent = 'No local account exists yet.';
+          return;
+        }
+        if (!(await verifyPassword(current))) {
+          msg.textContent = 'Current password is incorrect.';
+          return;
+        }
+        if (next.length < 4) {
+          msg.textContent = 'Use at least 4 characters.';
+          return;
+        }
+        if (next !== confirm) {
+          msg.textContent = 'The new passwords do not match.';
+          return;
+        }
+        try {
+          await setPassword(next);
+          form.reset();
+          msg.textContent = 'Password changed.';
+        } catch (err) {
+          msg.textContent = err.message || 'Could not save the new password.';
+        }
+      });
+    }
+
+    function renderWallpaper() {
+      page.innerHTML = pageHead('Wallpaper', 'Pick a built-in background or upload your own photo.') + `
+        <div class="wallpaper-grid"></div>
+        <div class="setting-group wallpaper-upload-row">
+          <div class="setting-row stack-on-small">
+            <div><strong>Custom wallpaper</strong><small>Your image is resized and stored locally in this browser.</small></div>
+            <div class="inline-actions"><button class="soft-btn" id="upload-wallpaper">Choose image</button>${state.wallpaper.type === 'custom' ? '<button class="soft-btn" id="reset-wallpaper">Use default</button>' : ''}</div>
+          </div>
+        </div>
+        <div class="settings-message" id="wallpaper-message" aria-live="polite"></div>
+        <input class="hidden-file-input" id="wallpaper-input" type="file" accept="image/*" />`;
+      const grid = $('.wallpaper-grid', page);
+      Object.entries(wallpapers).forEach(([name, bg]) => {
+        const b = document.createElement('button');
+        b.className = `wallpaper-card ${state.wallpaper.type === 'preset' && state.wallpaper.value === name ? 'selected' : ''}`;
+        b.innerHTML = `<span class="wallpaper-thumb"></span><span>${name[0].toUpperCase() + name.slice(1)}</span>`;
+        $('.wallpaper-thumb', b).style.background = bg;
+        b.addEventListener('click', () => {
+          state.wallpaper = { type:'preset', value:name, dataUrl:'' };
+          saveJSON('pocketvm.wallpaper', state.wallpaper);
+          applyWallpaper();
+          renderWallpaper();
+        });
+        grid.appendChild(b);
+      });
+
+      $('#upload-wallpaper', page).addEventListener('click', () => $('#wallpaper-input', page).click());
+      $('#wallpaper-input', page).addEventListener('change', async e => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const msg = $('#wallpaper-message', page);
+        msg.textContent = 'Processing wallpaper…';
+        try {
+          const dataUrl = await imageFileToDataURL(file, 1920, 1440, 0.78, false);
+          const previous = state.wallpaper;
+          state.wallpaper = { type:'custom', value:'custom', dataUrl };
+          if (!saveJSON('pocketvm.wallpaper', state.wallpaper)) {
+            state.wallpaper = previous;
+            throw new Error('That image is too large for browser storage. Try a smaller image.');
+          }
+          applyWallpaper();
+          renderWallpaper();
+        } catch (err) {
+          msg.textContent = err.message || 'Could not use that wallpaper.';
+        }
+      });
+      $('#reset-wallpaper', page)?.addEventListener('click', () => {
+        state.wallpaper = { type:'preset', value:'aurora', dataUrl:'' };
+        saveJSON('pocketvm.wallpaper', state.wallpaper);
+        applyWallpaper();
+        renderWallpaper();
+      });
+    }
+
+    function renderStorage() {
+      page.innerHTML = pageHead('Storage', 'Manage data saved by PocketVM on this device.') + `
+        <div class="setting-group">
+          <div class="setting-row"><div><strong>Erase virtual files</strong><small>Returns Files to an empty Home folder.</small></div><button class="danger-btn" id="reset-fs">Erase</button></div>
+        </div>
+        <p class="privacy-note">PocketVM has no account server. Your profile, password hash, wallpaper, notes, files and settings stay in this browser's local storage. The terminal command <code>null.user</code> clears all of it.</p>`;
+      $('#reset-fs', page).addEventListener('click', () => {
+        if (!confirm('Erase every file in PocketVM? This cannot be undone.')) return;
+        state.fs = makeEmptyFS();
+        persistFS();
+        localStorage.setItem('pocketvm.fs.schema', FS_SCHEMA);
+        $('#reset-fs', page).textContent = 'Erased';
+        for (const w of [...state.windows.values()]) {
+          if (w.appId === 'editor' || w.appId === 'browser') closeWindow(w.id);
+        }
+        const filesWin = [...state.windows.values()].find(w => w.appId === 'files');
+        if (filesWin) {
+          closeWindow(filesWin.id);
+          openApp('files');
+        }
+      });
+    }
+
+    renderTab();
+  }
+
+  function imageFileToDataURL(file, maxW, maxH, quality = 0.82, squareCrop = false) {
+    return new Promise((resolve, reject) => {
+      if (!file.type.startsWith('image/')) {
+        reject(new Error('Please choose an image file.'));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Could not read that image.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Could not decode that image.'));
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Image processing is unavailable.'));
+            return;
+          }
+
+          if (squareCrop) {
+            const side = Math.min(img.naturalWidth, img.naturalHeight);
+            const sx = (img.naturalWidth - side) / 2;
+            const sy = (img.naturalHeight - side) / 2;
+            const out = Math.min(maxW, maxH, side);
+            canvas.width = out;
+            canvas.height = out;
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, out, out);
+          } else {
+            const scale = Math.min(1, maxW / img.naturalWidth, maxH / img.naturalHeight);
+            canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          }
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- Local account / login ----------
+  const AUTH_KEY = 'pocketvm.auth';
+  const LOCKOUT_MS = 60_000;
+  let authTicker = null;
+  let currentPuzzle = null;
+
+  function bytesToBase64(bytes) {
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  function base64ToBytes(value) {
+    const binary = atob(value);
+    return Uint8Array.from(binary, c => c.charCodeAt(0));
+  }
+
+  async function derivePassword(password, saltBase64, algorithm = 'pbkdf2') {
+    if (algorithm === 'pbkdf2' && globalThis.crypto?.subtle) {
+      const key = await globalThis.crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(password),
+        'PBKDF2',
+        false,
+        ['deriveBits']
+      );
+      const bits = await globalThis.crypto.subtle.deriveBits({
+        name: 'PBKDF2',
+        salt: base64ToBytes(saltBase64),
+        iterations: 120000,
+        hash: 'SHA-256'
+      }, key, 256);
+      return bytesToBase64(new Uint8Array(bits));
+    }
+
+    // Fallback for non-secure/local-file contexts where SubtleCrypto is unavailable.
+    let h1 = 0x811c9dc5;
+    const input = `${saltBase64}:${password}`;
+    for (let round = 0; round < 16000; round++) {
+      for (let i = 0; i < input.length; i++) {
+        h1 ^= input.charCodeAt(i) + round;
+        h1 = Math.imul(h1, 0x01000193) >>> 0;
+      }
+    }
+    return `fallback-${h1.toString(16).padStart(8, '0')}`;
+  }
+
+  async function setPassword(password) {
+    const saltBytes = new Uint8Array(16);
+    globalThis.crypto.getRandomValues(saltBytes);
+    const salt = bytesToBase64(saltBytes);
+    const algorithm = globalThis.crypto?.subtle ? 'pbkdf2' : 'fallback';
+    const hash = await derivePassword(password, salt, algorithm);
+    state.auth = {
+      version: 1,
+      algorithm,
+      salt,
+      hash,
+      failedAttempts: 0,
+      lockUntil: 0,
+      createdAt: state.auth?.createdAt || Date.now(),
+      updatedAt: Date.now()
+    };
+    if (!saveJSON(AUTH_KEY, state.auth)) throw new Error('PocketVM could not save the password. Browser storage may be full.');
+  }
+
+  async function verifyPassword(password) {
+    if (!state.auth?.hash || !state.auth?.salt) return false;
+    const hash = await derivePassword(password, state.auth.salt, state.auth.algorithm || 'pbkdf2');
+    return hash === state.auth.hash;
+  }
+
+  function saveAuthState() {
+    if (state.auth) saveJSON(AUTH_KEY, state.auth);
+  }
+
+  function authRemainingMs() {
+    return Math.max(0, Number(state.auth?.lockUntil || 0) - Date.now());
+  }
+
+  function clearExpiredLockout() {
+    if (!state.auth) return;
+    if (state.auth.lockUntil && authRemainingMs() <= 0) {
+      state.auth.lockUntil = 0;
+      state.auth.failedAttempts = 0;
+      saveAuthState();
+    }
+  }
+
+  function setAuthWallpaper() {
+    const el = $('.auth-wallpaper');
+    if (!el) return;
+    if (state.wallpaper.type === 'custom' && state.wallpaper.dataUrl) {
+      el.style.background = `linear-gradient(rgba(3,7,14,.44), rgba(3,7,14,.62)), url("${state.wallpaper.dataUrl}") center / cover no-repeat`;
+    } else {
+      const key = wallpapers[state.wallpaper.value] ? state.wallpaper.value : 'aurora';
+      el.style.background = wallpapers[key];
+    }
+  }
+
+  function enterDesktop() {
+    if (authTicker) clearInterval(authTicker);
+    authTicker = null;
+    $('#auth-screen').hidden = true;
+    $('#desktop').removeAttribute('inert');
+    $('#desktop').hidden = false;
+    applyWallpaper();
+    renderUserChrome();
+  }
+
+  function showAuthScreen(mode = state.auth ? 'login' : 'setup') {
+    if (authTicker) clearInterval(authTicker);
+    authTicker = null;
+    clearExpiredLockout();
+    $('#start-menu').hidden = true;
+    $('#start-btn').classList.remove('active');
+    document.activeElement?.blur?.();
+    $('#desktop').setAttribute('inert', '');
+    $('#auth-screen').hidden = false;
+    setAuthWallpaper();
+    renderUserChrome();
+    if (mode === 'setup' || !state.auth) renderSetupScreen();
+    else if (mode === 'forgot') renderPuzzleScreen();
+    else renderLoginScreen();
+  }
+
+  function renderSetupScreen() {
+    const content = $('#auth-content');
+    content.innerHTML = `
+      <div class="auth-kicker">Welcome to PocketVM</div>
+      <h1>Create your local account</h1>
+      <p class="auth-copy">This is the first sign-in on this browser. Pick a name and create a password.</p>
+      <form id="setup-form" class="auth-form">
+        <label>Name<input id="setup-name" class="auth-input" maxlength="32" autocomplete="name" value="${escapeHTML(state.user.name === 'Guest' ? '' : state.user.name)}" placeholder="Your name" /></label>
+        <label>Password<input id="setup-password" class="auth-input" type="password" minlength="4" autocomplete="new-password" placeholder="At least 4 characters" /></label>
+        <label>Confirm password<input id="setup-confirm" class="auth-input" type="password" minlength="4" autocomplete="new-password" placeholder="Type it again" /></label>
+        <div class="auth-message" aria-live="polite"></div>
+        <button class="auth-primary" type="submit">Create account</button>
+      </form>
+      <p class="auth-note">Your account stays on this device in browser storage. It is not an online account.</p>`;
+    paintAvatar($('#auth-avatar'));
+    const form = $('#setup-form');
+    const msg = $('.auth-message', form);
+    setTimeout(() => $('#setup-name')?.focus(), 0);
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = $('#setup-name').value.trim().slice(0, 32);
+      const password = $('#setup-password').value;
+      const confirm = $('#setup-confirm').value;
+      if (!name) {
+        msg.textContent = 'Choose a name.';
+        return;
+      }
+      if (password.length < 4) {
+        msg.textContent = 'Use at least 4 characters for the password.';
+        return;
+      }
+      if (password !== confirm) {
+        msg.textContent = 'Those passwords do not match.';
+        return;
+      }
+      msg.textContent = 'Creating account…';
+      state.user.name = name;
+      saveJSON('pocketvm.user', state.user);
+      try {
+        await setPassword(password);
+      } catch (err) {
+        msg.textContent = err.message || 'Could not save the account.';
+        return;
+      }
+      renderUserChrome();
+      enterDesktop();
+    });
+  }
+
+  function renderLoginScreen() {
+    clearExpiredLockout();
+    const content = $('#auth-content');
+    content.innerHTML = `
+      <div class="auth-kicker">PocketVM</div>
+      <h1 id="auth-user-name">${escapeHTML(state.user.name || 'Guest')}</h1>
+      <p class="auth-copy">Enter your password to continue.</p>
+      <form id="login-form" class="auth-form">
+        <label>Password<input id="login-password" class="auth-input" type="password" autocomplete="current-password" placeholder="Password" /></label>
+        <div class="auth-message" aria-live="polite"></div>
+        <button class="auth-primary" id="login-submit" type="submit">Sign in</button>
+        <button class="auth-link" id="forgot-password" type="button">Forgot password?</button>
+      </form>`;
+    paintAvatar($('#auth-avatar'));
+    const form = $('#login-form');
+    const input = $('#login-password');
+    const submit = $('#login-submit');
+    const forgot = $('#forgot-password');
+    const msg = $('.auth-message', form);
+
+    const refreshLockout = () => {
+      const remaining = authRemainingMs();
+      if (remaining <= 0) {
+        if (state.auth?.lockUntil) {
+          state.auth.lockUntil = 0;
+          state.auth.failedAttempts = 0;
+          saveAuthState();
+        }
+        input.disabled = false;
+        submit.disabled = false;
+        forgot.disabled = false;
+        if (msg.dataset.lockout === '1') msg.textContent = '';
+        msg.dataset.lockout = '0';
+        if (authTicker) clearInterval(authTicker);
+        authTicker = null;
+        input.focus();
+        return;
+      }
+      const seconds = Math.ceil(remaining / 1000);
+      input.disabled = true;
+      submit.disabled = true;
+      forgot.disabled = true;
+      msg.dataset.lockout = '1';
+      msg.textContent = `Too many wrong attempts. Try again in ${seconds}s.`;
+    };
+
+    refreshLockout();
+    if (authRemainingMs() > 0) authTicker = setInterval(refreshLockout, 250);
+    else setTimeout(() => input.focus(), 0);
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      clearExpiredLockout();
+      if (authRemainingMs() > 0) {
+        refreshLockout();
+        return;
+      }
+      submit.disabled = true;
+      msg.textContent = 'Checking…';
+      const ok = await verifyPassword(input.value);
+      if (ok) {
+        state.auth.failedAttempts = 0;
+        state.auth.lockUntil = 0;
+        saveAuthState();
+        input.value = '';
+        enterDesktop();
+        return;
+      }
+
+      state.auth.failedAttempts = Number(state.auth.failedAttempts || 0) + 1;
+      if (state.auth.failedAttempts >= 3) {
+        state.auth.failedAttempts = 0;
+        state.auth.lockUntil = Date.now() + LOCKOUT_MS;
+        saveAuthState();
+        refreshLockout();
+        if (!authTicker) authTicker = setInterval(refreshLockout, 250);
+      } else {
+        saveAuthState();
+        const left = 3 - state.auth.failedAttempts;
+        msg.textContent = `Wrong password. ${left} ${left === 1 ? 'try' : 'tries'} left before a 1 minute lock.`;
+        submit.disabled = false;
+        input.select();
+      }
+    });
+
+    forgot.addEventListener('click', () => {
+      if (authRemainingMs() > 0) return;
+      showAuthScreen('forgot');
+    });
+  }
+
+  function newPuzzle() {
+    const a = 2 + Math.floor(Math.random() * 8);
+    const b = 2 + Math.floor(Math.random() * 8);
+    const subtract = Math.random() < 0.35;
+    if (subtract) {
+      const hi = Math.max(a, b);
+      const lo = Math.min(a, b);
+      currentPuzzle = { question: `${hi} − ${lo}`, answer: hi - lo };
+    } else {
+      currentPuzzle = { question: `${a} + ${b}`, answer: a + b };
+    }
+  }
+
+  function renderPuzzleScreen() {
+    if (authRemainingMs() > 0) {
+      renderLoginScreen();
+      return;
+    }
+    newPuzzle();
+    const content = $('#auth-content');
+    content.innerHTML = `
+      <div class="auth-kicker">Account recovery</div>
+      <h1>Quick verification</h1>
+      <p class="auth-copy">Solve this easy puzzle to unlock PocketVM.</p>
+      <form id="puzzle-form" class="auth-form">
+        <div class="puzzle-box"><span>What is</span><strong>${currentPuzzle.question}?</strong></div>
+        <label>Answer<input id="puzzle-answer" class="auth-input" inputmode="numeric" autocomplete="off" placeholder="Answer" /></label>
+        <div class="auth-message" aria-live="polite"></div>
+        <button class="auth-primary" type="submit">Verify and enter</button>
+        <button class="auth-link" id="back-to-login" type="button">Back to password</button>
+      </form>`;
+    paintAvatar($('#auth-avatar'));
+    const form = $('#puzzle-form');
+    const input = $('#puzzle-answer');
+    const msg = $('.auth-message', form);
+    setTimeout(() => input.focus(), 0);
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (Number(input.value.trim()) === currentPuzzle.answer) {
+        state.auth.failedAttempts = 0;
+        state.auth.lockUntil = 0;
+        saveAuthState();
+        enterDesktop();
+      } else {
+        msg.textContent = 'Not quite. Here is another one.';
+        setTimeout(() => renderPuzzleScreen(), 500);
+      }
+    });
+    $('#back-to-login').addEventListener('click', () => showAuthScreen('login'));
   }
 
   function buildAbout(win) {
-    win.content.innerHTML=`<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 1.0</h2><p>A touch-first browser computer built for iPad and static hosting.</p><p style="color:var(--muted)">This release is a virtual desktop/shell rather than hardware virtualization. It runs fully client-side, persists files locally, and works offline after first load.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>Ready</strong></div><div class="setting-row"><span>Terminal</span><strong>pocketsh</strong></div><div class="setting-row"><span>Persistence</span><strong>localStorage</strong></div><div class="setting-row"><span>PWA</span><strong>Enabled</strong></div></div></div>`;
+    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 1.2</h2><p>A touch-first browser computer built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM is a virtual desktop/shell rather than hardware virtualization. It runs fully client-side and works offline after the first load.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>Ready</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Account + files</span><strong>localStorage</strong></div><div class="setting-row"><span>HTML preview</span><strong>Sandboxed</strong></div><div class="setting-row"><span>PWA</span><strong>Enabled</strong></div></div></div>`;
   }
 
   // ---------- Shell ----------
   function updateClock() {
-    const d=new Date(); const t=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); const ds=d.toLocaleDateString([],{day:'2-digit',month:'short'});
-    $('#clock').textContent=t;$('#date').textContent=ds;$('#lock-time').textContent=t;$('#lock-date').textContent=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'});
+    const d = new Date();
+    const t = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    const ds = d.toLocaleDateString([], { day:'2-digit', month:'short' });
+    $('#clock').textContent = t;
+    $('#date').textContent = ds;
+    $('#auth-time').textContent = t;
+    $('#auth-date').textContent = d.toLocaleDateString([], { weekday:'long', day:'numeric', month:'long' });
   }
-  function shutdown(){
-    for(const id of [...state.windows.keys()]) closeWindow(id);
-    $('#desktop').hidden=true; $('#boot').hidden=false; $('.boot-title').textContent='PocketVM is off'; $('.boot-subtitle').textContent='Tap anywhere to start'; $('.boot-bar').hidden=true;
-    $('#boot').onclick=()=>location.reload();
+
+  function shutdown() {
+    for (const id of [...state.windows.keys()]) closeWindow(id);
+    $('#desktop').hidden = true;
+    $('#auth-screen').hidden = true;
+    $('#boot').hidden = false;
+    $('.boot-title').textContent = 'PocketVM is off';
+    $('.boot-subtitle').textContent = 'Tap anywhere to start';
+    $('.boot-bar').hidden = true;
+    $('#boot').onclick = () => location.reload();
   }
-  function lock(){ $('#lock-screen').hidden=false; }
 
-  $$('[data-open]').forEach(b=>b.addEventListener('click',()=>{openApp(b.dataset.open);$('#start-menu').hidden=true;$('#start-btn').classList.remove('active');}));
-  $('#start-about').addEventListener('click',()=>{openApp('about');$('#start-menu').hidden=true;});
-  $('#start-btn').addEventListener('click',e=>{e.stopPropagation();const m=$('#start-menu');m.hidden=!m.hidden;$('#start-btn').classList.toggle('active',!m.hidden);});
-  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#start-menu')&&!e.target.closest('#start-btn')){$('#start-menu').hidden=true;$('#start-btn').classList.remove('active');}});
-  $('#lock-btn').addEventListener('click',lock); $('#unlock-btn').addEventListener('click',()=>$('#lock-screen').hidden=true); $('#restart-btn').addEventListener('click',()=>location.reload());
-  $('#kbd-btn').addEventListener('click',()=>{const active=$('.window.focused .term-input'); if(active)active.focus(); else {const i=$('#mobile-keyboard');i.value='';i.focus();}});
-  updateClock(); setInterval(updateClock,1000);
+  function lock() {
+    showAuthScreen(state.auth ? 'login' : 'setup');
+  }
 
-  window.addEventListener('resize',()=>{ for(const w of state.windows.values()){ if(w.maximized)continue; const r=w.el.getBoundingClientRect(); if(r.left>innerWidth-100)w.el.style.left=`${innerWidth-100}px`; if(r.top>innerHeight-100)w.el.style.top=`${innerHeight-100}px`; } });
+  $$('[data-open]').forEach(b => b.addEventListener('click', () => {
+    openApp(b.dataset.open);
+    $('#start-menu').hidden = true;
+    $('#start-btn').classList.remove('active');
+  }));
+  $('#start-about').addEventListener('click', () => {
+    openApp('about');
+    $('#start-menu').hidden = true;
+  });
+  $('#start-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    const m = $('#start-menu');
+    m.hidden = !m.hidden;
+    $('#start-btn').classList.toggle('active', !m.hidden);
+  });
+  document.addEventListener('pointerdown', e => {
+    if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
+      $('#start-menu').hidden = true;
+      $('#start-btn').classList.remove('active');
+    }
+  });
+  $('#lock-btn').addEventListener('click', lock);
+  $('#restart-btn').addEventListener('click', () => location.reload());
+  $('#kbd-btn').addEventListener('click', () => {
+    const activeTerminal = $('.window.focused .term-input');
+    const activeEditor = $('.window.focused .editor-area');
+    if (activeTerminal) activeTerminal.focus();
+    else if (activeEditor) activeEditor.focus();
+    else {
+      const i = $('#mobile-keyboard');
+      i.value = '';
+      i.focus();
+    }
+  });
 
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  updateClock();
+  setInterval(updateClock, 1000);
+  renderUserChrome();
 
-  setTimeout(()=>{
-    $('#boot').hidden=true; $('#desktop').hidden=false;
-    openApp('terminal');
+  window.addEventListener('resize', () => {
+    for (const w of state.windows.values()) {
+      if (w.maximized) continue;
+      const r = w.el.getBoundingClientRect();
+      if (r.left > innerWidth - 100) w.el.style.left = `${innerWidth - 100}px`;
+      if (r.top > innerHeight - 100) w.el.style.top = `${innerHeight - 100}px`;
+    }
+  });
+
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  setTimeout(() => {
+    $('#boot').hidden = true;
+    $('#desktop').hidden = true;
+    applyWallpaper();
+    renderUserChrome();
+    showAuthScreen(state.auth ? 'login' : 'setup');
+    // The terminal intentionally never opens automatically.
   }, 900);
 })();

@@ -9,8 +9,8 @@
   <meta name="apple-mobile-web-app-title" content="PocketVM" />
   <title>PocketVM</title>
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -22,7 +22,7 @@
   </div>
 
   <main id="desktop" class="desktop" aria-label="PocketVM desktop" hidden>
-    <div class="desktop-wallpaper" aria-hidden="true"></div>
+    <div id="desktop-wallpaper" class="desktop-wallpaper" aria-hidden="true"></div>
     <div id="desktop-icons" class="desktop-icons">
       <button class="desktop-icon" data-open="terminal"><span class="desktop-glyph">›_</span><span>Terminal</span></button>
       <button class="desktop-icon" data-open="files"><span class="desktop-glyph">▤</span><span>Files</span></button>
@@ -35,8 +35,8 @@
 
     <div id="start-menu" class="start-menu" hidden>
       <div class="start-head">
-        <div class="avatar">PC</div>
-        <div><strong>Guest</strong><small>PocketVM local session</small></div>
+        <div id="start-avatar" class="avatar">G</div>
+        <div><strong id="start-user-name">Guest</strong><small>Local PocketVM account</small></div>
       </div>
       <div class="start-grid">
         <button data-open="terminal"><span>›_</span>Terminal</button>
@@ -62,10 +62,16 @@
     <input id="mobile-keyboard" class="mobile-keyboard" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" />
   </main>
 
-  <div id="lock-screen" class="lock-screen" hidden>
-    <div class="lock-time" id="lock-time">--:--</div>
-    <div class="lock-date" id="lock-date">---</div>
-    <button id="unlock-btn">Tap to unlock</button>
+  <div id="auth-screen" class="auth-screen" hidden>
+    <div class="auth-wallpaper" aria-hidden="true"></div>
+    <div class="auth-clock">
+      <div class="auth-time" id="auth-time">--:--</div>
+      <div class="auth-date" id="auth-date">---</div>
+    </div>
+    <section class="auth-card" aria-live="polite">
+      <div id="auth-avatar" class="avatar auth-avatar">G</div>
+      <div id="auth-content" class="auth-content"></div>
+    </section>
   </div>
 
   <template id="window-template">
