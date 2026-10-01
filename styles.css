@@ -446,3 +446,196 @@ button, .file-card { touch-action: manipulation; }
   .auth-clock,.auth-brand { display:none; }
   .auth-card { width:min(500px,100%); padding:26px; }
 }
+
+
+/* ---------- Pocket Browser ---------- */
+.web-browser {
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  background:#0b111c;
+  color:var(--text);
+}
+.web-tabbar {
+  min-height:43px;
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+  padding:6px 8px 0;
+  background:#0b111b;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.web-tabs {
+  min-width:0;
+  flex:1;
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.web-tabs::-webkit-scrollbar { display:none; }
+.web-tab {
+  flex:0 1 210px;
+  min-width:116px;
+  max-width:240px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  border:1px solid transparent;
+  border-bottom:0;
+  border-radius:11px 11px 0 0;
+  background:rgba(255,255,255,.035);
+  color:#aebdd3;
+  overflow:hidden;
+}
+.web-tab.active {
+  background:#151f2e;
+  border-color:rgba(255,255,255,.09);
+  color:#f5f8ff;
+}
+.web-tab-main {
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 6px 0 11px;
+  border:0;
+  background:transparent;
+  color:inherit;
+}
+.web-tab-icon { color:#7fc2ff; font-size:13px; flex:0 0 auto; }
+.web-tab-title {
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:11px;
+  text-align:left;
+}
+.web-tab-close {
+  width:30px;
+  height:30px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#8190a7;
+}
+.web-tab-close:hover, .web-tab-close:active { background:rgba(255,255,255,.09); color:white; }
+.web-icon-btn {
+  flex:0 0 auto;
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#d8e2f2;
+  font-size:17px;
+}
+.web-icon-btn:hover, .web-icon-btn:active { background:rgba(255,255,255,.075); }
+.web-icon-btn:disabled { opacity:.28; }
+.web-new-tab { margin-bottom:1px; color:#b7c8df; }
+.web-nav {
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:8px 10px;
+  background:#151f2e;
+  border-bottom:1px solid rgba(255,255,255,.085);
+}
+.web-address-form {
+  height:38px;
+  min-width:0;
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding-left:11px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:12px;
+  background:#0a111d;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.web-address-form:focus-within {
+  border-color:color-mix(in srgb,var(--accent) 65%,white 5%);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%,transparent);
+}
+.web-site-mark {
+  color:#76c1ff;
+  font-size:13px;
+  opacity:.9;
+}
+.web-address-input {
+  flex:1;
+  min-width:0;
+  height:100%;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#eef5ff;
+  font-size:12px;
+}
+.web-address-input::placeholder { color:#708099; }
+.web-go {
+  align-self:stretch;
+  min-width:48px;
+  border:0;
+  border-left:1px solid rgba(255,255,255,.08);
+  border-radius:0 11px 11px 0;
+  background:rgba(255,255,255,.045);
+  color:#c6d8ee;
+  font-size:11px;
+  font-weight:700;
+}
+.web-go:hover { background:rgba(255,255,255,.085); }
+.web-status {
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:#0e1623;
+  color:#899ab1;
+  font-size:10px;
+}
+.web-status-dot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#5ee7c4;
+  box-shadow:0 0 9px rgba(94,231,196,.5);
+}
+.web-status-spacer { flex:1; }
+.web-status-hint {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#66778f;
+}
+.web-viewport {
+  position:relative;
+  flex:1;
+  min-height:0;
+  background:white;
+}
+.web-frame {
+  width:100%;
+  height:100%;
+  display:block;
+  border:0;
+  background:white;
+}
+@media (max-width:620px) {
+  .web-nav { gap:2px; padding:7px 6px; }
+  .web-icon-btn { width:33px; height:34px; }
+  .web-nav [data-web-forward] { display:none; }
+  .web-address-form { height:36px; }
+  .web-status-hint { display:none; }
+  .web-tab { flex-basis:170px; }
+}
