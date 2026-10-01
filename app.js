@@ -1137,9 +1137,9 @@
   function renderSetupScreen() {
     const content = $('#auth-content');
     content.innerHTML = `
-      <div class="auth-kicker">Welcome to PocketVM</div>
-      <h1>Create your local account</h1>
-      <p class="auth-copy">This is the first sign-in on this browser. Pick a name and create a password.</p>
+      <div class="auth-kicker"><span class="auth-kicker-dot"></span>First-time setup</div>
+      <h1>Make PocketVM yours</h1>
+      <p class="auth-copy">Create a local profile for this device. Choose a name and a password to get started.</p>
       <form id="setup-form" class="auth-form">
         <label>Name<input id="setup-name" class="auth-input" maxlength="32" autocomplete="name" value="${escapeHTML(state.user.name === 'Guest' ? '' : state.user.name)}" placeholder="Your name" /></label>
         <label>Password<input id="setup-password" class="auth-input" type="password" minlength="4" autocomplete="new-password" placeholder="At least 4 characters" /></label>
@@ -1147,8 +1147,9 @@
         <div class="auth-message" aria-live="polite"></div>
         <button class="auth-primary" type="submit">Create account</button>
       </form>
-      <p class="auth-note">Your account stays on this device in browser storage. It is not an online account.</p>`;
+      <p class="auth-note">Stored only on this device. PocketVM never sends this account to a server.</p>`;
     paintAvatar($('#auth-avatar'));
+    if (!state.user.avatar && (!state.user.name || state.user.name === 'Guest')) $('#auth-avatar').textContent = 'PV';
     const form = $('#setup-form');
     const msg = $('.auth-message', form);
     setTimeout(() => $('#setup-name')?.focus(), 0);
@@ -1187,9 +1188,9 @@
     clearExpiredLockout();
     const content = $('#auth-content');
     content.innerHTML = `
-      <div class="auth-kicker">PocketVM</div>
+      <div class="auth-kicker"><span class="auth-kicker-dot"></span>Welcome back</div>
       <h1 id="auth-user-name">${escapeHTML(state.user.name || 'Guest')}</h1>
-      <p class="auth-copy">Enter your password to continue.</p>
+      <p class="auth-copy">Enter your password to unlock your PocketVM.</p>
       <form id="login-form" class="auth-form">
         <label>Password<input id="login-password" class="auth-input" type="password" autocomplete="current-password" placeholder="Password" /></label>
         <div class="auth-message" aria-live="polite"></div>
