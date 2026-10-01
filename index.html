@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PocketVM" />
+  <title>PocketVM</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="boot" class="boot-screen" aria-live="polite">
+    <div class="boot-logo">PV</div>
+    <div class="boot-title">PocketVM</div>
+    <div class="boot-subtitle">Browser computer for iPad</div>
+    <div class="boot-bar"><span></span></div>
+  </div>
+
+  <main id="desktop" class="desktop" aria-label="PocketVM desktop" hidden>
+    <div class="desktop-wallpaper" aria-hidden="true"></div>
+    <div id="desktop-icons" class="desktop-icons">
+      <button class="desktop-icon" data-open="terminal"><span class="desktop-glyph">›_</span><span>Terminal</span></button>
+      <button class="desktop-icon" data-open="files"><span class="desktop-glyph">▤</span><span>Files</span></button>
+      <button class="desktop-icon" data-open="notes"><span class="desktop-glyph">✎</span><span>Notes</span></button>
+      <button class="desktop-icon" data-open="monitor"><span class="desktop-glyph">⌁</span><span>System</span></button>
+      <button class="desktop-icon" data-open="settings"><span class="desktop-glyph">⚙</span><span>Settings</span></button>
+    </div>
+
+    <section id="window-layer" class="window-layer" aria-live="polite"></section>
+
+    <div id="start-menu" class="start-menu" hidden>
+      <div class="start-head">
+        <div class="avatar">PC</div>
+        <div><strong>Guest</strong><small>PocketVM local session</small></div>
+      </div>
+      <div class="start-grid">
+        <button data-open="terminal"><span>›_</span>Terminal</button>
+        <button data-open="files"><span>▤</span>Files</button>
+        <button data-open="notes"><span>✎</span>Notes</button>
+        <button data-open="monitor"><span>⌁</span>System</button>
+        <button data-open="settings"><span>⚙</span>Settings</button>
+        <button id="start-about"><span>ⓘ</span>About</button>
+      </div>
+      <div class="start-foot">
+        <button id="lock-btn">Lock</button>
+        <button id="restart-btn">Restart</button>
+      </div>
+    </div>
+
+    <footer class="taskbar">
+      <button id="start-btn" class="start-btn" aria-label="Start menu"><span>◈</span></button>
+      <div id="taskbar-apps" class="taskbar-apps"></div>
+      <button id="kbd-btn" class="tray-btn" aria-label="Show keyboard">⌨</button>
+      <div class="clock-wrap"><span id="clock">--:--</span><span id="date">----</span></div>
+    </footer>
+
+    <input id="mobile-keyboard" class="mobile-keyboard" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" />
+  </main>
+
+  <div id="lock-screen" class="lock-screen" hidden>
+    <div class="lock-time" id="lock-time">--:--</div>
+    <div class="lock-date" id="lock-date">---</div>
+    <button id="unlock-btn">Tap to unlock</button>
+  </div>
+
+  <template id="window-template">
+    <article class="window" role="dialog">
+      <header class="titlebar">
+        <div class="window-title"><span class="window-icon"></span><span class="window-name"></span></div>
+        <div class="window-actions">
+          <button data-action="minimize" aria-label="Minimize">—</button>
+          <button data-action="maximize" aria-label="Maximize">□</button>
+          <button data-action="close" class="close" aria-label="Close">×</button>
+        </div>
+      </header>
+      <div class="window-content"></div>
+      <div class="resize-handle" aria-hidden="true"></div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
