@@ -13,15 +13,8 @@ PocketVM is a touch-first browser desktop designed to feel at home on iPad. It i
 - `curl.exe ascii.live/rick` and `curl.exe ascii.live/parrot` built-in browser-safe animations
 - Responsive layout for iPad, phones and desktop browsers
 
-## Deploy to GitHub Pages
-
-1. Create a new GitHub repository.
-2. Upload every file in this folder, keeping the `icons/` folder.
-3. In GitHub: **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Pick `main` and `/ (root)`, then save.
-6. Open the Pages URL in Safari on iPad.
-7. Optional: Safari **Share → Add to Home Screen** for an app-like full-screen launch.
+## Use
+***The link is***: https://phillycheese704.github.io/PocketVM-Cheese/
 
 ## Terminal quick start
 
