@@ -727,7 +727,7 @@
   // ---------- Pocket Browser ----------
   function buildWebBrowser(win) {
     setWindowTitle(win, 'Pocket Browser', '◎');
-    win.content.innerHTML = \`
+    win.content.innerHTML = `
       <div class="web-browser">
         <div class="web-tabbar">
           <div class="web-tabs" role="tablist" aria-label="Browser tabs"></div>
@@ -754,7 +754,7 @@
         <div class="web-viewport">
           <iframe class="web-frame" title="Pocket Browser page"></iframe>
         </div>
-      </div>\`;
+      </div>`;
 
     const frame = $('.web-frame', win.el);
     const tabsEl = $('.web-tabs', win.el);
@@ -770,7 +770,7 @@
 
     const activeTab = () => tabs.find(t => t.id === activeId);
 
-    const homePage = () => \`<!doctype html>
+    const homePage = () => `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 :root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
@@ -792,17 +792,17 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 <p>Browse the web, search from the address bar, or open your own PocketVM HTML files with <b>local://filename.html</b>.</p>
 <div class="pills"><span class="pill">Private local shell</span><span class="pill">Tab history</span><span class="pill">Local HTML support</span></div>
 <div class="card"><strong>About embedded websites</strong><span>Pocket Browser runs inside PocketVM, so websites that forbid iframe embedding may refuse to display. If that happens, use the ↗ button in the toolbar to open the current page directly in Safari.</span></div>
-</main></body></html>\`;
+</main></body></html>`;
 
-    const errorPage = (title, detail) => \`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    const errorPage = (title, detail) => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}body{margin:0;min-height:100vh;background:#0a101b;color:#edf4ff;display:grid;place-items:center;padding:28px}.box{width:min(520px,100%);padding:28px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:rgba(255,255,255,.045)}h1{margin:0 0 8px;font-size:24px}p{margin:0;color:#9aacC4;line-height:1.55}</style>
-</head><body><div class="box"><h1>\${escapeHTML(title)}</h1><p>\${escapeHTML(detail)}</p></div></body></html>\`;
+</head><body><div class="box"><h1>${escapeHTML(title)}</h1><p>${escapeHTML(detail)}</p></div></body></html>`;
 
     function normalizeInput(raw) {
       const value = String(raw || '').trim();
       if (!value || value.toLowerCase() === 'pocket://home') return { kind:'home', url:'pocket://home' };
-      if (/^local:\\/\\//i.test(value)) return { kind:'local', url:value };
-      if (/^https?:\\/\\//i.test(value)) {
+      if (/^local:\/\//i.test(value)) return { kind:'local', url:value };
+      if (/^https?:\/\//i.test(value)) {
         try {
           const u = new URL(value);
           if (u.protocol === 'http:') u.protocol = 'https:';
@@ -812,7 +812,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
         return { kind:'error', url:value, message:'Pocket Browser only allows http://, https://, pocket:// and local:// addresses.' };
       }
-      if (/\\s/.test(value) || !value.includes('.')) {
+      if (/\s/.test(value) || !value.includes('.')) {
         return { kind:'web', url:'https://www.google.com/search?igu=1&q=' + encodeURIComponent(value), search:true };
       }
       try {
@@ -823,7 +823,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     }
 
     function localPathFromURL(value) {
-      let raw = value.replace(/^local:\\/\\//i, '').replace(/^\\/+/, '');
+      let raw = value.replace(/^local:\/\//i, '').replace(/^\/+/, '');
       try { raw = decodeURIComponent(raw); } catch {}
       if (!raw) return null;
       if (raw.startsWith('home/user/')) return norm('/' + raw);
@@ -842,7 +842,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         const wrap = document.createElement('div');
         wrap.className = 'web-tab' + (tab.id === activeId ? ' active' : '');
         wrap.dataset.tabId = tab.id;
-        wrap.innerHTML = \`<button class="web-tab-main" type="button"><span class="web-tab-icon">◎</span><span class="web-tab-title">\${escapeHTML(tab.title || 'New tab')}</span></button><button class="web-tab-close" type="button" aria-label="Close tab">×</button>\`;
+        wrap.innerHTML = `<button class="web-tab-main" type="button"><span class="web-tab-icon">◎</span><span class="web-tab-title">${escapeHTML(tab.title || 'New tab')}</span></button><button class="web-tab-close" type="button" aria-label="Close tab">×</button>`;
         $('.web-tab-main', wrap).addEventListener('click', () => switchTab(tab.id));
         $('.web-tab-close', wrap).addEventListener('click', e => {
           e.stopPropagation();
@@ -876,7 +876,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       const path = localPathFromURL(url);
       const node = path && state.fs[path];
       tab.kind = 'local';
-      if (!node || node.type !== 'file' || !/\\.html$/i.test(path)) {
+      if (!node || node.type !== 'file' || !/\.html$/i.test(path)) {
         tab.title = 'File not found';
         frame.removeAttribute('src');
         frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
@@ -895,7 +895,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     function showWeb(tab, url) {
       tab.kind = 'web';
       tab.title = (() => {
-        try { return new URL(url).hostname.replace(/^www\\./, '') || 'Web'; }
+        try { return new URL(url).hostname.replace(/^www\./, '') || 'Web'; }
         catch { return 'Web'; }
       })();
       frame.removeAttribute('srcdoc');
@@ -1150,7 +1150,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       bind('pref-seconds','clockSeconds');
     }
 
-    function renderUser() {    function renderUser() {
+    function renderUser() {
       page.innerHTML = pageHead('User', 'Create a local profile for this PocketVM installation.') + `
         <div class="user-card">
           <div class="settings-avatar avatar"></div>
