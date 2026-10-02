@@ -1,39 +1,39 @@
-# PocketVM
+# PocketVM 2.0
 
-PocketVM is a touch-first browser desktop designed for iPad and static hosting on GitHub Pages. Everything runs client-side.
+PocketVM is a touch-first browser PC designed for iPad and static hosting on GitHub Pages. Everything runs client-side.
 
 ## Use
 
 **Live site:** https://phillycheese704.github.io/PocketVM-Cheese/
 
-## PocketVM 1.2
+## 2.0 highlights
 
-- Local account setup on first launch
-- Password login on every launch / lock
-- Passwords stored as salted PBKDF2 hashes when Web Crypto is available
-- Three wrong password attempts trigger a 60-second lockout
-- **Forgot password?** opens a simple local puzzle that unlocks the desktop
-- Settings → Password requires the current password before changing it
-- User profile name and profile picture remain local
-- Built-in and custom-uploaded wallpapers
-- Empty personal Files area supporting `.txt` and `.html`
-- HTML files can be edited and run in a sandboxed preview
-- Terminal does not open automatically
-- Terminal has exactly one command: `null.user`
-- `null.user` calls `localStorage.clear()` and reloads PocketVM, deleting the local account, files, profile, wallpaper, settings and any other PocketVM local-storage data for this origin
+- Windows-style desktop with draggable, resizable, minimizable and maximizable windows
+- Window snapping with drag-to-edge and keyboard shortcuts
+- Start menu app search, pinned taskbar apps and Show Desktop
+- Quick Settings, notification centre, toast notifications and calendar flyout
+- Desktop right-click menu for new files/folders and display settings
+- Pocket Browser with tabs, navigation, search/address bar and local:// HTML pages
+- Files supports folders, .txt/.html creation, importing, renaming and downloading
+- Sandboxed runnable HTML files
+- Calculator with mouse/touch and hardware keyboard support
+- System Monitor using browser-exposed device, storage, network, FPS and running-app information
+- Settings for accents, transparency, animations, taskbar placement, clock seconds, user profile, password and wallpaper
+- Local account login and password recovery puzzle
 - Installable PWA with offline caching
-
-> **Security note:** PocketVM is a browser project, not an operating-system security boundary. The password screen is useful for casual local privacy, but anyone with access to browser developer tools or site data may be able to modify client-side state. The recovery puzzle is intentionally easy and is not strong identity verification.
+- Terminal remains intentionally minimal and does not auto-open
 
 ## Terminal
 
-PocketVM 1.2 deliberately resets the shell command set. The only accepted command is:
+The terminal still has exactly one accepted command:
 
 ```text
 null.user
 ```
 
-That command erases all `localStorage` for the PocketVM site and reloads to first-time account setup.
+It clears PocketVM's localStorage and reloads to first-time account setup.
+
+> PocketVM is a browser desktop, not a hardware virtual machine or OS security boundary. Website embedding is also subject to each site's iframe/security policy.
 
 ## License
 

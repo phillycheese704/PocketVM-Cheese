@@ -38,6 +38,10 @@
     auth: loadJSON('pocketvm.auth', null),
     user: loadJSON('pocketvm.user', { name: 'Guest', avatar: '' }),
     wallpaper: loadJSON('pocketvm.wallpaper', { type: 'preset', value: 'aurora', dataUrl: '' }),
+    preferences: loadJSON('pocketvm.preferences', { transparency:true, animations:true, taskbarCentered:false, clockSeconds:false, focusMode:false }),
+    notifications: loadJSON('pocketvm.notifications', []),
+    browserData: loadJSON('pocketvm.browser', { bookmarks:[], history:[] }),
+    bootedAt: Date.now(),
     fs: initialFS
   };
 
@@ -71,6 +75,14 @@
     localStorage.setItem('pocketvm.theme', name);
     document.documentElement.style.setProperty('--accent', t[0]);
     document.documentElement.style.setProperty('--accent-2', t[1]);
+  }
+
+  function applyPreferences() {
+    const p = state.preferences || {};
+    document.body.classList.toggle('solid-ui', p.transparency === false);
+    document.body.classList.toggle('reduce-motion', p.animations === false);
+    document.body.classList.toggle('center-taskbar', p.taskbarCentered === true);
+    saveJSON('pocketvm.preferences', p);
   }
 
   function applyWallpaper() {
@@ -120,6 +132,7 @@
   }
 
   applyTheme(state.theme);
+  applyPreferences();
 
   function persistFS() {
     return saveJSON('pocketvm.fs', state.fs);
@@ -167,7 +180,8 @@
 
   const apps = {
     terminal: { name: 'Terminal', icon: '›_', width: 790, height: 500, singleton: false, build: buildTerminal },
-    files: { name: 'Files', icon: '▤', width: 790, height: 520, singleton: true, build: buildFiles },
+    files: { name: 'Files', icon: '▤', width: 860, height: 560, singleton: true, build: buildFiles },
+    calculator: { name: 'Calculator', icon: '＋', width: 380, height: 560, singleton: true, build: buildCalculator },
     notes: { name: 'Notes', icon: '✎', width: 680, height: 480, singleton: true, build: buildNotes },
     editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: buildEditor },
     preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: buildPreview },
@@ -239,9 +253,10 @@
         el.style.left = `${clamp(left + ev.clientX - startX, -el.offsetWidth + 120, maxX)}px`;
         el.style.top = `${clamp(top + ev.clientY - startY, 0, maxY)}px`;
       };
-      const up = () => {
+      const up = ev => {
         bar.removeEventListener('pointermove', move);
         bar.removeEventListener('pointerup', up);
+        maybeSnapWindow(win, ev);
       };
       bar.addEventListener('pointermove', move);
       bar.addEventListener('pointerup', up);
@@ -420,8 +435,11 @@
           <div class="files-toolbar">
             <div class="files-path"></div>
             <span class="files-spacer"></span>
+            <button class="soft-btn" data-new-folder>+ Folder</button>
             <button class="soft-btn" data-new="txt">+ Text</button>
             <button class="soft-btn" data-new="html">+ HTML</button>
+            <button class="soft-btn" data-import>Import</button>
+            <input class="hidden-file-input" id="files-import" type="file" accept=".txt,.html,text/plain,text/html" multiple />
           </div>
           <div class="file-grid"></div>
         </div>
@@ -431,7 +449,38 @@
       current = '/home/user';
       render();
     });
-    $$('[data-new]', win.el).forEach(btn => btn.addEventListener('click', () => showCreateDialog(btn.dataset.new)));
+    $('[data-new]', win.el).forEach(btn => btn.addEventListener('click', () => showCreateDialog(btn.dataset.new)));
+
+    $('[data-new-folder]', win.el)?.addEventListener('click', () => {
+      let name = prompt('Folder name');
+      if (!name) return;
+      name = name.trim().replace(/[\\/:*?"<>|]/g, '').slice(0, 48);
+      if (!name) return;
+      const p = norm(name, current);
+      if (state.fs[p]) { alert('That name already exists.'); return; }
+      state.fs[p] = { type:'dir', createdAt:Date.now() };
+      persistFS();
+      render();
+      notify('Folder created', name, '📁');
+    });
+
+    $('[data-import]', win.el)?.addEventListener('click', () => $('#files-import', win.el)?.click());
+    $('#files-import', win.el)?.addEventListener('change', async e => {
+      const list = [...(e.target.files || [])];
+      let added = 0;
+      for (const file of list) {
+        if (!/\.(txt|html)$/i.test(file.name)) continue;
+        const name = file.name.replace(/[\\/:*?"<>|]/g, '').slice(0, 80);
+        const p = norm(name, current);
+        if (state.fs[p]) continue;
+        state.fs[p] = { type:'file', content:await file.text(), createdAt:Date.now(), modifiedAt:Date.now() };
+        added++;
+      }
+      persistFS();
+      render();
+      if (added) notify('Files imported', added + ' file' + (added === 1 ? '' : 's') + ' added.', '↓');
+      e.target.value = '';
+    });
 
     function render() {
       if (!state.fs[current] || state.fs[current].type !== 'dir') current = '/home/user';
@@ -470,12 +519,43 @@
           </button>
           <div class="file-mini-actions">
             ${node.type === 'file' && /\.html$/i.test(p) ? '<button class="file-run" title="Run HTML">▶</button>' : ''}
+            <button class="file-rename" title="Rename">✎</button>
+            ${node.type === 'file' ? '<button class="file-download" title="Download">↓</button>' : ''}
             <button class="file-delete" title="Delete">×</button>
           </div>`;
         $('.file-card', card).addEventListener('click', () => openItem(p));
         $('.file-run', card)?.addEventListener('click', e => {
           e.stopPropagation();
           openApp('preview', { file:p });
+        });
+        $('.file-rename', card)?.addEventListener('click', e => {
+          e.stopPropagation();
+          let next = prompt('Rename', basename(p));
+          if (!next) return;
+          next = next.trim().replace(/[\\/:*?"<>|]/g, '').slice(0, 80);
+          if (!next) return;
+          if (node.type === 'file' && !allowedFileName(next)) {
+            alert('PocketVM currently supports .txt and .html files.');
+            return;
+          }
+          const target = norm(next, parentPath(p));
+          if (target !== p && state.fs[target]) { alert('That name already exists.'); return; }
+          const moves = Object.keys(state.fs).filter(k => k === p || k.startsWith(p + '/')).sort((a,b) => a.length - b.length);
+          const replacements = moves.map(old => [old, target + old.slice(p.length), state.fs[old]]);
+          moves.sort((a,b) => b.length-a.length).forEach(old => delete state.fs[old]);
+          replacements.forEach(([old,n,val]) => state.fs[n] = val);
+          persistFS();
+          render();
+          notify('Renamed', basename(p) + ' → ' + next, '✎');
+        });
+        $('.file-download', card)?.addEventListener('click', e => {
+          e.stopPropagation();
+          if (node.type !== 'file') return;
+          const blob = new Blob([node.content || ''], { type:/\.html$/i.test(p) ? 'text/html' : 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = basename(p); document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
         });
         $('.file-delete', card).addEventListener('click', e => {
           e.stopPropagation();
@@ -545,7 +625,7 @@
           error.textContent = 'A file with that name already exists.';
           return;
         }
-        state.fs[p] = { type:'file', content: kind === 'html' ? htmlStarter(name) : '' };
+        state.fs[p] = { type:'file', content: kind === 'html' ? htmlStarter(name) : '', createdAt:Date.now(), modifiedAt:Date.now() };
         persistFS();
         overlay.remove();
         render();
@@ -591,7 +671,7 @@
     const save = () => {
       clearTimeout(timer);
       if (!state.fs[file]) return;
-      state.fs[file] = { type:'file', content:area.value };
+      state.fs[file] = { ...state.fs[file], type:'file', content:area.value, modifiedAt:Date.now() };
       if (persistFS()) status.textContent = 'Saved';
       else status.textContent = 'Save failed';
     };
@@ -943,59 +1023,66 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
   // ---------- System monitor ----------
   function buildMonitor(win) {
-    win.content.innerHTML = `<div class="app-pad"><h2 style="margin-top:0">System Monitor</h2><p style="color:var(--muted)">Live browser-session stats. Values are illustrative where browsers don't expose hardware data.</p><div class="monitor-grid"></div></div>`;
-    const grid = $('.monitor-grid', win.el);
-    const cards = [['CPU','cpu','%'], ['Memory','mem','%'], ['FPS','fps',''], ['Storage','storage',' KB']];
-    cards.forEach(([title, key, unit]) => {
-      const d = document.createElement('div');
-      d.className = 'metric';
-      d.dataset.metric = key;
-      d.innerHTML = `<small>${title}</small><strong>--${unit}</strong><div class="spark"></div>`;
-      grid.appendChild(d);
-    });
+    setWindowTitle(win, 'System Monitor', '⌁');
+    win.content.innerHTML = `
+      <div class="system-monitor-v2">
+        <div class="sys-hero"><div><span class="sys-eyebrow">POCKETVM SYSTEM</span><h2>System Monitor</h2><p>Live information the browser can actually expose.</p></div><div class="sys-live"><i></i> Live</div></div>
+        <div class="system-cards">
+          <div class="system-card"><span>Frame rate</span><strong data-sys="fps">--</strong><small>rendering FPS</small></div>
+          <div class="system-card"><span>Storage</span><strong data-sys="storage">--</strong><small data-sys-sub="storage">local browser data</small></div>
+          <div class="system-card"><span>Windows</span><strong data-sys="windows">0</strong><small>open PocketVM windows</small></div>
+          <div class="system-card"><span>Network</span><strong data-sys="network">--</strong><small data-sys-sub="network">browser connection</small></div>
+        </div>
+        <div class="system-panels">
+          <div class="system-panel"><h3>Device</h3><div class="system-list" data-device-list></div></div>
+          <div class="system-panel"><h3>Running apps</h3><div class="process-list" data-process-list></div></div>
+        </div>
+      </div>`;
 
-    let last = performance.now(), frames = 0, fps = 60, alive = true;
-    const tick = () => {
-      if (!alive) return;
-      frames++;
-      const now = performance.now();
-      if (now - last > 800) {
-        fps = Math.round(frames * 1000 / (now - last));
-        frames = 0;
-        last = now;
-      }
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
+    let alive=true, frames=0, last=performance.now(), fps=60;
+    const raf=()=>{ if(!alive)return; frames++; const now=performance.now(); if(now-last>=900){fps=Math.round(frames*1000/(now-last));frames=0;last=now;} requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
 
-    const interval = setInterval(() => {
-      const usage = Math.round(18 + Math.random() * 34);
-      const mem = Math.round(30 + Math.random() * 28);
-      let storageBytes = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i) || '';
-        storageBytes += key.length + (localStorage.getItem(key) || '').length;
-      }
-      const kb = Math.round(storageBytes * 2 / 1024);
-      const vals = { cpu:[usage,'%'], mem:[mem,'%'], fps:[fps,''], storage:[kb,' KB'] };
-      for (const [k, [v, u]] of Object.entries(vals)) {
-        const c = $(`[data-metric="${k}"]`, win.el);
-        if (!c) continue;
-        $('strong', c).textContent = `${v}${u}`;
-        const spark = $('.spark', c);
-        const i = document.createElement('i');
-        i.style.height = `${clamp(v, 8, 100)}%`;
-        spark.appendChild(i);
-        while (spark.children.length > 18) spark.firstChild.remove();
-      }
-    }, 700);
-    win.cleanup = () => {
-      alive = false;
-      clearInterval(interval);
+    const formatBytes=n=>n>=1024*1024 ? (n/1024/1024).toFixed(1)+' MB' : n>=1024 ? Math.round(n/1024)+' KB' : n+' B';
+    const refresh=async()=>{
+      if(!alive)return;
+      $('[data-sys="fps"]',win.el).textContent=String(fps);
+      $('[data-sys="windows"]',win.el).textContent=String(state.windows.size);
+      $('[data-sys="network"]',win.el).textContent=navigator.onLine?'Online':'Offline';
+      $('[data-sys-sub="network"]',win.el).textContent=(navigator.connection?.effectiveType || 'connection') + (navigator.connection?.downlink ? ' · '+navigator.connection.downlink+' Mbps' : '');
+
+      let used=0, quota=0;
+      try { const est=await navigator.storage?.estimate?.(); used=est?.usage||0; quota=est?.quota||0; } catch {}
+      if(!used){ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i)||''; used += (k.length+(localStorage.getItem(k)||'').length)*2; } }
+      $('[data-sys="storage"]',win.el).textContent=formatBytes(used);
+      $('[data-sys-sub="storage"]',win.el).textContent=quota ? 'of '+formatBytes(quota)+' browser quota' : 'local browser data';
+
+      const device=$('[data-device-list]',win.el);
+      device.innerHTML='';
+      const rows=[
+        ['Platform', navigator.userAgentData?.platform || navigator.platform || 'Browser'],
+        ['CPU threads', navigator.hardwareConcurrency || 'Not exposed'],
+        ['Device memory', navigator.deviceMemory ? navigator.deviceMemory+' GB' : 'Not exposed'],
+        ['Viewport', innerWidth+' × '+innerHeight],
+        ['Language', navigator.language || '—'],
+        ['Uptime', formatUptime(Date.now()-state.bootedAt)]
+      ];
+      rows.forEach(([a,b])=>{const d=document.createElement('div');d.innerHTML='<span>'+escapeHTML(a)+'</span><strong>'+escapeHTML(String(b))+'</strong>';device.appendChild(d);});
+
+      const processes=$('[data-process-list]',win.el);
+      processes.innerHTML='';
+      [...state.windows.values()].forEach(w=>{const d=document.createElement('div');d.className='process-row';d.innerHTML='<span class="process-icon">'+escapeHTML(apps[w.appId]?.icon||'◇')+'</span><span class="process-name">'+escapeHTML(apps[w.appId]?.name||w.appId)+'</span><small>'+ (w.el.classList.contains('minimized')?'Suspended':'Running') +'</small>'; processes.appendChild(d);});
     };
+    const interval=setInterval(refresh,1000); refresh();
+    win.cleanup=()=>{alive=false;clearInterval(interval);};
   }
 
-  // ---------- Settings ----------
+  function formatUptime(ms) {
+    const total=Math.floor(ms/1000), h=Math.floor(total/3600), m=Math.floor((total%3600)/60), s=total%60;
+    return h ? h+'h '+m+'m' : m ? m+'m '+s+'s' : s+'s';
+  }
+
+  // ---------- Settings ----------  // ---------- Settings ----------
   function buildSettings(win) {
     win.content.innerHTML = `
       <div class="settings-shell">
@@ -1005,6 +1092,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           <button data-settings-tab="password"><span>●</span>Password</button>
           <button data-settings-tab="wallpaper"><span>▧</span>Wallpaper</button>
           <button data-settings-tab="storage"><span>◫</span>Storage</button>
+          <button data-settings-tab="system"><span>⌘</span>System</button>
         </aside>
         <section class="settings-page"></section>
       </div>`;
@@ -1026,6 +1114,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (active === 'password') renderPassword();
       if (active === 'wallpaper') renderWallpaper();
       if (active === 'storage') renderStorage();
+      if (active === 'system') renderSystem();
     }
 
     function pageHead(title, subtitle) {
@@ -1033,12 +1122,16 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     }
 
     function renderAppearance() {
-      page.innerHTML = pageHead('Appearance', 'Choose the accent used across PocketVM.') + `
+      page.innerHTML = pageHead('Appearance', 'Make the desktop feel like your PC.') + `
         <div class="setting-group">
           <div class="setting-row stack-on-small">
-            <div><strong>Accent colour</strong><small>Changes windows, buttons and highlights.</small></div>
+            <div><strong>Accent colour</strong><small>Changes windows, controls and highlights.</small></div>
             <div class="swatches"></div>
           </div>
+          <div class="setting-row"><div><strong>Transparency</strong><small>Glass effects on windows and menus.</small></div><label class="switch"><input id="pref-transparency" type="checkbox" ${state.preferences.transparency !== false ? 'checked' : ''}><span></span></label></div>
+          <div class="setting-row"><div><strong>Animations</strong><small>Window and menu motion.</small></div><label class="switch"><input id="pref-animations" type="checkbox" ${state.preferences.animations !== false ? 'checked' : ''}><span></span></label></div>
+          <div class="setting-row"><div><strong>Centered taskbar</strong><small>Place pinned apps nearer the middle.</small></div><label class="switch"><input id="pref-centered" type="checkbox" ${state.preferences.taskbarCentered ? 'checked' : ''}><span></span></label></div>
+          <div class="setting-row"><div><strong>Seconds in clock</strong><small>Show seconds in the taskbar clock.</small></div><label class="switch"><input id="pref-seconds" type="checkbox" ${state.preferences.clockSeconds ? 'checked' : ''}><span></span></label></div>
           <div class="setting-row"><div><strong>Install as app</strong><small>Safari → Share → Add to Home Screen</small></div><span>↗</span></div>
         </div>`;
       const sw = $('.swatches', page);
@@ -1047,15 +1140,17 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         b.className = `swatch ${state.theme === name ? 'selected' : ''}`;
         b.title = name;
         b.style.background = `linear-gradient(135deg,${c[0]},${c[1]})`;
-        b.addEventListener('click', () => {
-          applyTheme(name);
-          renderAppearance();
-        });
+        b.addEventListener('click', () => { applyTheme(name); renderAppearance(); });
         sw.appendChild(b);
       });
+      const bind=(id,key)=>$('#'+id,page)?.addEventListener('change',e=>{state.preferences[key]=e.target.checked;applyPreferences();notify('Setting changed',key.replace(/([A-Z])/g,' $1'),'⚙');});
+      bind('pref-transparency','transparency');
+      bind('pref-animations','animations');
+      bind('pref-centered','taskbarCentered');
+      bind('pref-seconds','clockSeconds');
     }
 
-    function renderUser() {
+    function renderUser() {    function renderUser() {
       page.innerHTML = pageHead('User', 'Create a local profile for this PocketVM installation.') + `
         <div class="user-card">
           <div class="settings-avatar avatar"></div>
@@ -1214,6 +1309,24 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         applyWallpaper();
         renderWallpaper();
       });
+    }
+
+    function renderSystem() {
+      const standalone=matchMedia('(display-mode: standalone)').matches;
+      page.innerHTML = pageHead('System', 'PocketVM device information and useful shortcuts.') + `
+        <div class="setting-group">
+          <div class="setting-row"><div><strong>PocketVM version</strong><small>Current web desktop release.</small></div><strong>2.0</strong></div>
+          <div class="setting-row"><div><strong>App mode</strong><small>Whether PocketVM is running from the Home Screen.</small></div><strong>${standalone?'Installed':'Browser tab'}</strong></div>
+          <div class="setting-row"><div><strong>Connection</strong><small>Current browser network state.</small></div><strong>${navigator.onLine?'Online':'Offline'}</strong></div>
+        </div>
+        <div class="shortcut-card"><h3>Keyboard shortcuts</h3>
+          <div><kbd>⌘/Ctrl</kbd><kbd>E</kbd><span>Files</span></div>
+          <div><kbd>⌘/Ctrl</kbd><kbd>B</kbd><span>Browser</span></div>
+          <div><kbd>⌘/Ctrl</kbd><kbd>L</kbd><span>Lock PocketVM</span></div>
+          <div><kbd>⌘/Ctrl</kbd><kbd>D</kbd><span>Show desktop</span></div>
+          <div><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Esc</kbd><span>System Monitor</span></div>
+          <div><kbd>⌘/Ctrl</kbd><kbd>← / →</kbd><span>Snap focused window</span></div>
+        </div>`;
     }
 
     function renderStorage() {
@@ -1602,13 +1715,216 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   }
 
   function buildAbout(win) {
-    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 1.2</h2><p>A touch-first browser computer built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM is a virtual desktop/shell rather than hardware virtualization. It runs fully client-side and works offline after the first load.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>Ready</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Account + files</span><strong>localStorage</strong></div><div class="setting-row"><span>HTML preview</span><strong>Sandboxed</strong></div><div class="setting-row"><span>PWA</span><strong>Enabled</strong></div></div></div>`;
+    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.0</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM now includes a windowed desktop, snapping, taskbar flyouts, Files, Browser, Calculator, notifications and local accounts. It remains fully client-side.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.0</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Files</span><strong>.txt / .html + folders</strong></div><div class="setting-row"><span>Browser</span><strong>Tabs + local pages</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
   }
 
-  // ---------- Shell ----------
+  // ---------- PocketVM 2.0 desktop layer ----------
+  function buildCalculator(win) {
+    setWindowTitle(win, 'Calculator', '＋');
+    win.content.innerHTML = '<div class="calculator-app"><div class="calc-mode">STANDARD</div><div class="calc-display"><div class="calc-expression"></div><div class="calc-value">0</div></div><div class="calc-grid"></div></div>';
+    const valueEl=$('.calc-value',win.el), exprEl=$('.calc-expression',win.el), grid=$('.calc-grid',win.el);
+    let expr='';
+    const keys=['C','⌫','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','±','0','.','='];
+    keys.forEach(k=>{const b=document.createElement('button');b.textContent=k;b.dataset.calc=k;if('÷×−+='.includes(k))b.classList.add('op');if(k==='=')b.classList.add('equals');grid.appendChild(b);});
+    const render=()=>{exprEl.textContent=expr||'';valueEl.textContent=expr||'0';};
+    const evaluate=()=>{
+      if(!expr)return;
+      try{
+        const safe=expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/%/g,'/100');
+        if(!/^[0-9+\-*/().\s]+$/.test(safe)) throw 0;
+        const result=Function('"use strict";return ('+safe+')')();
+        if(!Number.isFinite(result))throw 0;
+        expr=String(Math.round((result+Number.EPSILON)*1e12)/1e12);
+        exprEl.textContent='= '+expr; valueEl.textContent=expr;
+      }catch{valueEl.textContent='Error';}
+    };
+    const press=k=>{
+      if(k==='C'){expr='';render();return;}
+      if(k==='⌫'){expr=expr.slice(0,-1);render();return;}
+      if(k==='='){evaluate();return;}
+      if(k==='±'){expr=expr? (expr.startsWith('-')?expr.slice(1):'-'+expr):'';render();return;}
+      expr+=k;render();
+    };
+    grid.addEventListener('click',e=>{const b=e.target.closest('[data-calc]');if(b)press(b.dataset.calc);});
+    const keydown=e=>{
+      if(!win.el.classList.contains('focused'))return;
+      const map={Enter:'=',Escape:'C',Backspace:'⌫','*':'×','/':'÷','-':'−'};
+      const k=map[e.key]||e.key;
+      if(/^[0-9.]$/.test(k)||['+','−','×','÷','%','=','C','⌫'].includes(k)){e.preventDefault();press(k);}
+    };
+    document.addEventListener('keydown',keydown);
+    win.cleanup=()=>document.removeEventListener('keydown',keydown);
+  }
+
+  function notify(title, body='', icon='◇') {
+    const item={id:Date.now()+Math.random(),title:String(title),body:String(body),icon:String(icon),time:Date.now()};
+    state.notifications.unshift(item);
+    state.notifications=state.notifications.slice(0,30);
+    saveJSON('pocketvm.notifications',state.notifications);
+    updateNotificationBadge();
+    renderNotificationCenter();
+    if(state.preferences.focusMode)return;
+    const layer=$('#toast-layer'); if(!layer)return;
+    const toast=document.createElement('div'); toast.className='toast';
+    toast.innerHTML='<span class="toast-icon">'+escapeHTML(item.icon)+'</span><div><strong>'+escapeHTML(item.title)+'</strong><p>'+escapeHTML(item.body)+'</p></div><button aria-label="Dismiss">×</button>';
+    $('button',toast).addEventListener('click',()=>toast.remove());
+    layer.appendChild(toast);
+    requestAnimationFrame(()=>toast.classList.add('show'));
+    setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>toast.remove(),250);},4200);
+  }
+
+  function updateNotificationBadge(){
+    const b=$('#notify-btn'); if(!b)return;
+    const n=state.notifications.length;
+    b.textContent=n? (n>9?'9+':String(n)) : '○';
+    b.classList.toggle('has-notifications',n>0);
+  }
+
+  function renderNotificationCenter(){
+    const panel=$('#notification-center'); if(!panel)return;
+    panel.innerHTML='<div class="flyout-head"><div><strong>Notifications</strong><small>'+state.notifications.length+' saved locally</small></div><button data-clear-notifications>Clear</button></div><div class="notification-list"></div>';
+    const list=$('.notification-list',panel);
+    if(!state.notifications.length) list.innerHTML='<div class="empty-notifications"><span>✓</span><strong>You’re all caught up</strong><small>No notifications right now.</small></div>';
+    state.notifications.forEach(n=>{const d=document.createElement('div');d.className='notification-item';d.innerHTML='<span>'+escapeHTML(n.icon)+'</span><div><strong>'+escapeHTML(n.title)+'</strong><p>'+escapeHTML(n.body)+'</p><small>'+new Date(n.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</small></div>';list.appendChild(d);});
+    $('[data-clear-notifications]',panel)?.addEventListener('click',()=>{state.notifications=[];saveJSON('pocketvm.notifications',state.notifications);updateNotificationBadge();renderNotificationCenter();});
+  }
+
+  function renderCalendar(){
+    const panel=$('#calendar-panel'); if(!panel)return;
+    const now=new Date(), y=now.getFullYear(), m=now.getMonth();
+    const first=new Date(y,m,1), start=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
+    let cells='';
+    for(let i=0;i<start;i++)cells+='<span></span>';
+    for(let d=1;d<=days;d++)cells+='<button class="'+(d===now.getDate()?'today':'')+'">'+d+'</button>';
+    panel.innerHTML='<div class="calendar-hero"><strong>'+now.toLocaleDateString([],{weekday:'long'})+'</strong><span>'+now.toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'})+'</span></div><div class="calendar-month"><h3>'+now.toLocaleDateString([],{month:'long',year:'numeric'})+'</h3><div class="calendar-week"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="calendar-grid">'+cells+'</div></div>';
+  }
+
+  function renderQuickSettings(){
+    const p=$('#quick-panel'); if(!p)return;
+    p.innerHTML='<div class="quick-top"><strong>Quick settings</strong><span>'+escapeHTML(navigator.onLine?'Online':'Offline')+'</span></div><div class="quick-grid">'+
+      '<button class="quick-tile '+(navigator.onLine?'active':'')+'" data-quick="network"><span>⌁</span><strong>Network</strong><small>'+(navigator.onLine?'Connected':'Offline')+'</small></button>'+
+      '<button class="quick-tile '+(state.preferences.focusMode?'active':'')+'" data-quick="focus"><span>◐</span><strong>Focus</strong><small>'+(state.preferences.focusMode?'On':'Off')+'</small></button>'+
+      '<button class="quick-tile '+(state.preferences.transparency!==false?'active':'')+'" data-quick="glass"><span>◇</span><strong>Glass</strong><small>'+(state.preferences.transparency!==false?'On':'Off')+'</small></button>'+
+      '<button class="quick-tile" data-quick="fullscreen"><span>⛶</span><strong>Full screen</strong><small>Display</small></button></div>'+
+      '<div class="quick-footer"><button data-open-settings>⚙ Open Settings</button><span>'+escapeHTML(state.user.name||'Guest')+'</span></div>';
+    $('[data-quick="focus"]',p)?.addEventListener('click',()=>{state.preferences.focusMode=!state.preferences.focusMode;applyPreferences();renderQuickSettings();});
+    $('[data-quick="glass"]',p)?.addEventListener('click',()=>{state.preferences.transparency=state.preferences.transparency===false;applyPreferences();renderQuickSettings();});
+    $('[data-quick="fullscreen"]',p)?.addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen?.();}catch{}});
+    $('[data-open-settings]',p)?.addEventListener('click',()=>{p.hidden=true;openApp('settings');});
+  }
+
+  function hideShellFlyouts(except=null){
+    ['#quick-panel','#calendar-panel','#notification-center'].forEach(sel=>{const el=$(sel);if(el&&el!==except)el.hidden=true;});
+  }
+
+  function toggleFlyout(el){
+    if(!el)return;
+    const opening=el.hidden;
+    hideShellFlyouts(el);
+    el.hidden=!opening;
+  }
+
+  function showDesktop(){
+    const visible=[...state.windows.values()].filter(w=>!w.el.classList.contains('minimized'));
+    if(visible.length){visible.forEach(w=>minimizeWindow(w.id));}
+    else [...state.windows.values()].forEach(w=>restoreWindow(w.id));
+  }
+
+  function focusedWindow(){ return [...state.windows.values()].find(w=>w.el.classList.contains('focused')); }
+
+  function snapWindow(win,zone){
+    if(!win)return;
+    if(win.maximized)unmaximizeWindow(win.id);
+    const gap=8, task=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--taskbar-h'))||60;
+    const h=innerHeight-task-gap*2, half=(innerWidth-gap*3)/2;
+    win.el.classList.remove('maximized');
+    win.maximized=false;
+    win.el.style.transform='none';
+    win.el.style.top=gap+'px';
+    win.el.style.height=h+'px';
+    if(zone==='left'){win.el.style.left=gap+'px';win.el.style.width=half+'px';}
+    else if(zone==='right'){win.el.style.left=(half+gap*2)+'px';win.el.style.width=half+'px';}
+    else if(zone==='full'){maximizeWindow(win.id);}
+  }
+
+  function maybeSnapWindow(win,ev){
+    if(!ev||innerWidth<700)return;
+    $('#snap-preview').hidden=true;
+    if(ev.clientY<=18){snapWindow(win,'full');return;}
+    if(ev.clientX<=18){snapWindow(win,'left');return;}
+    if(ev.clientX>=innerWidth-18){snapWindow(win,'right');}
+  }
+
+  function createDesktopItem(kind){
+    let name=prompt(kind==='dir'?'Folder name':kind==='html'?'HTML file name':'Text file name');
+    if(!name)return;
+    name=name.trim().replace(/[\\/:*?"<>|]/g,'').slice(0,80);
+    if(!name)return;
+    if(kind==='txt'&&!/\.txt$/i.test(name))name+='.txt';
+    if(kind==='html'&&!/\.html$/i.test(name))name+='.html';
+    const p=norm(name,'/home/user');
+    if(state.fs[p]){alert('That name already exists.');return;}
+    if(kind==='dir')state.fs[p]={type:'dir',createdAt:Date.now()};
+    else state.fs[p]={type:'file',content:kind==='html'?htmlStarter(name):'',createdAt:Date.now(),modifiedAt:Date.now()};
+    persistFS();
+    notify(kind==='dir'?'Folder created':'File created',name,kind==='dir'?'📁':'📄');
+    if(kind!=='dir')openApp('editor',{file:p}); else openApp('files',{path:'/home/user'});
+  }
+
+  function renderDesktopContext(x,y){
+    const menu=$('#desktop-context'); if(!menu)return;
+    menu.innerHTML='<button data-dctx="txt"><span>📄</span>New text file</button><button data-dctx="html"><span>🌐</span>New HTML file</button><button data-dctx="dir"><span>📁</span>New folder</button><hr><button data-dctx="files"><span>▤</span>Open Files</button><button data-dctx="settings"><span>⚙</span>Display settings</button><button data-dctx="refresh"><span>↻</span>Refresh</button>';
+    menu.style.left=Math.min(x,innerWidth-220)+'px'; menu.style.top=Math.min(y,innerHeight-300)+'px'; menu.hidden=false;
+    menu.querySelectorAll('[data-dctx]').forEach(b=>b.addEventListener('click',()=>{menu.hidden=true;const a=b.dataset.dctx;if(['txt','html','dir'].includes(a))createDesktopItem(a);if(a==='files')openApp('files');if(a==='settings')openApp('settings');if(a==='refresh')applyWallpaper();}));
+  }
+
+  function initDesktopExperience(){
+    renderQuickSettings(); renderCalendar(); renderNotificationCenter(); updateNotificationBadge();
+    $('#quick-btn')?.addEventListener('click',e=>{e.stopPropagation();renderQuickSettings();toggleFlyout($('#quick-panel'));});
+    $('#clock-btn')?.addEventListener('click',e=>{e.stopPropagation();renderCalendar();toggleFlyout($('#calendar-panel'));});
+    $('#notify-btn')?.addEventListener('click',e=>{e.stopPropagation();renderNotificationCenter();toggleFlyout($('#notification-center'));});
+    $('#show-desktop-btn')?.addEventListener('click',showDesktop);
+    $('#shutdown-btn')?.addEventListener('click',shutdown);
+
+    const search=$('#start-search-input');
+    search?.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();$('.start-grid button').forEach(b=>b.hidden=q&&!b.textContent.toLowerCase().includes(q));});
+    search?.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('.start-grid button').find(x=>!x.hidden);if(b)b.click();}});
+
+    $('#desktop')?.addEventListener('contextmenu',e=>{if(e.target.closest('.window,.taskbar,.start-menu,.shell-flyout'))return;e.preventDefault();renderDesktopContext(e.clientX,e.clientY);});
+    document.addEventListener('pointerdown',e=>{
+      if(!e.target.closest('#desktop-context'))$('#desktop-context').hidden=true;
+      if(!e.target.closest('.shell-flyout,#quick-btn,#clock-btn,#notify-btn'))hideShellFlyouts();
+    });
+
+    window.addEventListener('online',()=>{renderQuickSettings();notify('You’re online','Network connection restored.','⌁');});
+    window.addEventListener('offline',()=>{renderQuickSettings();notify('You’re offline','PocketVM can still use cached apps and local files.','⌁');});
+
+    document.addEventListener('keydown',e=>{
+      const mod=e.metaKey||e.ctrlKey;
+      if(e.key==='Escape'){hideShellFlyouts();$('#desktop-context').hidden=true;return;}
+      if(e.altKey&&e.key==='F4'){const w=focusedWindow();if(w){e.preventDefault();closeWindow(w.id);}return;}
+      if(e.ctrlKey&&e.shiftKey&&e.key==='Escape'){e.preventDefault();openApp('monitor');return;}
+      if(!mod)return;
+      const k=e.key.toLowerCase();
+      if(k==='e'){e.preventDefault();openApp('files');}
+      else if(k==='b'){e.preventDefault();openApp('browser');}
+      else if(k==='d'){e.preventDefault();showDesktop();}
+      else if(k==='l'){e.preventDefault();lock();}
+      else if(k===' '){e.preventDefault();$('#start-btn')?.click();setTimeout(()=>$('#start-search-input')?.focus(),0);}
+      else if(e.key==='ArrowLeft'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'left');}}
+      else if(e.key==='ArrowRight'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'right');}}
+      else if(e.key==='ArrowUp'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'full');}}
+    });
+
+    setTimeout(()=>notify('Welcome to PocketVM 2.0','Desktop upgrades are ready. Right-click the desktop or try the taskbar controls.','PV'),1500);
+  }
+
+
+
+  // ---------- Shell ----------  // ---------- Shell ----------
   function updateClock() {
     const d = new Date();
-    const t = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    const t = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', ...(state.preferences.clockSeconds ? {second:'2-digit'} : {}) });
     const ds = d.toLocaleDateString([], { day:'2-digit', month:'short' });
     $('#clock').textContent = t;
     $('#date').textContent = ds;
@@ -1666,6 +1982,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     }
   });
 
+  initDesktopExperience();
   updateClock();
   setInterval(updateClock, 1000);
   renderUserChrome();

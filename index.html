@@ -27,6 +27,7 @@
       <button class="desktop-icon" data-open="browser"><span class="desktop-glyph">◎</span><span>Browser</span></button>
       <button class="desktop-icon" data-open="terminal"><span class="desktop-glyph">›_</span><span>Terminal</span></button>
       <button class="desktop-icon" data-open="files"><span class="desktop-glyph">▤</span><span>Files</span></button>
+      <button class="desktop-icon" data-open="calculator"><span class="desktop-glyph">＋</span><span>Calculator</span></button>
       <button class="desktop-icon" data-open="notes"><span class="desktop-glyph">✎</span><span>Notes</span></button>
       <button class="desktop-icon" data-open="monitor"><span class="desktop-glyph">⌁</span><span>System</span></button>
       <button class="desktop-icon" data-open="settings"><span class="desktop-glyph">⚙</span><span>Settings</span></button>
@@ -35,6 +36,7 @@
     <section id="window-layer" class="window-layer" aria-live="polite"></section>
 
     <div id="start-menu" class="start-menu" hidden>
+      <div class="start-search"><span>⌕</span><input id="start-search-input" type="search" autocomplete="off" placeholder="Search apps" aria-label="Search apps" /></div>
       <div class="start-head">
         <div id="start-avatar" class="avatar">G</div>
         <div><strong id="start-user-name">Guest</strong><small>Local PocketVM account</small></div>
@@ -43,6 +45,7 @@
         <button data-open="browser"><span>◎</span>Browser</button>
         <button data-open="terminal"><span>›_</span>Terminal</button>
         <button data-open="files"><span>▤</span>Files</button>
+        <button data-open="calculator"><span>＋</span>Calculator</button>
         <button data-open="notes"><span>✎</span>Notes</button>
         <button data-open="monitor"><span>⌁</span>System</button>
         <button data-open="settings"><span>⚙</span>Settings</button>
@@ -51,15 +54,27 @@
       <div class="start-foot">
         <button id="lock-btn">Lock</button>
         <button id="restart-btn">Restart</button>
+        <button id="shutdown-btn">Shut down</button>
       </div>
     </div>
 
     <footer class="taskbar">
       <button id="start-btn" class="start-btn" aria-label="Start menu"><span>◈</span></button>
+      <div class="task-pins"><button class="task-pin" data-open="browser" title="Browser">◎</button><button class="task-pin" data-open="files" title="Files">▤</button><button class="task-pin" data-open="calculator" title="Calculator">＋</button></div>
       <div id="taskbar-apps" class="taskbar-apps"></div>
       <button id="kbd-btn" class="tray-btn" aria-label="Show keyboard">⌨</button>
-      <div class="clock-wrap"><span id="clock">--:--</span><span id="date">----</span></div>
+      <button id="quick-btn" class="tray-btn" aria-label="Quick settings">⌁</button>
+      <button id="notify-btn" class="tray-btn notify-btn" aria-label="Notifications">○</button>
+      <button id="clock-btn" class="clock-wrap" aria-label="Calendar"><span id="clock">--:--</span><span id="date">----</span></button>
+      <button id="show-desktop-btn" class="show-desktop-btn" aria-label="Show desktop" title="Show desktop"></button>
     </footer>
+
+    <div id="quick-panel" class="shell-flyout quick-panel" hidden></div>
+    <div id="calendar-panel" class="shell-flyout calendar-panel" hidden></div>
+    <div id="notification-center" class="shell-flyout notification-center" hidden></div>
+    <div id="desktop-context" class="desktop-context" hidden></div>
+    <div id="snap-preview" class="snap-preview" hidden></div>
+    <div id="toast-layer" class="toast-layer" aria-live="polite"></div>
 
     <input id="mobile-keyboard" class="mobile-keyboard" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" />
   </main>
