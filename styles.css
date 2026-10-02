@@ -795,3 +795,22 @@ button { cursor:default; }
   .system-cards{grid-template-columns:1fr 1fr}
   .toast-layer{right:7px;width:calc(100vw - 14px)}
 }
+
+
+/* PocketVM 2.0 browser polish */
+.web-bookmarks { min-height:31px;display:flex;align-items:center;gap:5px;padding:4px 9px;overflow-x:auto;background:#111a28;border-bottom:1px solid rgba(255,255,255,.065);scrollbar-width:none; }
+.web-bookmarks::-webkit-scrollbar{display:none}
+.web-bookmarks button { flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:0;border-radius:7px;background:transparent;color:#aabbd1;font-size:10px;padding:5px 8px; }
+.web-bookmarks button:hover{background:rgba(255,255,255,.075);color:white}
+.web-bookmarks-empty{color:#60728b;font-size:9px;padding-left:4px}
+.web-browser-panel{position:absolute;z-index:7;right:10px;top:132px;width:min(370px,calc(100% - 20px));max-height:55%;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(13,20,34,.98);box-shadow:0 20px 65px rgba(0,0,0,.46);color:var(--text)}
+.web-panel-head{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--line)}
+.web-panel-head strong{font-size:12px}.web-panel-head button{width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:#8294ad;font-size:18px}
+.web-panel-list{max-height:320px;overflow:auto;padding:7px}
+.web-panel-row{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px;border:0;border-radius:9px;background:transparent;color:var(--text);text-align:left}
+.web-panel-row:hover{background:rgba(255,255,255,.07)}
+.web-panel-row span{font-size:11px}.web-panel-row small{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#72849c;font-size:9px}
+.web-panel-empty{padding:28px;text-align:center;color:#7688a0;font-size:11px}
+.web-viewport{isolation:isolate}
+.file-mini-actions{gap:2px}.file-mini-actions button{width:22px;padding:0;font-size:10px}
+.snap-preview{transition:all .08s ease}

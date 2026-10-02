@@ -252,6 +252,7 @@
         const maxY = innerHeight - 100;
         el.style.left = `${clamp(left + ev.clientX - startX, -el.offsetWidth + 120, maxX)}px`;
         el.style.top = `${clamp(top + ev.clientY - startY, 0, maxY)}px`;
+        updateSnapPreview(ev);
       };
       const up = ev => {
         bar.removeEventListener('pointermove', move);
@@ -743,6 +744,8 @@
             <input class="web-address-input" type="text" inputmode="url" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Address or search" placeholder="Search or enter address" />
             <button class="web-go" type="submit">Go</button>
           </form>
+          <button class="web-icon-btn" data-web-bookmark type="button" title="Bookmark" aria-label="Bookmark">☆</button>
+          <button class="web-icon-btn" data-web-history type="button" title="History" aria-label="History">☷</button>
           <button class="web-icon-btn" data-web-external type="button" title="Open outside PocketVM" aria-label="Open outside PocketVM">↗</button>
         </div>
         <div class="web-status">
@@ -751,6 +754,8 @@
           <span class="web-status-spacer"></span>
           <span class="web-status-hint">Some websites block embedded browsers · use ↗ if needed</span>
         </div>
+        <div class="web-bookmarks"></div>
+        <div class="web-browser-panel" hidden></div>
         <div class="web-viewport">
           <iframe class="web-frame" title="Pocket Browser page"></iframe>
         </div>
@@ -763,12 +768,59 @@
     const backBtn = $('[data-web-back]', win.el);
     const forwardBtn = $('[data-web-forward]', win.el);
     const externalBtn = $('[data-web-external]', win.el);
+    const bookmarkBtn = $('[data-web-bookmark]', win.el);
+    const historyBtn = $('[data-web-history]', win.el);
+    const bookmarksBar = $('.web-bookmarks', win.el);
+    const browserPanel = $('.web-browser-panel', win.el);
 
     let tabCounter = 0;
     let activeId = '';
     const tabs = [];
 
     const activeTab = () => tabs.find(t => t.id === activeId);
+
+    function saveBrowserData() {
+      state.browserData.bookmarks = (state.browserData.bookmarks || []).slice(0, 16);
+      state.browserData.history = (state.browserData.history || []).slice(0, 60);
+      saveJSON('pocketvm.browser', state.browserData);
+    }
+
+    function bookmarkLabel(url) {
+      if (/^local:\/\//i.test(url)) return url.replace(/^local:\/\//i,'');
+      try { return new URL(url).hostname.replace(/^www\./,'') || url; } catch { return url; }
+    }
+
+    function renderBookmarksBar() {
+      bookmarksBar.innerHTML = '';
+      const items = state.browserData.bookmarks || [];
+      if (!items.length) {
+        bookmarksBar.innerHTML = '<span class="web-bookmarks-empty">☆ Bookmark pages to keep them here</span>';
+      } else {
+        items.forEach(item => {
+          const b=document.createElement('button');
+          b.type='button'; b.textContent=bookmarkLabel(item.url); b.title=item.url;
+          b.addEventListener('click',()=>navigate(item.url,true));
+          bookmarksBar.appendChild(b);
+        });
+      }
+      const tab=activeTab();
+      bookmarkBtn.textContent = tab && items.some(x=>x.url===tab.url) ? '★' : '☆';
+    }
+
+    function renderBrowserPanel(type) {
+      browserPanel.hidden=false;
+      const source=type==='history' ? (state.browserData.history||[]) : (state.browserData.bookmarks||[]);
+      browserPanel.innerHTML='<div class="web-panel-head"><strong>'+(type==='history'?'History':'Bookmarks')+'</strong><button type="button" data-web-panel-close>×</button></div><div class="web-panel-list"></div>';
+      const list=$('.web-panel-list',browserPanel);
+      if(!source.length) list.innerHTML='<div class="web-panel-empty">Nothing here yet.</div>';
+      source.forEach(item=>{
+        const row=document.createElement('button');row.type='button';row.className='web-panel-row';
+        row.innerHTML='<span>'+escapeHTML(bookmarkLabel(item.url))+'</span><small>'+escapeHTML(item.url)+'</small>';
+        row.addEventListener('click',()=>{browserPanel.hidden=true;navigate(item.url,true);});
+        list.appendChild(row);
+      });
+      $('[data-web-panel-close]',browserPanel)?.addEventListener('click',()=>browserPanel.hidden=true);
+    }
 
     const homePage = () => `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -860,6 +912,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       forwardBtn.disabled = tab.index >= tab.history.length - 1;
       externalBtn.disabled = tab.kind === 'home' || tab.kind === 'error';
       renderTabs();
+      renderBookmarksBar();
       setWindowTitle(win, (tab.title || 'New tab') + ' — Pocket Browser', '◎');
     }
 
@@ -909,7 +962,13 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (!tab) return;
       const target = normalizeInput(raw);
       tab.url = target.url;
-      if (push) addHistory(tab, target.url);
+      if (push) {
+        addHistory(tab, target.url);
+        if (target.kind === 'web' || target.kind === 'local') {
+          state.browserData.history = [{url:target.url,time:Date.now()}, ...(state.browserData.history||[]).filter(x=>x.url!==target.url)].slice(0,60);
+          saveBrowserData();
+        }
+      }
 
       if (target.kind === 'home') showHome(tab);
       else if (target.kind === 'local') showLocal(tab, target.url);
@@ -979,6 +1038,16 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       tab.url = tab.history[tab.index];
       navigate(tab.url, false);
     });
+    bookmarkBtn.addEventListener('click', () => {
+      const tab=activeTab(); if(!tab || tab.kind==='home' || tab.kind==='error') return;
+      const items=state.browserData.bookmarks||[];
+      const i=items.findIndex(x=>x.url===tab.url);
+      if(i>=0){items.splice(i,1);notify('Bookmark removed',bookmarkLabel(tab.url),'☆');}
+      else{items.unshift({url:tab.url,time:Date.now()});notify('Bookmarked',bookmarkLabel(tab.url),'★');}
+      state.browserData.bookmarks=items;saveBrowserData();renderBookmarksBar();
+    });
+    historyBtn.addEventListener('click',()=>renderBrowserPanel('history'));
+
     externalBtn.addEventListener('click', () => {
       const tab = activeTab();
       if (!tab) return;
@@ -994,6 +1063,20 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (tab?.kind === 'web') status.textContent = 'Loaded · if the page is blocked, use ↗';
     });
 
+    const browserKeys=e=>{
+      if(!win.el.classList.contains('focused'))return;
+      const mod=e.metaKey||e.ctrlKey;
+      if(!mod)return;
+      const k=e.key.toLowerCase();
+      if(k==='l'){e.preventDefault();address.focus();address.select();}
+      else if(k==='t'){e.preventDefault();createTab();}
+      else if(k==='w'){e.preventDefault();const t=activeTab();if(t)closeTab(t.id);}
+      else if(k==='r'){e.preventDefault();const t=activeTab();if(t)navigate(t.url,false);}
+    };
+    document.addEventListener('keydown',browserKeys);
+    win.cleanup=()=>document.removeEventListener('keydown',browserKeys);
+
+    renderBookmarksBar();
     createTab();
   }
 
@@ -1322,7 +1405,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         <div class="shortcut-card"><h3>Keyboard shortcuts</h3>
           <div><kbd>⌘/Ctrl</kbd><kbd>E</kbd><span>Files</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>B</kbd><span>Browser</span></div>
-          <div><kbd>⌘/Ctrl</kbd><kbd>L</kbd><span>Lock PocketVM</span></div>
+          <div><kbd>⌘/Ctrl</kbd><kbd>Alt</kbd><kbd>L</kbd><span>Lock PocketVM</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>D</kbd><span>Show desktop</span></div>
           <div><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Esc</kbd><span>System Monitor</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>← / →</kbd><span>Snap focused window</span></div>
@@ -1847,6 +1930,16 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     else if(zone==='full'){maximizeWindow(win.id);}
   }
 
+  function updateSnapPreview(ev){
+    const p=$('#snap-preview'); if(!p || !ev || innerWidth<700)return;
+    const task=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--taskbar-h'))||60;
+    const gap=8, h=innerHeight-task-gap*2, half=(innerWidth-gap*3)/2;
+    if(ev.clientY<=22){p.hidden=false;Object.assign(p.style,{left:gap+'px',top:gap+'px',width:(innerWidth-gap*2)+'px',height:h+'px'});}
+    else if(ev.clientX<=22){p.hidden=false;Object.assign(p.style,{left:gap+'px',top:gap+'px',width:half+'px',height:h+'px'});}
+    else if(ev.clientX>=innerWidth-22){p.hidden=false;Object.assign(p.style,{left:(half+gap*2)+'px',top:gap+'px',width:half+'px',height:h+'px'});}
+    else p.hidden=true;
+  }
+
   function maybeSnapWindow(win,ev){
     if(!ev||innerWidth<700)return;
     $('#snap-preview').hidden=true;
@@ -1891,6 +1984,15 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     search?.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('.start-grid button').find(x=>!x.hidden);if(b)b.click();}});
 
     $('#desktop')?.addEventListener('contextmenu',e=>{if(e.target.closest('.window,.taskbar,.start-menu,.shell-flyout'))return;e.preventDefault();renderDesktopContext(e.clientX,e.clientY);});
+    let desktopHoldTimer=null;
+    $('#desktop')?.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='touch' || e.target.closest('.window,.taskbar,.desktop-icon,.start-menu,.shell-flyout'))return;
+      desktopHoldTimer=setTimeout(()=>{renderDesktopContext(e.clientX,e.clientY);navigator.vibrate?.(20);},650);
+    });
+    const cancelDesktopHold=()=>{clearTimeout(desktopHoldTimer);desktopHoldTimer=null;};
+    $('#desktop')?.addEventListener('pointerup',cancelDesktopHold);
+    $('#desktop')?.addEventListener('pointermove',cancelDesktopHold);
+    $('#desktop')?.addEventListener('pointercancel',cancelDesktopHold);
     document.addEventListener('pointerdown',e=>{
       if(!e.target.closest('#desktop-context'))$('#desktop-context').hidden=true;
       if(!e.target.closest('.shell-flyout,#quick-btn,#clock-btn,#notify-btn'))hideShellFlyouts();
@@ -1909,14 +2011,14 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if(k==='e'){e.preventDefault();openApp('files');}
       else if(k==='b'){e.preventDefault();openApp('browser');}
       else if(k==='d'){e.preventDefault();showDesktop();}
-      else if(k==='l'){e.preventDefault();lock();}
+      else if(k==='l'&&e.altKey){e.preventDefault();lock();}
       else if(k===' '){e.preventDefault();$('#start-btn')?.click();setTimeout(()=>$('#start-search-input')?.focus(),0);}
       else if(e.key==='ArrowLeft'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'left');}}
       else if(e.key==='ArrowRight'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'right');}}
       else if(e.key==='ArrowUp'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'full');}}
     });
 
-    setTimeout(()=>notify('Welcome to PocketVM 2.0','Desktop upgrades are ready. Right-click the desktop or try the taskbar controls.','PV'),1500);
+    if(!localStorage.getItem('pocketvm.welcome2')) setTimeout(()=>{notify('Welcome to PocketVM 2.0','Desktop upgrades are ready. Long-press/right-click the desktop or try the taskbar controls.','PV');localStorage.setItem('pocketvm.welcome2','1');},1500);
   }
 
 
