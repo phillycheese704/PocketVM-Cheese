@@ -239,11 +239,21 @@
   }
 
   function fileAppContext() {
-    return { state, queryOne: $, queryAll: $, escapeHTML, norm, parentPath, basename, children, openApp, notify, refreshFS, setWallpaperFromFile, setWindowTitle };
+    return {
+      state,
+      queryOne: (selector, root = document) => root.querySelector(selector),
+      queryAll: (selector, root = document) => Array.from(root.querySelectorAll(selector)),
+      escapeHTML, norm, parentPath, basename, children, openApp, notify, refreshFS, setWallpaperFromFile, setWindowTitle
+    };
   }
 
   function systemAppContext() {
-    return { state, queryOne: $, queryAll: $, escapeHTML, openApp, closeWindow, setWindowTitle, formatUptime, apps };
+    return {
+      state,
+      queryOne: (selector, root = document) => root.querySelector(selector),
+      queryAll: (selector, root = document) => Array.from(root.querySelectorAll(selector)),
+      escapeHTML, openApp, closeWindow, setWindowTitle, formatUptime, apps
+    };
   }
 
   const apps = {
