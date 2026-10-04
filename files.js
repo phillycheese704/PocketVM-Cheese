@@ -68,6 +68,8 @@
     let holdTimer = null;
     let holdTriggered = false;
     let suppressNextClick = false;
+    let holdX = 0;
+    let holdY = 0;
 
     ctx.setWindowTitle(win, 'Files', '▤');
     win.content.innerHTML =
@@ -85,6 +87,7 @@
         '</aside>' +
         '<section class="files-workspace">' +
           '<div class="files-commandbar">' +
+            '<button class="file-command icon-only files-nav-toggle" data-files-nav title="Folders">☰</button>' +
             '<button class="file-command icon-only" data-files-back title="Back">←</button>' +
             '<button class="file-command icon-only" data-files-up title="Up">↑</button>' +
             '<span class="command-sep"></span>' +
@@ -274,14 +277,14 @@
         entry.addEventListener('pointerdown', event => {
           if (event.pointerType !== 'touch') return;
           holdTriggered = false;
-          const x = event.clientX;
-          const y = event.clientY;
+          holdX = event.clientX;
+          holdY = event.clientY;
           holdTimer = setTimeout(() => {
             holdTriggered = true;
             selected.clear();
             selected.add(path);
             updateSelectionUI();
-            showContext(path, x, y);
+            showContext(path, holdX, holdY);
             if (navigator.vibrate) navigator.vibrate(18);
           }, 600);
         });
@@ -297,7 +300,9 @@
           else openItem(path);
         });
         entry.addEventListener('pointercancel', () => clearTimeout(holdTimer));
-        entry.addEventListener('pointermove', () => clearTimeout(holdTimer));
+        entry.addEventListener('pointermove', event => {
+          if (holdTimer && Math.hypot(event.clientX - holdX, event.clientY - holdY) > 12) clearTimeout(holdTimer);
+        });
         fileView.appendChild(entry);
       });
 
@@ -524,6 +529,13 @@
     }
 
     qa('[data-files-path]').forEach(button => button.addEventListener('click', () => go(button.dataset.filesPath)));
+    q('[data-files-nav]').addEventListener('click', () => {
+      win.content.querySelector('.files-v3')?.classList.toggle('files-nav-open');
+    });
+    qa('[data-files-path]').forEach(button => button.addEventListener('click', () => {
+      win.content.querySelector('.files-v3')?.classList.remove('files-nav-open');
+    }));
+
     q('[data-files-back]').addEventListener('click', async () => {
       if (historyIndex <= 0) return;
       historyIndex--;
