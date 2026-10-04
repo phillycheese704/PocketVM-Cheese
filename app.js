@@ -1266,6 +1266,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           <div class="setting-row"><div><strong>Animations</strong><small>Window and menu motion.</small></div><label class="switch"><input id="pref-animations" type="checkbox" ${state.preferences.animations !== false ? 'checked' : ''}><span></span></label></div>
           <div class="setting-row"><div><strong>Centered taskbar</strong><small>Place pinned apps nearer the middle.</small></div><label class="switch"><input id="pref-centered" type="checkbox" ${state.preferences.taskbarCentered ? 'checked' : ''}><span></span></label></div>
           <div class="setting-row"><div><strong>Seconds in clock</strong><small>Show seconds in the taskbar clock.</small></div><label class="switch"><input id="pref-seconds" type="checkbox" ${state.preferences.clockSeconds ? 'checked' : ''}><span></span></label></div>
+          <div class="setting-row"><div><strong>Desktop icon size</strong><small>Resize the desktop grid and app icons.</small></div><select id="pref-icon-size" class="settings-select"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></div>
+          <div class="setting-row stack-on-small"><div><strong>Desktop icons</strong><small>Choose which built-in apps appear on the desktop.</small></div><div class="desktop-icon-toggles"></div></div>
           <div class="setting-row"><div><strong>Install as app</strong><small>Safari → Share → Add to Home Screen</small></div><span>↗</span></div>
         </div>`;
       const sw = $('.swatches', page);
@@ -1282,6 +1284,33 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       bind('pref-animations','animations');
       bind('pref-centered','taskbarCentered');
       bind('pref-seconds','clockSeconds');
+
+      const iconSize = $('#pref-icon-size', page);
+      iconSize.value = state.preferences.desktopIconSize || 'medium';
+      iconSize.addEventListener('change', e => {
+        state.preferences.desktopIconSize = e.target.value;
+        applyPreferences();
+        initDesktopGrid();
+      });
+
+      const desktopChoices = [
+        ['browser','Browser'],['files','Files'],['calculator','Calculator'],['terminal','Terminal'],
+        ['notes','Notes'],['monitor','System'],['taskmanager','Task Manager'],['settings','Settings']
+      ];
+      const toggleWrap = $('.desktop-icon-toggles', page);
+      desktopChoices.forEach(([id,label]) => {
+        const item = document.createElement('label');
+        item.className = 'icon-toggle-chip';
+        item.innerHTML = '<input type="checkbox" ' + (!state.preferences.desktopHidden.includes(id) ? 'checked' : '') + '><span>' + escapeHTML(label) + '</span>';
+        $('input', item).addEventListener('change', e => {
+          const hidden = new Set(state.preferences.desktopHidden || []);
+          if (e.target.checked) hidden.delete(id); else hidden.add(id);
+          state.preferences.desktopHidden = [...hidden];
+          applyPreferences();
+          initDesktopGrid();
+        });
+        toggleWrap.appendChild(item);
+      });
     }
 
     function renderUser() {
@@ -1299,11 +1328,34 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
             <div><strong>Profile picture</strong><small>JPG, PNG or WebP. PocketVM resizes it before saving.</small></div>
             <div class="inline-actions"><button class="soft-btn" id="choose-avatar">Choose image</button>${state.user.avatar ? '<button class="soft-btn" id="remove-avatar">Remove</button>' : ''}</div>
           </div>
+          <div class="setting-row">
+            <div><strong>Profile border</strong><small>Change the treatment around your avatar.</small></div>
+            <select id="profile-border-style" class="settings-select"><option value="none">None</option><option value="ring">Ring</option><option value="double">Double</option><option value="glow">Glow</option></select>
+          </div>
+          <div class="setting-row">
+            <div><strong>Border colour</strong><small>Used on the Start menu, lock screen and Settings.</small></div>
+            <div class="profile-colour-control"><input id="profile-border-color" type="color" value="${escapeHTML(state.user.borderColor || '#8fc6ff')}"><span id="profile-border-hex">${escapeHTML(state.user.borderColor || '#8fc6ff')}</span></div>
+          </div>
         </div>
         <div class="settings-footer"><span class="settings-message" aria-live="polite"></span><button class="primary-btn" id="save-user">Save user</button></div>
         <input class="hidden-file-input" id="avatar-input" type="file" accept="image/*" />`;
       paintAvatar($('.settings-avatar', page));
       const msg = $('.settings-message', page);
+      const borderStyle = $('#profile-border-style', page);
+      borderStyle.value = state.user.borderStyle || 'ring';
+      borderStyle.addEventListener('change', e => {
+        state.user.borderStyle = e.target.value;
+        saveJSON('pocketvm.user', state.user);
+        renderUserChrome();
+        paintAvatar($('.settings-avatar', page));
+      });
+      $('#profile-border-color', page).addEventListener('input', e => {
+        state.user.borderColor = e.target.value;
+        $('#profile-border-hex', page).textContent = e.target.value;
+        saveJSON('pocketvm.user', state.user);
+        renderUserChrome();
+        paintAvatar($('.settings-avatar', page));
+      });
 
       $('#save-user', page).addEventListener('click', () => {
         const value = $('#user-name-input', page).value.trim().slice(0, 32) || 'Guest';
@@ -1396,8 +1448,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         <div class="wallpaper-grid"></div>
         <div class="setting-group wallpaper-upload-row">
           <div class="setting-row stack-on-small">
-            <div><strong>Custom wallpaper</strong><small>Your image is resized and stored locally in this browser.</small></div>
-            <div class="inline-actions"><button class="soft-btn" id="upload-wallpaper">Choose image</button>${state.wallpaper.type === 'custom' ? '<button class="soft-btn" id="reset-wallpaper">Use default</button>' : ''}</div>
+            <div><strong>Custom wallpaper</strong><small>Your image is stored in the PocketVM Pictures folder on the virtual drive.</small></div>
+            <div class="inline-actions"><button class="soft-btn" id="upload-wallpaper">Choose image</button>${state.wallpaper.type !== 'preset' ? '<button class="soft-btn" id="reset-wallpaper">Use default</button>' : ''}</div>
           </div>
         </div>
         <div class="settings-message" id="wallpaper-message" aria-live="polite"></div>
@@ -1422,20 +1474,20 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         const file = e.target.files?.[0];
         if (!file) return;
         const msg = $('#wallpaper-message', page);
-        msg.textContent = 'Processing wallpaper…';
+        msg.textContent = 'Saving wallpaper to the virtual drive…';
         try {
-          const dataUrl = await imageFileToDataURL(file, 1920, 1440, 0.78, false);
-          const previous = state.wallpaper;
-          state.wallpaper = { type:'custom', value:'custom', dataUrl };
-          if (!saveJSON('pocketvm.wallpaper', state.wallpaper)) {
-            state.wallpaper = previous;
-            throw new Error('That image is too large for browser storage. Try a smaller image.');
-          }
-          applyWallpaper();
+          const dataUrl = await imageFileToDataURL(file, 2560, 1800, 0.86, false);
+          const response = await fetch(dataUrl);
+          const blob = await response.blob();
+          const path = '/home/user/Pictures/PocketVM Wallpaper ' + Date.now() + '.jpg';
+          await PocketDisk.writeBlob(path, blob, 'image/jpeg');
+          await refreshFS();
+          await setWallpaperFromFile(path);
           renderWallpaper();
         } catch (err) {
           msg.textContent = err.message || 'Could not use that wallpaper.';
         }
+        e.target.value = '';
       });
       $('#reset-wallpaper', page)?.addEventListener('click', () => {
         state.wallpaper = { type:'preset', value:'aurora', dataUrl:'' };
@@ -1449,7 +1501,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       const standalone=matchMedia('(display-mode: standalone)').matches;
       page.innerHTML = pageHead('System', 'PocketVM device information and useful shortcuts.') + `
         <div class="setting-group">
-          <div class="setting-row"><div><strong>PocketVM version</strong><small>Current web desktop release.</small></div><strong>2.0</strong></div>
+          <div class="setting-row"><div><strong>PocketVM version</strong><small>Current web desktop release.</small></div><strong>2.1</strong></div>
           <div class="setting-row"><div><strong>App mode</strong><small>Whether PocketVM is running from the Home Screen.</small></div><strong>${standalone?'Installed':'Browser tab'}</strong></div>
           <div class="setting-row"><div><strong>Connection</strong><small>Current browser network state.</small></div><strong>${navigator.onLine?'Online':'Offline'}</strong></div>
         </div>
@@ -1458,30 +1510,52 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           <div><kbd>⌘/Ctrl</kbd><kbd>B</kbd><span>Browser</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>Alt</kbd><kbd>L</kbd><span>Lock PocketVM</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>D</kbd><span>Show desktop</span></div>
-          <div><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Esc</kbd><span>System Monitor</span></div>
+          <div><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Esc</kbd><span>Task Manager</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>← / →</kbd><span>Snap focused window</span></div>
         </div>`;
     }
 
-    function renderStorage() {
-      page.innerHTML = pageHead('Storage', 'Manage data saved by PocketVM on this device.') + `
-        <div class="setting-group">
-          <div class="setting-row"><div><strong>Erase virtual files</strong><small>Returns Files to an empty Home folder.</small></div><button class="danger-btn" id="reset-fs">Erase</button></div>
+    async function renderStorage() {
+      const stats = await PocketDisk.stats();
+      const pct = Math.min(100, stats.used / stats.max * 100);
+      page.innerHTML = pageHead('Storage', 'PocketVM files and images live on a 1 GB IndexedDB virtual drive.') + `
+        <div class="storage-hero">
+          <div class="storage-disk-icon">◫</div>
+          <div class="storage-disk-copy"><span>Local Disk</span><strong>${PocketDisk.formatBytes(stats.used)} used</strong><small>${PocketDisk.formatBytes(stats.free)} free of 1.00 GB</small></div>
+          <div class="storage-percent">${pct.toFixed(pct < 1 ? 1 : 0)}%</div>
+          <div class="storage-track"><i style="width:${pct}%"></i></div>
         </div>
-        <p class="privacy-note">PocketVM has no account server. Your profile, password hash, wallpaper, notes, files and settings stay in this browser's local storage. The terminal command <code>null.user</code> clears all of it.</p>`;
-      $('#reset-fs', page).addEventListener('click', () => {
-        if (!confirm('Erase every file in PocketVM? This cannot be undone.')) return;
-        state.fs = makeEmptyFS();
-        persistFS();
-        localStorage.setItem('pocketvm.fs.schema', FS_SCHEMA);
-        $('#reset-fs', page).textContent = 'Erased';
-        for (const w of [...state.windows.values()]) {
-          if (w.appId === 'editor' || w.appId === 'preview') closeWindow(w.id);
-        }
-        const filesWin = [...state.windows.values()].find(w => w.appId === 'files');
-        if (filesWin) {
-          closeWindow(filesWin.id);
-          openApp('files');
+        <div class="setting-group">
+          <div class="setting-row"><div><strong>Virtual capacity</strong><small>PocketVM's own maximum.</small></div><strong>1.00 GB</strong></div>
+          <div class="setting-row"><div><strong>Browser quota</strong><small>Safari may enforce a smaller device/browser limit.</small></div><strong>${stats.browserQuota ? PocketDisk.formatBytes(stats.browserQuota) : 'Not exposed'}</strong></div>
+          <div class="setting-row"><div><strong>Persistence</strong><small>Whether the browser granted persistent storage.</small></div><strong>${stats.persisted ? 'Granted' : 'Best effort'}</strong></div>
+          <div class="setting-row"><div><strong>Open drive</strong><small>Browse Desktop, Documents, Downloads and Pictures.</small></div><button class="soft-btn" id="open-drive">Open Files</button></div>
+          <div class="setting-row"><div><strong>Erase virtual drive</strong><small>Deletes user files while keeping the PocketVM account and settings.</small></div><button class="danger-btn" id="reset-fs">Erase files</button></div>
+        </div>
+        <p class="privacy-note">Files are stored in IndexedDB. Account preferences remain in local browser storage. <code>null.user</code> deletes both and returns PocketVM to first-time setup.</p>`;
+      $('#open-drive', page).addEventListener('click', () => openApp('files'));
+      $('#reset-fs', page).addEventListener('click', async () => {
+        if (!confirm('Erase every file on the PocketVM virtual drive? This cannot be undone.')) return;
+        const button = $('#reset-fs', page);
+        button.disabled = true;
+        button.textContent = 'Erasing…';
+        try {
+          await PocketDisk.clearDrive();
+          await refreshFS();
+          if (state.wallpaper.type === 'file') {
+            state.wallpaper = { type:'preset', value:'aurora', dataUrl:'' };
+            saveJSON('pocketvm.wallpaper', state.wallpaper);
+            applyWallpaper();
+          }
+          for (const w of [...state.windows.values()]) {
+            if (w.appId === 'editor' || w.appId === 'preview' || w.appId === 'imageviewer') closeWindow(w.id);
+          }
+          renderStorage();
+          notify('Drive erased', 'PocketVM files were deleted. System folders were recreated.', '◫');
+        } catch (err) {
+          button.disabled = false;
+          button.textContent = 'Erase files';
+          alert(err.message || 'Could not erase the drive.');
         }
       });
     }
