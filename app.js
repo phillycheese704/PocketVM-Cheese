@@ -422,18 +422,22 @@
   function closeWindow(id) {
     const win = state.windows.get(id);
     if (!win) return;
+    const wasFocused = win.el.classList.contains('focused');
     win.cleanup?.();
     win.el.remove();
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.remove();
     state.windows.delete(id);
+    if (wasFocused) focusTopVisibleWindow(id);
   }
 
   function minimizeWindow(id) {
     const win = state.windows.get(id);
     if (!win) return;
+    const wasFocused = win.el.classList.contains('focused');
     win.el.classList.add('minimized');
     win.el.classList.remove('focused');
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.classList.remove('active');
+    if (wasFocused) focusTopVisibleWindow(id);
   }
 
   function restoreWindow(id) {
