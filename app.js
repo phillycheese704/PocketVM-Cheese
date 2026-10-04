@@ -60,7 +60,8 @@
     rose: ['#ff7aa8', '#9c7cff'],
     lime: ['#b7f36b', '#3dd6a5'],
     amber: ['#ffbf66', '#ff7b72'],
-    cobalt: ['#4b8dff', '#38d8ff']
+    cobalt: ['#4b8dff', '#38d8ff'],
+    crimson: ['#ff4054', '#991827']
   };
 
   const wallpapers = {
@@ -71,7 +72,8 @@
     sunrise: 'radial-gradient(circle at 20% 20%, rgba(255,194,116,.48), transparent 31%), radial-gradient(circle at 78% 70%, rgba(255,105,135,.28), transparent 38%), linear-gradient(150deg,#25182b,#55304d 52%,#151529)',
     alpine: 'radial-gradient(circle at 25% 20%, rgba(106,237,203,.25), transparent 34%), radial-gradient(circle at 75% 75%, rgba(80,145,255,.26), transparent 38%), linear-gradient(150deg,#081a1d,#0c3035 50%,#0b1320)',
     neon: 'radial-gradient(circle at 20% 65%, rgba(255,0,153,.32), transparent 30%), radial-gradient(circle at 78% 28%, rgba(0,229,255,.28), transparent 32%), linear-gradient(145deg,#090019,#1a0b31 48%,#050812)',
-    ice: 'radial-gradient(circle at 25% 25%, rgba(190,228,255,.28), transparent 35%), radial-gradient(circle at 75% 75%, rgba(100,160,255,.26), transparent 34%), linear-gradient(145deg,#122031,#1b334d 56%,#0c1725)'
+    ice: 'radial-gradient(circle at 25% 25%, rgba(190,228,255,.28), transparent 35%), radial-gradient(circle at 75% 75%, rgba(100,160,255,.26), transparent 34%), linear-gradient(145deg,#122031,#1b334d 56%,#0c1725)',
+    redline: 'radial-gradient(circle at 78% 22%, rgba(255,35,58,.22), transparent 30%), radial-gradient(circle at 18% 78%, rgba(150,10,26,.18), transparent 34%), linear-gradient(154deg, transparent 0 46%, rgba(255,45,65,.10) 46.4%, rgba(255,45,65,.03) 47.2%, transparent 48%), linear-gradient(135deg,#030405 0%,#08090b 38%,#160609 69%,#040405 100%)'
   };
 
   function saveJSON(key, value) {
