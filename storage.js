@@ -335,14 +335,16 @@
   async function stats() {
     const used = await usedBytes();
     let estimate = null;
+    let persisted = false;
     try { estimate = await navigator.storage?.estimate?.(); } catch {}
+    try { persisted = !!(await navigator.storage?.persisted?.()); } catch {}
     return {
       used,
       max: MAX_BYTES,
       free: Math.max(0, MAX_BYTES - used),
       browserUsage: Number(estimate?.usage || 0),
       browserQuota: Number(estimate?.quota || 0),
-      persisted: await navigator.storage?.persisted?.().catch?.(() => false) || false
+      persisted
     };
   }
 
@@ -357,23 +359,35 @@
   async function migrateLegacy() {
     if (await getMeta('migratedLegacy', false)) return;
     const raw = localStorage.getItem('pocketvm.fs');
-    if (raw) {
-      try {
-        const legacy = JSON.parse(raw);
-        const dirs = Object.entries(legacy).filter(([, v]) => v?.type === 'dir').map(([p]) => cleanPath(p)).sort((a, b) => a.length - b.length);
-        for (const path of dirs) await ensureDir(path);
-        for (const [pathRaw, node] of Object.entries(legacy)) {
-          const path = cleanPath(pathRaw);
-          if (node?.type !== 'file') continue;
-          await writeText(path, node.content || '', mimeFromName(path));
-        }
-      } catch (err) {
-        console.warn('PocketVM legacy file migration failed', err);
-      }
+    if (!raw) {
+      await setMeta('migratedLegacy', true);
+      return;
     }
-    localStorage.removeItem('pocketvm.fs');
-    localStorage.removeItem('pocketvm.fs.schema');
-    await setMeta('migratedLegacy', true);
+
+    let migrated = false;
+    try {
+      const legacy = JSON.parse(raw);
+      const dirs = Object.entries(legacy)
+        .filter(([, value]) => value?.type === 'dir')
+        .map(([path]) => cleanPath(path))
+        .sort((a, b) => a.length - b.length);
+      for (const path of dirs) await ensureDir(path);
+
+      for (const [pathRaw, node] of Object.entries(legacy)) {
+        const path = cleanPath(pathRaw);
+        if (node?.type !== 'file') continue;
+        await writeText(path, node.content || '', mimeFromName(path));
+      }
+      migrated = true;
+    } catch (err) {
+      console.warn('PocketVM legacy file migration failed; legacy data was preserved for retry.', err);
+    }
+
+    if (migrated) {
+      localStorage.removeItem('pocketvm.fs');
+      localStorage.removeItem('pocketvm.fs.schema');
+      await setMeta('migratedLegacy', true);
+    }
   }
 
   async function init() {
