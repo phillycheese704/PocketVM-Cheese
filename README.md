@@ -1,39 +1,53 @@
-# PocketVM 2.0
+# PocketVM 2.1
 
 PocketVM is a touch-first browser PC designed for iPad and static hosting on GitHub Pages. Everything runs client-side.
 
-## Use
+## Live site
 
-**Live site:** https://phillycheese704.github.io/PocketVM-Cheese/
+https://phillycheese704.github.io/PocketVM-Cheese/
 
-## 2.0 highlights
+## 2.1 — Files, storage and polish
 
-- Windows-style desktop with draggable, resizable, minimizable and maximizable windows
-- Window snapping with drag-to-edge and keyboard shortcuts
-- Start menu app search, pinned taskbar apps and Show Desktop
-- Quick Settings, notification centre, toast notifications and calendar flyout
-- Desktop right-click menu for new files/folders and display settings
-- Pocket Browser with tabs, navigation, search/address bar and local:// HTML pages
-- Files supports folders, .txt/.html creation, importing, renaming and downloading
-- Sandboxed runnable HTML files
-- Calculator with mouse/touch and hardware keyboard support
-- System Monitor using browser-exposed device, storage, network, FPS and running-app information
-- Settings for accents, transparency, animations, taskbar placement, clock seconds, user profile, password and wallpaper
-- Local account login and password recovery puzzle
-- Installable PWA with offline caching
-- Terminal remains intentionally minimal and does not auto-open
+- **1 GB PocketVM virtual drive** backed by IndexedDB
+- Existing legacy TXT/HTML files are migrated into the virtual drive
+- Standard Home folders: Desktop, Documents, Downloads and Pictures
+- Rebuilt Files app with grid/list views, breadcrumbs, sorting and multi-select
+- Copy, cut, paste, rename, delete, download, properties and file importing
+- iPad-friendly single-tap open and long-press context menus
+- Image support for PNG, JPG/JPEG, WebP, GIF and SVG
+- Image thumbnails directly inside Files
+- Photos/Image Viewer with zoom, fit, download and Set as Wallpaper
+- Custom wallpapers are saved into Pictures on the virtual drive
+- Draggable desktop app icons that snap to a persistent grid
+- Built-in apps can be removed from / restored to the desktop from Settings
+- Desktop long-press acts like PocketVM's right-click menu on iPad
+- New Task Manager with running processes and End Task
+- Rebuilt System app with real browser-exposed device and storage information
+- Storage Settings show virtual capacity, free space and browser quota
+- More accent themes and preset wallpapers
+- Custom profile borders: none, ring, double or glow
+- Custom profile border colours
+- Desktop icon size controls
+
+## Storage model
+
+PocketVM enforces a **1 GB maximum virtual drive**. The browser or iPad may impose a smaller real IndexedDB quota, so 1 GB is PocketVM's maximum rather than a promise that every browser will grant the full amount.
+
+Files and images live in IndexedDB. Small preferences, the local account hash and UI settings remain in localStorage.
 
 ## Terminal
 
-The terminal still has exactly one accepted command:
+The terminal intentionally has exactly one command:
 
 ```text
 null.user
 ```
 
-It clears PocketVM's localStorage and reloads to first-time account setup.
+It erases both localStorage and the IndexedDB virtual drive, then returns PocketVM to first-time account setup.
 
-> PocketVM is a browser desktop, not a hardware virtual machine or OS security boundary. Website embedding is also subject to each site's iframe/security policy.
+## Security
+
+PocketVM is a browser desktop, not a hardware VM or operating-system security boundary. Local HTML files run sandboxed and cannot directly access PocketVM storage.
 
 ## License
 
