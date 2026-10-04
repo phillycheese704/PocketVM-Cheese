@@ -81,7 +81,7 @@
     document.body.classList.toggle('reduce-motion', p.animations === false);
     document.body.classList.toggle('center-taskbar', p.taskbarCentered === true);
     document.body.dataset.desktopIconSize = p.desktopIconSize;
-    $('.desktop-icon').forEach(icon => {
+    document.querySelectorAll('.desktop-icon').forEach(icon => {
       const id = icon.dataset.open || '';
       icon.hidden = p.desktopHidden.includes(id);
     });
@@ -706,7 +706,11 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         catch { return 'Web'; }
       })();
       frame.removeAttribute('srcdoc');
-      frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads allow-same-origin');
+      let sandbox = 'allow-scripts allow-forms allow-modals allow-popups allow-downloads';
+      try {
+        if (new URL(url).origin !== location.origin) sandbox += ' allow-same-origin';
+      } catch {}
+      frame.setAttribute('sandbox', sandbox);
       frame.src = url;
       status.textContent = 'Loading…';
     }
@@ -859,61 +863,6 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   }
 
   // ---------- System monitor ----------
-  function buildMonitor(win) {
-    setWindowTitle(win, 'System Monitor', '⌁');
-    win.content.innerHTML = `
-      <div class="system-monitor-v2">
-        <div class="sys-hero"><div><span class="sys-eyebrow">POCKETVM SYSTEM</span><h2>System Monitor</h2><p>Live information the browser can actually expose.</p></div><div class="sys-live"><i></i> Live</div></div>
-        <div class="system-cards">
-          <div class="system-card"><span>Frame rate</span><strong data-sys="fps">--</strong><small>rendering FPS</small></div>
-          <div class="system-card"><span>Storage</span><strong data-sys="storage">--</strong><small data-sys-sub="storage">local browser data</small></div>
-          <div class="system-card"><span>Windows</span><strong data-sys="windows">0</strong><small>open PocketVM windows</small></div>
-          <div class="system-card"><span>Network</span><strong data-sys="network">--</strong><small data-sys-sub="network">browser connection</small></div>
-        </div>
-        <div class="system-panels">
-          <div class="system-panel"><h3>Device</h3><div class="system-list" data-device-list></div></div>
-          <div class="system-panel"><h3>Running apps</h3><div class="process-list" data-process-list></div></div>
-        </div>
-      </div>`;
-
-    let alive=true, frames=0, last=performance.now(), fps=60;
-    const raf=()=>{ if(!alive)return; frames++; const now=performance.now(); if(now-last>=900){fps=Math.round(frames*1000/(now-last));frames=0;last=now;} requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-
-    const formatBytes=n=>n>=1024*1024 ? (n/1024/1024).toFixed(1)+' MB' : n>=1024 ? Math.round(n/1024)+' KB' : n+' B';
-    const refresh=async()=>{
-      if(!alive)return;
-      $('[data-sys="fps"]',win.el).textContent=String(fps);
-      $('[data-sys="windows"]',win.el).textContent=String(state.windows.size);
-      $('[data-sys="network"]',win.el).textContent=navigator.onLine?'Online':'Offline';
-      $('[data-sys-sub="network"]',win.el).textContent=(navigator.connection?.effectiveType || 'connection') + (navigator.connection?.downlink ? ' · '+navigator.connection.downlink+' Mbps' : '');
-
-      let used=0, quota=0;
-      try { const est=await navigator.storage?.estimate?.(); used=est?.usage||0; quota=est?.quota||0; } catch {}
-      if(!used){ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i)||''; used += (k.length+(localStorage.getItem(k)||'').length)*2; } }
-      $('[data-sys="storage"]',win.el).textContent=formatBytes(used);
-      $('[data-sys-sub="storage"]',win.el).textContent=quota ? 'of '+formatBytes(quota)+' browser quota' : 'local browser data';
-
-      const device=$('[data-device-list]',win.el);
-      device.innerHTML='';
-      const rows=[
-        ['Platform', navigator.userAgentData?.platform || navigator.platform || 'Browser'],
-        ['CPU threads', navigator.hardwareConcurrency || 'Not exposed'],
-        ['Device memory', navigator.deviceMemory ? navigator.deviceMemory+' GB' : 'Not exposed'],
-        ['Viewport', innerWidth+' × '+innerHeight],
-        ['Language', navigator.language || '—'],
-        ['Uptime', formatUptime(Date.now()-state.bootedAt)]
-      ];
-      rows.forEach(([a,b])=>{const d=document.createElement('div');d.innerHTML='<span>'+escapeHTML(a)+'</span><strong>'+escapeHTML(String(b))+'</strong>';device.appendChild(d);});
-
-      const processes=$('[data-process-list]',win.el);
-      processes.innerHTML='';
-      [...state.windows.values()].forEach(w=>{const d=document.createElement('div');d.className='process-row';d.innerHTML='<span class="process-icon">'+escapeHTML(apps[w.appId]?.icon||'◇')+'</span><span class="process-name">'+escapeHTML(apps[w.appId]?.name||w.appId)+'</span><small>'+ (w.el.classList.contains('minimized')?'Suspended':'Running') +'</small>'; processes.appendChild(d);});
-    };
-    const interval=setInterval(refresh,1000); refresh();
-    win.cleanup=()=>{alive=false;clearInterval(interval);};
-  }
-
   function formatUptime(ms) {
     const total=Math.floor(ms/1000), h=Math.floor(total/3600), m=Math.floor((total%3600)/60), s=total%60;
     return h ? h+'h '+m+'m' : m ? m+'m '+s+'s' : s+'s';
@@ -1976,18 +1925,19 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     $('#shutdown-btn')?.addEventListener('click',shutdown);
 
     const search=$('#start-search-input');
-    search?.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();$('.start-grid button').forEach(b=>b.hidden=!!q&&!b.textContent.toLowerCase().includes(q));});
-    search?.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('.start-grid button').find(x=>!x.hidden);if(b)b.click();}});
+    search?.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();document.querySelectorAll('.start-grid button').forEach(b=>b.hidden=!!q&&!b.textContent.toLowerCase().includes(q));});
+    search?.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=[...document.querySelectorAll('.start-grid button')].find(x=>!x.hidden);if(b)b.click();}});
 
     $('#desktop')?.addEventListener('contextmenu',e=>{if(e.target.closest('.window,.taskbar,.start-menu,.shell-flyout'))return;e.preventDefault();renderDesktopContext(e.clientX,e.clientY);});
-    let desktopHoldTimer=null;
+    let desktopHoldTimer=null, desktopHoldX=0, desktopHoldY=0;
     $('#desktop')?.addEventListener('pointerdown',e=>{
       if(e.pointerType!=='touch' || e.target.closest('.window,.taskbar,.desktop-icon,.start-menu,.shell-flyout'))return;
-      desktopHoldTimer=setTimeout(()=>{renderDesktopContext(e.clientX,e.clientY);navigator.vibrate?.(20);},650);
+      desktopHoldX=e.clientX; desktopHoldY=e.clientY;
+      desktopHoldTimer=setTimeout(()=>{renderDesktopContext(desktopHoldX,desktopHoldY);navigator.vibrate?.(20);desktopHoldTimer=null;},650);
     });
     const cancelDesktopHold=()=>{clearTimeout(desktopHoldTimer);desktopHoldTimer=null;};
     $('#desktop')?.addEventListener('pointerup',cancelDesktopHold);
-    $('#desktop')?.addEventListener('pointermove',cancelDesktopHold);
+    $('#desktop')?.addEventListener('pointermove',e=>{if(desktopHoldTimer&&Math.hypot(e.clientX-desktopHoldX,e.clientY-desktopHoldY)>12)cancelDesktopHold();});
     $('#desktop')?.addEventListener('pointercancel',cancelDesktopHold);
     document.addEventListener('pointerdown',e=>{
       if(!e.target.closest('#desktop-context'))$('#desktop-context').hidden=true;
@@ -2107,4 +2057,16 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     showAuthScreen(state.auth ? 'login' : 'setup');
     // The terminal intentionally never opens automatically.
   }, 900);
-})();
+})().catch(err => {
+  console.error('PocketVM failed to start', err);
+  const boot = document.getElementById('boot');
+  if (boot) {
+    boot.hidden = false;
+    const title = boot.querySelector('.boot-title');
+    const subtitle = boot.querySelector('.boot-subtitle');
+    const bar = boot.querySelector('.boot-bar');
+    if (title) title.textContent = 'PocketVM could not start';
+    if (subtitle) subtitle.textContent = err?.message || 'Browser storage or a required feature is unavailable.';
+    if (bar) bar.hidden = true;
+  }
+});
