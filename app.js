@@ -125,6 +125,28 @@
     notify('Wallpaper changed', basename(path), '▧');
   }
 
+  function syncWallpaperWithDriveChange(event) {
+    if (state.wallpaper.type !== 'file' || !state.wallpaper.path) return;
+    const detail = event.detail || {};
+    const current = state.wallpaper.path;
+    if (detail.action === 'move' && detail.from && detail.path &&
+        (current === detail.from || current.startsWith(detail.from + '/'))) {
+      state.wallpaper.path = detail.path + current.slice(detail.from.length);
+      saveJSON('pocketvm.wallpaper', state.wallpaper);
+      return;
+    }
+    if ((detail.action === 'delete' && detail.path &&
+         (current === detail.path || current.startsWith(detail.path + '/'))) ||
+        detail.action === 'reset') {
+      state.wallpaper = { type:'preset', value:'aurora', dataUrl:'' };
+      saveJSON('pocketvm.wallpaper', state.wallpaper);
+      applyWallpaper();
+      setAuthWallpaper();
+    }
+  }
+
+  window.addEventListener('pocketdiskchange', syncWallpaperWithDriveChange);
+
   function initials(name) {
     const parts = String(name || 'Guest').trim().split(/\s+/).filter(Boolean);
     return (parts.slice(0, 2).map(p => p[0]).join('') || 'G').toUpperCase();
@@ -305,10 +327,20 @@
       const up = ev => {
         bar.removeEventListener('pointermove', move);
         bar.removeEventListener('pointerup', up);
+        bar.removeEventListener('pointercancel', cancel);
+        try { bar.releasePointerCapture(ev.pointerId); } catch {}
         maybeSnapWindow(win, ev);
+      };
+      const cancel = ev => {
+        bar.removeEventListener('pointermove', move);
+        bar.removeEventListener('pointerup', up);
+        bar.removeEventListener('pointercancel', cancel);
+        $('#snap-preview').hidden = true;
+        try { bar.releasePointerCapture(ev.pointerId); } catch {}
       };
       bar.addEventListener('pointermove', move);
       bar.addEventListener('pointerup', up);
+      bar.addEventListener('pointercancel', cancel);
     });
 
     const handle = $('.resize-handle', el);
@@ -324,12 +356,15 @@
         el.style.width = `${clamp(sw + ev.clientX - sx, 290, innerWidth - rect.left)}px`;
         el.style.height = `${clamp(sh + ev.clientY - sy, 210, innerHeight - 60 - rect.top)}px`;
       };
-      const up = () => {
+      const up = ev => {
         handle.removeEventListener('pointermove', move);
         handle.removeEventListener('pointerup', up);
+        handle.removeEventListener('pointercancel', up);
+        try { handle.releasePointerCapture(ev.pointerId); } catch {}
       };
       handle.addEventListener('pointermove', move);
       handle.addEventListener('pointerup', up);
+      handle.addEventListener('pointercancel', up);
     });
   }
 
@@ -1169,6 +1204,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
     async function renderStorage() {
       const stats = await PocketDisk.stats();
+      if (active !== 'storage') return;
       const pct = Math.min(100, stats.used / stats.max * 100);
       page.innerHTML = pageHead('Storage', 'PocketVM files and images live on a 1 GB IndexedDB virtual drive.') + `
         <div class="storage-hero">
@@ -1359,6 +1395,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     $('#desktop').hidden = false;
     applyWallpaper();
     renderUserChrome();
+    requestAnimationFrame(placeDesktopIcons);
   }
 
   function showAuthScreen(mode = state.auth ? 'login' : 'setup') {
@@ -1570,7 +1607,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   }
 
   function buildAbout(win) {
-    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.0</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM now includes a windowed desktop, snapping, taskbar flyouts, Files, Browser, Calculator, notifications and local accounts. It remains fully client-side.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.0</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Files</span><strong>.txt / .html + folders</strong></div><div class="setting-row"><span>Browser</span><strong>Tabs + local pages</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
+    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.1</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM uses a 1 GB IndexedDB virtual drive and includes a windowed desktop, Files, image support, Browser, Photos, Calculator, Task Manager, System, notifications and local accounts.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Virtual drive</span><strong>1 GB max</strong></div><div class="setting-row"><span>Files</span><strong>TXT / HTML / images</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
   }
 
   // ---------- PocketVM 2.0 desktop layer ----------
