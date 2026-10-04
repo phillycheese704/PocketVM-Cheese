@@ -171,11 +171,6 @@
     return state.fs;
   }
 
-  function persistFS() {
-    console.warn('persistFS() is deprecated; PocketVM files now use IndexedDB.');
-    return true;
-  }
-
   function norm(path, cwd = '/home/user') {
     if (!path) return cwd;
     const full = path.startsWith('/') ? path : `${cwd}/${path}`;
@@ -223,6 +218,10 @@
 
   function fileAppContext() {
     return { state, $, $, escapeHTML, norm, parentPath, basename, children, openApp, notify, refreshFS, setWallpaperFromFile, setWindowTitle };
+  }
+
+  function systemAppContext() {
+    return { state, $, $, escapeHTML, openApp, closeWindow, setWindowTitle, formatUptime, apps };
   }
 
   const apps = {
@@ -474,308 +473,6 @@
     print(term, `${raw}: command not found`, 'error');
   }
 
-  // ---------- Files ----------
-  function buildFiles(win, options = {}) {
-    let current = options.path || '/home/user';
-    win.content.innerHTML = `
-      <div class="files-app">
-        <aside class="files-sidebar">
-          <button class="active" data-path="/home/user">⌂ Home</button>
-          <div class="files-side-note"><strong>Your files</strong><span>Stored locally on this device.</span></div>
-        </aside>
-        <div class="files-main">
-          <div class="files-toolbar">
-            <div class="files-path"></div>
-            <span class="files-spacer"></span>
-            <button class="soft-btn" data-new-folder>+ Folder</button>
-            <button class="soft-btn" data-new="txt">+ Text</button>
-            <button class="soft-btn" data-new="html">+ HTML</button>
-            <button class="soft-btn" data-import>Import</button>
-            <input class="hidden-file-input" id="files-import" type="file" accept=".txt,.html,text/plain,text/html" multiple />
-          </div>
-          <div class="file-grid"></div>
-        </div>
-      </div>`;
-
-    $('[data-path="/home/user"]', win.el).addEventListener('click', () => {
-      current = '/home/user';
-      render();
-    });
-    $('[data-new]', win.el).forEach(btn => btn.addEventListener('click', () => showCreateDialog(btn.dataset.new)));
-
-    $('[data-new-folder]', win.el)?.addEventListener('click', () => {
-      let name = prompt('Folder name');
-      if (!name) return;
-      name = name.trim().replace(/[\\/:*?"<>|]/g, '').slice(0, 48);
-      if (!name) return;
-      const p = norm(name, current);
-      if (state.fs[p]) { alert('That name already exists.'); return; }
-      state.fs[p] = { type:'dir', createdAt:Date.now() };
-      persistFS();
-      render();
-      notify('Folder created', name, '📁');
-    });
-
-    $('[data-import]', win.el)?.addEventListener('click', () => $('#files-import', win.el)?.click());
-    $('#files-import', win.el)?.addEventListener('change', async e => {
-      const list = [...(e.target.files || [])];
-      let added = 0;
-      for (const file of list) {
-        if (!/\.(txt|html)$/i.test(file.name)) continue;
-        const name = file.name.replace(/[\\/:*?"<>|]/g, '').slice(0, 80);
-        const p = norm(name, current);
-        if (state.fs[p]) continue;
-        state.fs[p] = { type:'file', content:await file.text(), createdAt:Date.now(), modifiedAt:Date.now() };
-        added++;
-      }
-      persistFS();
-      render();
-      if (added) notify('Files imported', added + ' file' + (added === 1 ? '' : 's') + ' added.', '↓');
-      e.target.value = '';
-    });
-
-    function render() {
-      if (!state.fs[current] || state.fs[current].type !== 'dir') current = '/home/user';
-      $('.files-path', win.el).textContent = current.replace('/home/user', 'Home') || 'Home';
-      const grid = $('.file-grid', win.el);
-      grid.innerHTML = '';
-      const items = children(current);
-
-      if (current !== '/home/user') {
-        const up = document.createElement('button');
-        up.className = 'file-card up-card';
-        up.innerHTML = '<span class="ficon">↩</span><span>Up</span>';
-        up.addEventListener('click', () => {
-          current = parentPath(current);
-          render();
-        });
-        grid.appendChild(up);
-      }
-
-      if (!items.length && current === '/home/user') {
-        const empty = document.createElement('div');
-        empty.className = 'files-empty';
-        empty.innerHTML = '<div class="empty-icon">◇</div><strong>This folder is empty</strong><span>Create a .txt or .html file to get started.</span>';
-        grid.appendChild(empty);
-        return;
-      }
-
-      items.forEach(p => {
-        const node = state.fs[p];
-        const card = document.createElement('div');
-        card.className = 'file-card-wrap';
-        const icon = node.type === 'dir' ? '📁' : /\.html$/i.test(p) ? '🌐' : '📄';
-        card.innerHTML = `
-          <button class="file-card" aria-label="Open ${escapeHTML(basename(p))}">
-            <span class="ficon">${icon}</span><span>${escapeHTML(basename(p))}</span>
-          </button>
-          <div class="file-mini-actions">
-            ${node.type === 'file' && /\.html$/i.test(p) ? '<button class="file-run" title="Run HTML">▶</button>' : ''}
-            <button class="file-rename" title="Rename">✎</button>
-            ${node.type === 'file' ? '<button class="file-download" title="Download">↓</button>' : ''}
-            <button class="file-delete" title="Delete">×</button>
-          </div>`;
-        $('.file-card', card).addEventListener('click', () => openItem(p));
-        $('.file-run', card)?.addEventListener('click', e => {
-          e.stopPropagation();
-          openApp('preview', { file:p });
-        });
-        $('.file-rename', card)?.addEventListener('click', e => {
-          e.stopPropagation();
-          let next = prompt('Rename', basename(p));
-          if (!next) return;
-          next = next.trim().replace(/[\\/:*?"<>|]/g, '').slice(0, 80);
-          if (!next) return;
-          if (node.type === 'file' && !allowedFileName(next)) {
-            alert('PocketVM currently supports .txt and .html files.');
-            return;
-          }
-          const target = norm(next, parentPath(p));
-          if (target !== p && state.fs[target]) { alert('That name already exists.'); return; }
-          const moves = Object.keys(state.fs).filter(k => k === p || k.startsWith(p + '/')).sort((a,b) => a.length - b.length);
-          const replacements = moves.map(old => [old, target + old.slice(p.length), state.fs[old]]);
-          moves.sort((a,b) => b.length-a.length).forEach(old => delete state.fs[old]);
-          replacements.forEach(([old,n,val]) => state.fs[n] = val);
-          persistFS();
-          render();
-          notify('Renamed', basename(p) + ' → ' + next, '✎');
-        });
-        $('.file-download', card)?.addEventListener('click', e => {
-          e.stopPropagation();
-          if (node.type !== 'file') return;
-          const blob = new Blob([node.content || ''], { type:/\.html$/i.test(p) ? 'text/html' : 'text/plain' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = basename(p); document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-        });
-        $('.file-delete', card).addEventListener('click', e => {
-          e.stopPropagation();
-          const label = basename(p);
-          if (!confirm(`Delete ${label}?`)) return;
-          if (node.type === 'dir' && children(p).length) {
-            alert('That folder is not empty.');
-            return;
-          }
-          delete state.fs[p];
-          persistFS();
-          render();
-        });
-        grid.appendChild(card);
-      });
-    }
-
-    function openItem(p) {
-      const node = state.fs[p];
-      if (!node) return;
-      if (node.type === 'dir') {
-        current = p;
-        render();
-      } else {
-        openApp('editor', { file:p });
-      }
-    }
-
-    function showCreateDialog(kind) {
-      const ext = kind === 'html' ? '.html' : '.txt';
-      const overlay = document.createElement('div');
-      overlay.className = 'dialog-backdrop';
-      overlay.innerHTML = `
-        <form class="mini-dialog">
-          <h3>New ${kind === 'html' ? 'HTML' : 'text'} file</h3>
-          <p>Files are saved to PocketVM on this device.</p>
-          <label>File name<input class="dialog-input" type="text" inputmode="text" autocomplete="off" placeholder="${kind === 'html' ? 'website.html' : 'notes.txt'}" /></label>
-          <div class="dialog-error" aria-live="polite"></div>
-          <div class="dialog-actions"><button type="button" data-cancel>Cancel</button><button type="submit" class="primary-btn">Create</button></div>
-        </form>`;
-      win.content.appendChild(overlay);
-      const input = $('.dialog-input', overlay);
-      setTimeout(() => input.focus(), 0);
-      $('[data-cancel]', overlay).addEventListener('click', () => overlay.remove());
-      overlay.addEventListener('pointerdown', e => {
-        if (e.target === overlay) overlay.remove();
-      });
-      $('form', overlay).addEventListener('submit', e => {
-        e.preventDefault();
-        let name = input.value.trim();
-        const error = $('.dialog-error', overlay);
-        if (!name) {
-          error.textContent = 'Enter a file name.';
-          return;
-        }
-        if (/[\\/:*?"<>|]/.test(name)) {
-          error.textContent = 'That file name contains unsupported characters.';
-          return;
-        }
-        if (!name.toLowerCase().endsWith(ext)) name += ext;
-        if (!allowedFileName(name)) {
-          error.textContent = 'PocketVM currently supports .txt and .html files.';
-          return;
-        }
-        const p = norm(name, current);
-        if (state.fs[p]) {
-          error.textContent = 'A file with that name already exists.';
-          return;
-        }
-        state.fs[p] = { type:'file', content: kind === 'html' ? htmlStarter(name) : '', createdAt:Date.now(), modifiedAt:Date.now() };
-        persistFS();
-        overlay.remove();
-        render();
-        openApp('editor', { file:p });
-      });
-    }
-
-    render();
-  }
-
-  function htmlStarter(filename) {
-    const title = basename(filename).replace(/\.html$/i, '') || 'PocketVM Page';
-    return `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>${title}</title>\n  <style>\n    body { font-family: system-ui, sans-serif; padding: 32px; }\n  </style>\n</head>\n<body>\n  <h1>Hello from PocketVM 👋</h1>\n  <p>Edit this file, then tap Run.</p>\n  <button onclick="document.body.append(' It works!')">Test JavaScript</button>\n</body>\n</html>`;
-  }
-
-  // ---------- Editor + HTML preview ----------
-  function buildEditor(win, options = {}) {
-    const file = options.file;
-    if (!file || !state.fs[file] || state.fs[file].type !== 'file') {
-      win.content.innerHTML = '<div class="app-pad"><h2>File not found</h2></div>';
-      return;
-    }
-    const isHTML = /\.html$/i.test(file);
-    setWindowTitle(win, basename(file), isHTML ? '🌐' : '📄');
-    win.content.innerHTML = `
-      <div class="editor-app ${isHTML ? 'html-editor' : ''}">
-        <div class="editor-toolbar">
-          <strong>${escapeHTML(basename(file))}</strong>
-          <span class="editor-location">${escapeHTML(parentPath(file).replace('/home/user', 'Home'))}</span>
-          <span class="files-spacer"></span>
-          <span class="editor-state">Saved</span>
-          ${isHTML ? '<button class="soft-btn" data-editor-run>▶ Run</button>' : ''}
-          <button class="soft-btn" data-editor-save>Save</button>
-        </div>
-        <textarea class="editor-area" ${isHTML ? 'spellcheck="false" autocapitalize="off" autocorrect="off"' : 'spellcheck="true"'}></textarea>
-      </div>`;
-
-    const area = $('.editor-area', win.el);
-    const status = $('.editor-state', win.el);
-    area.value = state.fs[file].content || '';
-    let timer;
-
-    const save = () => {
-      clearTimeout(timer);
-      if (!state.fs[file]) return;
-      state.fs[file] = { ...state.fs[file], type:'file', content:area.value, modifiedAt:Date.now() };
-      if (persistFS()) status.textContent = 'Saved';
-      else status.textContent = 'Save failed';
-    };
-
-    area.addEventListener('input', () => {
-      status.textContent = 'Saving…';
-      clearTimeout(timer);
-      timer = setTimeout(save, 300);
-    });
-    area.addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        save();
-      }
-    });
-    $('[data-editor-save]', win.el).addEventListener('click', save);
-    $('[data-editor-run]', win.el)?.addEventListener('click', () => {
-      save();
-      openApp('preview', { file });
-    });
-    win.cleanup = save;
-  }
-
-  function buildPreview(win, options = {}) {
-    const file = options.file;
-    if (!file || !state.fs[file] || state.fs[file].type !== 'file' || !/\.html$/i.test(file)) {
-      win.content.innerHTML = '<div class="app-pad"><h2>HTML file not found</h2></div>';
-      return;
-    }
-    setWindowTitle(win, `${basename(file)} — Preview`, '◉');
-    win.content.innerHTML = `
-      <div class="browser-app">
-        <div class="browser-toolbar">
-          <div class="browser-address"><span>local://</span>${escapeHTML(basename(file))}</div>
-          <button class="soft-btn" data-preview-edit>Edit</button>
-          <button class="soft-btn" data-preview-refresh>↻ Refresh</button>
-        </div>
-        <div class="browser-safety">Sandboxed local HTML preview · scripts are allowed, but the page cannot access PocketVM itself.</div>
-        <iframe class="html-preview" title="Preview of ${escapeHTML(basename(file))}" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
-      </div>`;
-
-    const frame = $('.html-preview', win.el);
-    const refresh = () => {
-      if (!state.fs[file]) return;
-      frame.srcdoc = state.fs[file].content || '';
-    };
-    refresh();
-    $('[data-preview-refresh]', win.el).addEventListener('click', refresh);
-    $('[data-preview-edit]', win.el).addEventListener('click', () => openApp('editor', { file }));
-  }
-
-
   // ---------- Pocket Browser ----------
   function buildWebBrowser(win) {
     setWindowTitle(win, 'Pocket Browser', '◎');
@@ -976,8 +673,9 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       status.textContent = 'Pocket Browser home';
     }
 
-    function showLocal(tab, url) {
+    async function showLocal(tab, url) {
       const path = localPathFromURL(url);
+      await refreshFS();
       const node = path && state.fs[path];
       tab.kind = 'local';
       if (!node || node.type !== 'file' || !/\.html$/i.test(path)) {
@@ -990,10 +688,15 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       }
       tab.title = basename(path);
       frame.removeAttribute('src');
-      // Deliberately no allow-same-origin: user HTML must not be able to reach PocketVM storage.
+      // Deliberately no allow-same-origin: local HTML cannot reach PocketVM storage.
       frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads');
-      frame.srcdoc = node.content || '';
-      status.textContent = 'Local PocketVM page · sandboxed';
+      try {
+        frame.srcdoc = await PocketDisk.readText(path);
+        status.textContent = 'Local PocketVM page · sandboxed';
+      } catch {
+        frame.srcdoc = errorPage('Could not read local page', 'The file may have been moved or deleted.');
+        status.textContent = 'Local page unavailable';
+      }
     }
 
     function showWeb(tab, url) {
@@ -2316,7 +2019,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
 
 
-  // ---------- Shell ----------  // ---------- Shell ----------
+  // ---------- Shell ----------
   function updateClock() {
     const d = new Date();
     const t = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', ...(state.preferences.clockSeconds ? {second:'2-digit'} : {}) });
