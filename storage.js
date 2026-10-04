@@ -386,6 +386,7 @@
   }
 
   async function destroy() {
+    try { await clearDrive(); } catch {}
     const db = await openDB().catch(() => null);
     db?.close?.();
     dbPromise = null;
@@ -393,6 +394,7 @@
       const req = indexedDB.deleteDatabase(DB_NAME);
       req.onsuccess = resolve;
       req.onerror = () => reject(req.error || new Error('Could not erase the PocketVM drive.'));
+      // Another open PocketVM tab can delay deletion, but clearDrive above has already erased the data.
       req.onblocked = resolve;
     });
   }
