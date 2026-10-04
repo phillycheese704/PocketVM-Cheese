@@ -2096,7 +2096,175 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     menu.querySelectorAll('[data-dctx]').forEach(b=>b.addEventListener('click',()=>{menu.hidden=true;const a=b.dataset.dctx;if(['txt','html','dir'].includes(a))createDesktopItem(a);if(a==='files')openApp('files');if(a==='settings')openApp('settings');if(a==='refresh')applyWallpaper();}));
   }
 
+  function desktopGridMetrics() {
+    const size = state.preferences.desktopIconSize || 'medium';
+    if (size === 'small') return { cellW:72, cellH:78 };
+    if (size === 'large') return { cellW:108, cellH:116 };
+    return { cellW:90, cellH:96 };
+  }
+
+  function ensureDesktopLayout() {
+    const icons = $$('.desktop-icon');
+    const used = new Set();
+    icons.forEach((icon, index) => {
+      const id = icon.dataset.open;
+      let slot = Number(state.desktopLayout[id]);
+      if (!Number.isInteger(slot) || slot < 0 || used.has(slot)) {
+        slot = index;
+        while (used.has(slot)) slot++;
+        state.desktopLayout[id] = slot;
+      }
+      used.add(slot);
+    });
+    saveJSON('pocketvm.desktopLayout', state.desktopLayout);
+  }
+
+  function placeDesktopIcons() {
+    const host = $('#desktop-icons');
+    if (!host) return;
+    ensureDesktopLayout();
+    const { cellW, cellH } = desktopGridMetrics();
+    const rect = host.getBoundingClientRect();
+    const cols = Math.max(1, Math.floor(rect.width / cellW));
+    $$('.desktop-icon', host).forEach(icon => {
+      const slot = Number(state.desktopLayout[icon.dataset.open] || 0);
+      const row = Math.floor(slot / cols);
+      const col = slot % cols;
+      icon.style.gridColumn = String(col + 1);
+      icon.style.gridRow = String(row + 1);
+    });
+  }
+
+  function desktopSlotFromPoint(x, y) {
+    const host = $('#desktop-icons');
+    if (!host) return 0;
+    const rect = host.getBoundingClientRect();
+    const { cellW, cellH } = desktopGridMetrics();
+    const cols = Math.max(1, Math.floor(rect.width / cellW));
+    const col = clamp(Math.floor((x - rect.left) / cellW), 0, cols - 1);
+    const row = Math.max(0, Math.floor((y - rect.top) / cellH));
+    return row * cols + col;
+  }
+
+  function moveDesktopIcon(id, targetSlot) {
+    const current = Number(state.desktopLayout[id] || 0);
+    const other = Object.entries(state.desktopLayout).find(([otherId, slot]) => otherId !== id && Number(slot) === Number(targetSlot));
+    if (other) state.desktopLayout[other[0]] = current;
+    state.desktopLayout[id] = targetSlot;
+    saveJSON('pocketvm.desktopLayout', state.desktopLayout);
+    placeDesktopIcons();
+  }
+
+  function renderDesktopIconContext(icon, x, y) {
+    const menu = $('#desktop-context');
+    if (!menu || !icon) return;
+    const id = icon.dataset.open;
+    const label = icon.textContent.trim() || id;
+    menu.innerHTML =
+      '<button data-icon-action="open"><span>↗</span>Open ' + escapeHTML(label) + '</button>' +
+      '<button data-icon-action="remove"><span>−</span>Remove from desktop</button>' +
+      '<hr><button data-icon-action="settings"><span>⚙</span>Personalization</button>';
+    menu.style.left = Math.min(x, innerWidth - 230) + 'px';
+    menu.style.top = Math.min(y, innerHeight - 210) + 'px';
+    menu.hidden = false;
+    $$('[data-icon-action]', menu).forEach(button => button.addEventListener('click', () => {
+      menu.hidden = true;
+      const action = button.dataset.iconAction;
+      if (action === 'open') openApp(id);
+      if (action === 'remove') {
+        const hidden = new Set(state.preferences.desktopHidden || []);
+        hidden.add(id);
+        state.preferences.desktopHidden = [...hidden];
+        applyPreferences();
+        initDesktopGrid();
+        notify('Removed from desktop', label + ' is still available from Start.', '−');
+      }
+      if (action === 'settings') openApp('settings');
+    }));
+  }
+
+  function initDesktopGrid() {
+    const host = $('#desktop-icons');
+    if (!host) return;
+    ensureDesktopLayout();
+    placeDesktopIcons();
+
+    $$('.desktop-icon', host).forEach(icon => {
+      if (icon.dataset.desktopDragReady === '1') return;
+      icon.dataset.desktopDragReady = '1';
+
+      let startX = 0, startY = 0, dragging = false, moved = false, holdTimer = null, suppressClick = false;
+
+      icon.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        renderDesktopIconContext(icon, e.clientX, e.clientY);
+      });
+
+      icon.addEventListener('pointerdown', e => {
+        if (e.button != null && e.button !== 0) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        dragging = false;
+        moved = false;
+        suppressClick = false;
+        if (e.pointerType === 'touch') {
+          holdTimer = setTimeout(() => {
+            if (!moved) {
+              suppressClick = true;
+              renderDesktopIconContext(icon, startX, startY);
+              navigator.vibrate?.(18);
+            }
+          }, 650);
+        }
+        try { icon.setPointerCapture(e.pointerId); } catch {}
+      });
+
+      icon.addEventListener('pointermove', e => {
+        if (!icon.hasPointerCapture?.(e.pointerId)) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (!dragging && Math.hypot(dx, dy) > 8) {
+          dragging = true;
+          moved = true;
+          clearTimeout(holdTimer);
+          icon.classList.add('desktop-icon-dragging');
+          icon.style.zIndex = '20';
+        }
+        if (dragging) {
+          e.preventDefault();
+          icon.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1.04)';
+        }
+      });
+
+      const finish = e => {
+        clearTimeout(holdTimer);
+        if (dragging) {
+          const target = desktopSlotFromPoint(e.clientX, e.clientY);
+          moveDesktopIcon(icon.dataset.open, target);
+          suppressClick = true;
+        }
+        dragging = false;
+        icon.classList.remove('desktop-icon-dragging');
+        icon.style.transform = '';
+        icon.style.zIndex = '';
+        try { icon.releasePointerCapture(e.pointerId); } catch {}
+      };
+
+      icon.addEventListener('pointerup', finish);
+      icon.addEventListener('pointercancel', finish);
+      icon.addEventListener('click', e => {
+        if (suppressClick) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          suppressClick = false;
+        }
+      }, true);
+    });
+  }
+
   function initDesktopExperience(){
+    initDesktopGrid();
     renderQuickSettings(); renderCalendar(); renderNotificationCenter(); updateNotificationBadge();
     $('#quick-btn')?.addEventListener('click',e=>{e.stopPropagation();renderQuickSettings();toggleFlyout($('#quick-panel'));});
     $('#clock-btn')?.addEventListener('click',e=>{e.stopPropagation();renderCalendar();toggleFlyout($('#calendar-panel'));});
@@ -2215,6 +2383,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   renderUserChrome();
 
   window.addEventListener('resize', () => {
+    placeDesktopIcons();
     for (const w of state.windows.values()) {
       if (w.maximized) continue;
       const r = w.el.getBoundingClientRect();
