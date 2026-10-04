@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   'use strict';
 
   const $ = (s, root = document) => root.querySelector(s);
@@ -14,21 +14,7 @@
     }
   };
 
-  const FS_SCHEMA = '2';
-  const makeEmptyFS = () => ({
-    '/': { type: 'dir' },
-    '/home': { type: 'dir' },
-    '/home/user': { type: 'dir' }
-  });
-
-  let initialFS;
-  if (localStorage.getItem('pocketvm.fs.schema') !== FS_SCHEMA) {
-    initialFS = makeEmptyFS();
-    localStorage.setItem('pocketvm.fs', JSON.stringify(initialFS));
-    localStorage.setItem('pocketvm.fs.schema', FS_SCHEMA);
-  } else {
-    initialFS = loadJSON('pocketvm.fs', makeEmptyFS());
-  }
+  const initialFS = await PocketDisk.init();
 
   const state = {
     z: 20,
@@ -36,12 +22,14 @@
     terminalCounter: 0,
     theme: localStorage.getItem('pocketvm.theme') || 'blue',
     auth: loadJSON('pocketvm.auth', null),
-    user: loadJSON('pocketvm.user', { name: 'Guest', avatar: '' }),
+    user: loadJSON('pocketvm.user', { name: 'Guest', avatar: '', borderStyle:'ring', borderColor:'#8fc6ff' }),
     wallpaper: loadJSON('pocketvm.wallpaper', { type: 'preset', value: 'aurora', dataUrl: '' }),
-    preferences: loadJSON('pocketvm.preferences', { transparency:true, animations:true, taskbarCentered:false, clockSeconds:false, focusMode:false }),
+    preferences: loadJSON('pocketvm.preferences', { transparency:true, animations:true, taskbarCentered:false, clockSeconds:false, focusMode:false, desktopIconSize:'medium', desktopHidden:[] }),
     notifications: loadJSON('pocketvm.notifications', []),
     browserData: loadJSON('pocketvm.browser', { bookmarks:[], history:[] }),
     bootedAt: Date.now(),
+    fileClipboard: null,
+    desktopLayout: loadJSON('pocketvm.desktopLayout', {}),
     fs: initialFS
   };
 
@@ -49,14 +37,22 @@
     blue: ['#65a7ff', '#8f7cff'],
     mint: ['#5ee7c4', '#4da6ff'],
     sunset: ['#ff9b73', '#b276ff'],
-    mono: ['#e7edf6', '#8794a8']
+    mono: ['#e7edf6', '#8794a8'],
+    rose: ['#ff7aa8', '#9c7cff'],
+    lime: ['#b7f36b', '#3dd6a5'],
+    amber: ['#ffbf66', '#ff7b72'],
+    cobalt: ['#4b8dff', '#38d8ff']
   };
 
   const wallpapers = {
     aurora: 'radial-gradient(circle at 25% 20%, rgba(65,102,255,.48), transparent 34%), radial-gradient(circle at 75% 65%, rgba(80,53,170,.48), transparent 32%), radial-gradient(circle at 60% 20%, rgba(0,190,255,.2), transparent 27%), linear-gradient(145deg,#090f1e 0%,#101a36 55%,#070b15 100%)',
     dusk: 'radial-gradient(circle at 20% 25%, rgba(255,125,105,.34), transparent 32%), radial-gradient(circle at 78% 68%, rgba(139,92,246,.42), transparent 36%), linear-gradient(145deg,#1b1020,#13152e 58%,#080b14)',
     ocean: 'radial-gradient(circle at 30% 22%, rgba(45,212,191,.26), transparent 33%), radial-gradient(circle at 72% 70%, rgba(14,165,233,.36), transparent 35%), linear-gradient(145deg,#06151b,#082f49 55%,#07111a)',
-    graphite: 'radial-gradient(circle at 32% 25%, rgba(255,255,255,.11), transparent 28%), radial-gradient(circle at 70% 70%, rgba(148,163,184,.12), transparent 31%), linear-gradient(145deg,#090b0f,#181b21 58%,#07080b)'
+    graphite: 'radial-gradient(circle at 32% 25%, rgba(255,255,255,.11), transparent 28%), radial-gradient(circle at 70% 70%, rgba(148,163,184,.12), transparent 31%), linear-gradient(145deg,#090b0f,#181b21 58%,#07080b)',
+    sunrise: 'radial-gradient(circle at 20% 20%, rgba(255,194,116,.48), transparent 31%), radial-gradient(circle at 78% 70%, rgba(255,105,135,.28), transparent 38%), linear-gradient(150deg,#25182b,#55304d 52%,#151529)',
+    alpine: 'radial-gradient(circle at 25% 20%, rgba(106,237,203,.25), transparent 34%), radial-gradient(circle at 75% 75%, rgba(80,145,255,.26), transparent 38%), linear-gradient(150deg,#081a1d,#0c3035 50%,#0b1320)',
+    neon: 'radial-gradient(circle at 20% 65%, rgba(255,0,153,.32), transparent 30%), radial-gradient(circle at 78% 28%, rgba(0,229,255,.28), transparent 32%), linear-gradient(145deg,#090019,#1a0b31 48%,#050812)',
+    ice: 'radial-gradient(circle at 25% 25%, rgba(190,228,255,.28), transparent 35%), radial-gradient(circle at 75% 75%, rgba(100,160,255,.26), transparent 34%), linear-gradient(145deg,#122031,#1b334d 56%,#0c1725)'
   };
 
   function saveJSON(key, value) {
@@ -79,22 +75,54 @@
 
   function applyPreferences() {
     const p = state.preferences || {};
+    p.desktopHidden ||= [];
+    p.desktopIconSize ||= 'medium';
     document.body.classList.toggle('solid-ui', p.transparency === false);
     document.body.classList.toggle('reduce-motion', p.animations === false);
     document.body.classList.toggle('center-taskbar', p.taskbarCentered === true);
+    document.body.dataset.desktopIconSize = p.desktopIconSize;
+    $('.desktop-icon').forEach(icon => {
+      const id = icon.dataset.open || '';
+      icon.hidden = p.desktopHidden.includes(id);
+    });
     saveJSON('pocketvm.preferences', p);
   }
 
-  function applyWallpaper() {
+  const wallpaperObjectUrls = { desktop:'', auth:'' };
+
+  async function wallpaperCSS(target = 'desktop') {
+    if (state.wallpaper.type === 'file' && state.wallpaper.path) {
+      try {
+        const blob = await PocketDisk.readBlob(state.wallpaper.path);
+        if (wallpaperObjectUrls[target]) URL.revokeObjectURL(wallpaperObjectUrls[target]);
+        wallpaperObjectUrls[target] = URL.createObjectURL(blob);
+        const shade = target === 'auth' ? 'linear-gradient(rgba(3,7,14,.42), rgba(3,7,14,.62)),' : 'linear-gradient(rgba(4,8,16,.12), rgba(4,8,16,.17)),';
+        return `${shade} url("${wallpaperObjectUrls[target]}") center / cover no-repeat`;
+      } catch {}
+    }
+    if (state.wallpaper.type === 'custom' && state.wallpaper.dataUrl) {
+      const shade = target === 'auth' ? 'linear-gradient(rgba(3,7,14,.42), rgba(3,7,14,.62)),' : 'linear-gradient(rgba(4,8,16,.12), rgba(4,8,16,.17)),';
+      return `${shade} url("${state.wallpaper.dataUrl}") center / cover no-repeat`;
+    }
+    const key = wallpapers[state.wallpaper.value] ? state.wallpaper.value : 'aurora';
+    return wallpapers[key];
+  }
+
+  async function applyWallpaper() {
     const el = $('#desktop-wallpaper');
     if (!el) return;
-    el.classList.toggle('custom-wallpaper', state.wallpaper.type === 'custom' && !!state.wallpaper.dataUrl);
-    if (state.wallpaper.type === 'custom' && state.wallpaper.dataUrl) {
-      el.style.background = `linear-gradient(rgba(4,8,16,.14), rgba(4,8,16,.18)), url("${state.wallpaper.dataUrl}") center / cover no-repeat`;
-    } else {
-      const key = wallpapers[state.wallpaper.value] ? state.wallpaper.value : 'aurora';
-      el.style.background = wallpapers[key];
-    }
+    el.classList.toggle('custom-wallpaper', state.wallpaper.type === 'file' || state.wallpaper.type === 'custom');
+    el.style.background = await wallpaperCSS('desktop');
+  }
+
+  async function setWallpaperFromFile(path) {
+    const node = state.fs[path] || await PocketDisk.getNode(path);
+    if (!node || !PocketDisk.isImageMime(node.mime)) throw new Error('Choose an image file.');
+    state.wallpaper = { type:'file', value:'custom', path };
+    saveJSON('pocketvm.wallpaper', state.wallpaper);
+    await applyWallpaper();
+    await setAuthWallpaper();
+    notify('Wallpaper changed', basename(path), '▧');
   }
 
   function initials(name) {
@@ -109,6 +137,10 @@
 
   function paintAvatar(el) {
     if (!el) return;
+    const style = state.user.borderStyle || 'ring';
+    el.classList.remove('avatar-border-none','avatar-border-ring','avatar-border-double','avatar-border-glow');
+    el.classList.add('avatar-border-' + style);
+    el.style.setProperty('--avatar-border-color', state.user.borderColor || '#8fc6ff');
     if (state.user.avatar) {
       el.innerHTML = `<img src="${state.user.avatar}" alt="" />`;
     } else {
@@ -134,8 +166,14 @@
   applyTheme(state.theme);
   applyPreferences();
 
+  async function refreshFS() {
+    state.fs = await PocketDisk.snapshot();
+    return state.fs;
+  }
+
   function persistFS() {
-    return saveJSON('pocketvm.fs', state.fs);
+    console.warn('persistFS() is deprecated; PocketVM files now use IndexedDB.');
+    return true;
   }
 
   function norm(path, cwd = '/home/user') {
@@ -168,7 +206,12 @@
   }
 
   function allowedFileName(name) {
-    return /\.(txt|html)$/i.test(String(name || ''));
+    return /\.(txt|html|png|jpe?g|webp|gif|svg)$/i.test(String(name || ''));
+  }
+
+  function isImagePath(path) {
+    const node = state.fs[path];
+    return !!node && PocketDisk.isImageMime(node.mime || PocketDisk.mimeFromName(path));
   }
 
   function setWindowTitle(win, title, icon) {
@@ -182,11 +225,13 @@
     terminal: { name: 'Terminal', icon: '›_', width: 790, height: 500, singleton: false, build: buildTerminal },
     files: { name: 'Files', icon: '▤', width: 860, height: 560, singleton: true, build: buildFiles },
     calculator: { name: 'Calculator', icon: '＋', width: 380, height: 560, singleton: true, build: buildCalculator },
+    imageviewer: { name: 'Photos', icon: '▧', width: 860, height: 620, singleton: false, build: buildImageViewer },
     notes: { name: 'Notes', icon: '✎', width: 680, height: 480, singleton: true, build: buildNotes },
     editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: buildEditor },
     preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: buildPreview },
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
-    monitor: { name: 'System Monitor', icon: '⌁', width: 620, height: 470, singleton: true, build: buildMonitor },
+    monitor: { name: 'System', icon: '⌁', width: 760, height: 560, singleton: true, build: buildMonitor },
+    taskmanager: { name: 'Task Manager', icon: '▦', width: 760, height: 560, singleton: true, build: buildTaskManager },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
     about: { name: 'About PocketVM', icon: 'ⓘ', width: 500, height: 410, singleton: true, build: buildAbout }
   };
