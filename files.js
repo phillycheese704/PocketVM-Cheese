@@ -67,6 +67,7 @@
     let thumbUrls = [];
     let holdTimer = null;
     let holdTriggered = false;
+    let suppressNextClick = false;
 
     ctx.setWindowTitle(win, 'Files', '▤');
     win.content.innerHTML =
@@ -249,6 +250,10 @@
         }
 
         entry.addEventListener('click', event => {
+          if (suppressNextClick) {
+            suppressNextClick = false;
+            return;
+          }
           if (holdTriggered) {
             holdTriggered = false;
             return;
@@ -280,7 +285,19 @@
             if (navigator.vibrate) navigator.vibrate(18);
           }, 600);
         });
-        ['pointerup','pointercancel','pointermove'].forEach(type => entry.addEventListener(type, () => clearTimeout(holdTimer)));
+        entry.addEventListener('pointerup', event => {
+          if (event.pointerType !== 'touch') return;
+          clearTimeout(holdTimer);
+          suppressNextClick = true;
+          if (holdTriggered) {
+            holdTriggered = false;
+            return;
+          }
+          if (selectMode) toggleSelection(path, true);
+          else openItem(path);
+        });
+        entry.addEventListener('pointercancel', () => clearTimeout(holdTimer));
+        entry.addEventListener('pointermove', () => clearTimeout(holdTimer));
         fileView.appendChild(entry);
       });
 
