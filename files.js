@@ -70,6 +70,7 @@
     let suppressNextClick = false;
     let holdX = 0;
     let holdY = 0;
+    let touchMoved = false;
 
     ctx.setWindowTitle(win, 'Files', '▤');
     win.content.innerHTML =
@@ -277,6 +278,7 @@
         entry.addEventListener('pointerdown', event => {
           if (event.pointerType !== 'touch') return;
           holdTriggered = false;
+          touchMoved = false;
           holdX = event.clientX;
           holdY = event.clientY;
           holdTimer = setTimeout(() => {
@@ -296,12 +298,19 @@
             holdTriggered = false;
             return;
           }
+          if (touchMoved) {
+            touchMoved = false;
+            return;
+          }
           if (selectMode) toggleSelection(path, true);
           else openItem(path);
         });
         entry.addEventListener('pointercancel', () => clearTimeout(holdTimer));
         entry.addEventListener('pointermove', event => {
-          if (holdTimer && Math.hypot(event.clientX - holdX, event.clientY - holdY) > 12) clearTimeout(holdTimer);
+          if (Math.hypot(event.clientX - holdX, event.clientY - holdY) > 12) {
+            touchMoved = true;
+            clearTimeout(holdTimer);
+          }
         });
         fileView.appendChild(entry);
       });
@@ -582,6 +591,11 @@
     q('[data-selection-properties]').addEventListener('click', () => showProperties(selectedPaths()));
     win.content.addEventListener('pointerdown', event => {
       if (!event.target.closest('.files-context-menu,.file-entry-v3')) contextMenu.hidden = true;
+      const shell = win.content.querySelector('.files-v3');
+      if (shell?.classList.contains('files-nav-open') &&
+          !event.target.closest('.files-nav-v3,[data-files-nav]')) {
+        shell.classList.remove('files-nav-open');
+      }
     });
 
     const diskListener = () => render();
