@@ -123,11 +123,17 @@
     }
 
     async function updateDriveMeter() {
-      const stats = await PocketDisk.stats();
-      const pct = Math.min(100, stats.used / stats.max * 100);
-      q('[data-drive-mini-used]').textContent = PocketDisk.formatBytes(stats.used);
-      q('[data-drive-mini-bar]').style.width = pct + '%';
-      q('[data-drive-mini-free]').textContent = PocketDisk.formatBytes(stats.free) + ' free of 1 GB';
+      try {
+        const stats = await PocketDisk.stats();
+        const pct = Math.min(100, stats.used / stats.max * 100);
+        q('[data-drive-mini-used]').textContent = PocketDisk.formatBytes(stats.used);
+        q('[data-drive-mini-bar]').style.width = pct + '%';
+        q('[data-drive-mini-free]').textContent = PocketDisk.formatBytes(stats.free) + ' free of 1 GB';
+      } catch {
+        q('[data-drive-mini-used]').textContent = '—';
+        q('[data-drive-mini-bar]').style.width = '0%';
+        q('[data-drive-mini-free]').textContent = 'Storage unavailable';
+      }
     }
 
     function sortItems(items) {
@@ -598,14 +604,18 @@
       }
     });
 
-    const diskListener = () => render();
+    const showRenderFailure = err => {
+      fileView.innerHTML = '<div class="files-empty-v3"><div>!</div><strong>Files unavailable</strong><span>' + ctx.escapeHTML(err?.message || 'Could not read the virtual drive.') + '</span></div>';
+      q('[data-files-status]').textContent = 'Storage error';
+    };
+    const diskListener = () => { render().catch(showRenderFailure); };
     window.addEventListener('pocketdiskchange', diskListener);
     win.cleanup = () => {
       revokeThumbs();
       clearTimeout(holdTimer);
       window.removeEventListener('pocketdiskchange', diskListener);
     };
-    ctx.refreshFS().then(render);
+    render().catch(showRenderFailure);
   }
 
   function htmlStarter(filename) {
