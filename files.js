@@ -107,8 +107,8 @@
         '</section>' +
       '</div>';
 
-    const q = selector => ctx.$(selector, win.el);
-    const qa = selector => ctx.$$(selector, win.el);
+    const q = selector => ctx.queryOne(selector, win.el);
+    const qa = selector => ctx.queryAll(selector, win.el);
     const fileView = q('.files-view-v3');
     const contextMenu = q('.files-context-menu');
     q('.files-sort').value = sort;
@@ -245,7 +245,7 @@
             img.src = url;
             img.alt = '';
             img.className = 'file-thumb-v3';
-            ctx.$('.file-preview-v3', entry).replaceChildren(img);
+            ctx.queryOne('.file-preview-v3', entry).replaceChildren(img);
           }).catch(() => {});
         }
 
@@ -459,7 +459,7 @@
       }
       overlay.innerHTML = '<div class="mini-dialog file-properties-dialog"><h3>' + (single ? ctx.escapeHTML(ctx.basename(single.path)) : items.length + ' items') + '</h3><div class="property-list">' + rows + '</div><div class="dialog-actions"><button class="primary-btn" data-close-props>OK</button></div></div>';
       win.content.appendChild(overlay);
-      ctx.$('[data-close-props]', overlay).addEventListener('click', () => overlay.remove());
+      ctx.queryOne('[data-close-props]', overlay).addEventListener('click', () => overlay.remove());
       overlay.addEventListener('pointerdown', event => {
         if (event.target === overlay) overlay.remove();
       });
@@ -508,7 +508,7 @@
       contextMenu.style.left = Math.max(6, Math.min(x - rootRect.left, rootRect.width - 225)) + 'px';
       contextMenu.style.top = Math.max(6, Math.min(y - rootRect.top, rootRect.height - 340)) + 'px';
       contextMenu.hidden = false;
-      ctx.$$('[data-fctx]', contextMenu).forEach(button => button.addEventListener('click', async () => {
+      ctx.queryAll('[data-fctx]', contextMenu).forEach(button => button.addEventListener('click', async () => {
         contextMenu.hidden = true;
         const action = button.dataset.fctx;
         if (action === 'open') openItem(path);
@@ -605,8 +605,8 @@
         '<textarea class="editor-area" ' + (isHTML ? 'spellcheck="false" autocapitalize="off" autocorrect="off"' : 'spellcheck="true"') + '></textarea>' +
       '</div>';
 
-    const area = ctx.$('.editor-area', win.el);
-    const status = ctx.$('.editor-state', win.el);
+    const area = ctx.queryOne('.editor-area', win.el);
+    const status = ctx.queryOne('.editor-state', win.el);
     try {
       area.value = await PocketDisk.readText(file);
       status.textContent = 'Saved';
@@ -645,8 +645,8 @@
         save();
       }
     });
-    ctx.$('[data-editor-save]', win.el).addEventListener('click', save);
-    const run = ctx.$('[data-editor-run]', win.el);
+    ctx.queryOne('[data-editor-save]', win.el).addEventListener('click', save);
+    const run = ctx.queryOne('[data-editor-run]', win.el);
     if (run) run.addEventListener('click', async () => {
       await save();
       ctx.openApp('preview', { file });
@@ -672,7 +672,7 @@
         '<iframe class="html-preview" title="HTML preview" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-downloads"></iframe>' +
       '</div>';
 
-    const frame = ctx.$('.html-preview', win.el);
+    const frame = ctx.queryOne('.html-preview', win.el);
     const refresh = async () => {
       if (!ctx.state.fs[file]) return;
       try {
@@ -682,8 +682,8 @@
       }
     };
     await refresh();
-    ctx.$('[data-preview-refresh]', win.el).addEventListener('click', refresh);
-    ctx.$('[data-preview-edit]', win.el).addEventListener('click', () => ctx.openApp('editor', { file }));
+    ctx.queryOne('[data-preview-refresh]', win.el).addEventListener('click', refresh);
+    ctx.queryOne('[data-preview-edit]', win.el).addEventListener('click', () => ctx.openApp('editor', { file }));
   }
 
   async function buildImageViewer(win, options, ctx) {
@@ -702,8 +702,8 @@
         '<div class="photos-status"><span>' + ctx.escapeHTML(info.mime) + '</span><span>' + ctx.escapeHTML(PocketDisk.formatBytes(info.node.size || 0)) + '</span><span data-photo-dimensions>Loading…</span></div>' +
       '</div>';
 
-    const img = ctx.$('.photos-canvas img', win.el);
-    const canvas = ctx.$('.photos-canvas', win.el);
+    const img = ctx.queryOne('.photos-canvas img', win.el);
+    const canvas = ctx.queryOne('.photos-canvas', win.el);
     const blob = await PocketDisk.readBlob(file);
     const url = URL.createObjectURL(blob);
     let zoom = 1;
@@ -712,23 +712,23 @@
       canvas.dataset.zoomed = zoom !== 1 ? '1' : '0';
     };
     img.onload = () => {
-      ctx.$('[data-photo-dimensions]', win.el).textContent = img.naturalWidth + ' × ' + img.naturalHeight;
+      ctx.queryOne('[data-photo-dimensions]', win.el).textContent = img.naturalWidth + ' × ' + img.naturalHeight;
     };
     img.src = url;
-    ctx.$('[data-photo-zoom-in]', win.el).addEventListener('click', () => {
+    ctx.queryOne('[data-photo-zoom-in]', win.el).addEventListener('click', () => {
       zoom = Math.min(4, zoom + .25);
       applyZoom();
     });
-    ctx.$('[data-photo-zoom-out]', win.el).addEventListener('click', () => {
+    ctx.queryOne('[data-photo-zoom-out]', win.el).addEventListener('click', () => {
       zoom = Math.max(.25, zoom - .25);
       applyZoom();
     });
-    ctx.$('[data-photo-fit]', win.el).addEventListener('click', () => {
+    ctx.queryOne('[data-photo-fit]', win.el).addEventListener('click', () => {
       zoom = 1;
       applyZoom();
     });
-    ctx.$('[data-photo-wallpaper]', win.el).addEventListener('click', () => ctx.setWallpaperFromFile(file));
-    ctx.$('[data-photo-download]', win.el).addEventListener('click', () => {
+    ctx.queryOne('[data-photo-wallpaper]', win.el).addEventListener('click', () => ctx.setWallpaperFromFile(file));
+    ctx.queryOne('[data-photo-download]', win.el).addEventListener('click', () => {
       const anchor = document.createElement('a');
       anchor.href = url;
       anchor.download = ctx.basename(file);
