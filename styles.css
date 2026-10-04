@@ -1315,3 +1315,24 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
   .tm-performance-grid{grid-template-columns:1fr}
   .desktop-icon-toggles{justify-content:flex-start}
 }
+
+
+/* Files mobile drawer audit fix */
+.files-nav-toggle{display:none}
+@media(max-width:760px){
+  .files-nav-toggle{display:grid}
+  .files-nav-v3{
+    transition:transform .18s ease;
+    box-shadow:18px 0 55px rgba(0,0,0,.38);
+  }
+  .files-v3.files-nav-open .files-nav-v3{transform:translateX(0)}
+  .files-v3.files-nav-open::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:14;
+    background:rgba(0,0,0,.30);
+    pointer-events:none;
+  }
+  .files-v3.files-nav-open .files-nav-v3{z-index:16}
+}
