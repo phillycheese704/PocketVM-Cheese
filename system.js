@@ -59,15 +59,15 @@
       if (!alive) return;
       const stats = await PocketDisk.stats();
       const pct = Math.min(100, stats.used / stats.max * 100);
-      ctx.$('[data-vdisk-used]', win.el).textContent = PocketDisk.formatBytes(stats.used);
-      ctx.$('[data-vdisk-free]', win.el).textContent = PocketDisk.formatBytes(stats.free) + ' free';
-      ctx.$('[data-vdisk-bar]', win.el).style.width = pct + '%';
-      ctx.$('[data-system-fps]', win.el).textContent = String(fps);
-      ctx.$('[data-system-windows]', win.el).textContent = String(ctx.state.windows.size);
-      ctx.$('[data-system-network]', win.el).textContent = navigator.onLine ? 'Online' : 'Offline';
-      ctx.$('[data-system-uptime]', win.el).textContent = ctx.formatUptime(Date.now() - ctx.state.bootedAt);
+      ctx.queryOne('[data-vdisk-used]', win.el).textContent = PocketDisk.formatBytes(stats.used);
+      ctx.queryOne('[data-vdisk-free]', win.el).textContent = PocketDisk.formatBytes(stats.free) + ' free';
+      ctx.queryOne('[data-vdisk-bar]', win.el).style.width = pct + '%';
+      ctx.queryOne('[data-system-fps]', win.el).textContent = String(fps);
+      ctx.queryOne('[data-system-windows]', win.el).textContent = String(ctx.state.windows.size);
+      ctx.queryOne('[data-system-network]', win.el).textContent = navigator.onLine ? 'Online' : 'Offline';
+      ctx.queryOne('[data-system-uptime]', win.el).textContent = ctx.formatUptime(Date.now() - ctx.state.bootedAt);
 
-      const device = ctx.$('[data-system-device]', win.el);
+      const device = ctx.queryOne('[data-system-device]', win.el);
       const deviceRows = [
         ['Platform', platformName()],
         ['CPU threads', navigator.hardwareConcurrency || 'Not exposed'],
@@ -83,7 +83,7 @@
         device.appendChild(el);
       });
 
-      const storage = ctx.$('[data-system-storage]', win.el);
+      const storage = ctx.queryOne('[data-system-storage]', win.el);
       const storageRows = [
         ['Virtual limit', '1.00 GB'],
         ['Virtual used', PocketDisk.formatBytes(stats.used)],
@@ -102,8 +102,8 @@
 
     const timer = setInterval(render, 1000);
     render();
-    ctx.$('[data-system-taskmanager]', win.el).addEventListener('click', () => ctx.openApp('taskmanager'));
-    ctx.$('[data-system-files]', win.el).addEventListener('click', () => ctx.openApp('files'));
+    ctx.queryOne('[data-system-taskmanager]', win.el).addEventListener('click', () => ctx.openApp('taskmanager'));
+    ctx.queryOne('[data-system-files]', win.el).addEventListener('click', () => ctx.openApp('files'));
     win.cleanup = () => {
       alive = false;
       clearInterval(timer);
@@ -118,7 +118,7 @@
         '<section class="task-manager-page" data-tm-page></section>' +
       '</div>';
 
-    const page = ctx.$('[data-tm-page]', win.el);
+    const page = ctx.queryOne('[data-tm-page]', win.el);
     let active = 'processes';
     let alive = true;
     let frames = 0;
@@ -139,7 +139,7 @@
     requestAnimationFrame(frameTick);
 
     function appTitle(w) {
-      const name = ctx.$('.window-name', w.el);
+      const name = ctx.queryOne('.window-name', w.el);
       return name ? name.textContent : (ctx.apps[w.appId] ? ctx.apps[w.appId].name : w.appId);
     }
 
@@ -147,9 +147,9 @@
       page.innerHTML =
         '<div class="tm-process-toolbar"><span><strong data-tm-count>0</strong> running windows</span><small>Per-app RAM/CPU is not exposed by Safari, so PocketVM does not invent those numbers.</small></div>' +
         '<div class="tm-process-list"><div class="tm-process-header"><span>Name</span><span>Status</span><span>Window</span><span></span></div><div data-tm-processes></div></div>';
-      const list = ctx.$('[data-tm-processes]', page);
+      const list = ctx.queryOne('[data-tm-processes]', page);
       const windows = Array.from(ctx.state.windows.values());
-      ctx.$('[data-tm-count]', page).textContent = String(windows.length);
+      ctx.queryOne('[data-tm-count]', page).textContent = String(windows.length);
 
       windows.forEach(w => {
         const row = document.createElement('div');
@@ -161,7 +161,7 @@
           '<span><em class="tm-status ' + status.toLowerCase() + '">' + ctx.escapeHTML(status) + '</em></span>' +
           '<span class="tm-window-title">' + ctx.escapeHTML(appTitle(w)) + '</span>' +
           '<span><button class="tm-end-task">End task</button></span>';
-        ctx.$('.tm-end-task', row).addEventListener('click', () => {
+        ctx.queryOne('.tm-end-task', row).addEventListener('click', () => {
           if (w.id === win.id) {
             setTimeout(() => ctx.closeWindow(w.id), 0);
             return;
@@ -196,12 +196,12 @@
     }
 
     const render = () => {
-      ctx.$$('[data-tm-tab]', win.el).forEach(button => button.classList.toggle('active', button.dataset.tmTab === active));
+      ctx.queryAll('[data-tm-tab]', win.el).forEach(button => button.classList.toggle('active', button.dataset.tmTab === active));
       if (active === 'processes') renderProcesses();
       else renderPerformance();
     };
 
-    ctx.$$('[data-tm-tab]', win.el).forEach(button => button.addEventListener('click', () => {
+    ctx.queryAll('[data-tm-tab]', win.el).forEach(button => button.addEventListener('click', () => {
       active = button.dataset.tmTab;
       render();
     }));
