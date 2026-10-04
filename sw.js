@@ -1,10 +1,11 @@
-const CACHE = 'pocketvm-shell-v9';
+const CACHE = 'pocketvm-shell-v10';
 const ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './storage.js',
+  './files.js',
   './manifest.webmanifest',
   './icon.svg',
   './icon-192.png',

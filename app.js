@@ -221,14 +221,18 @@
     if (btn) $('.task-label', btn).textContent = title;
   }
 
+  function fileAppContext() {
+    return { state, $, $, escapeHTML, norm, parentPath, basename, children, openApp, notify, refreshFS, setWallpaperFromFile, setWindowTitle };
+  }
+
   const apps = {
     terminal: { name: 'Terminal', icon: '›_', width: 790, height: 500, singleton: false, build: buildTerminal },
-    files: { name: 'Files', icon: '▤', width: 860, height: 560, singleton: true, build: buildFiles },
+    files: { name: 'Files', icon: '▤', width: 920, height: 600, singleton: true, build: (win, options) => PocketFilesApp.buildFiles(win, options, fileAppContext()) },
     calculator: { name: 'Calculator', icon: '＋', width: 380, height: 560, singleton: true, build: buildCalculator },
-    imageviewer: { name: 'Photos', icon: '▧', width: 860, height: 620, singleton: false, build: buildImageViewer },
+    imageviewer: { name: 'Photos', icon: '▧', width: 860, height: 620, singleton: false, build: (win, options) => PocketFilesApp.buildImageViewer(win, options, fileAppContext()) },
     notes: { name: 'Notes', icon: '✎', width: 680, height: 480, singleton: true, build: buildNotes },
-    editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: buildEditor },
-    preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: buildPreview },
+    editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: (win, options) => PocketFilesApp.buildEditor(win, options, fileAppContext()) },
+    preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: (win, options) => PocketFilesApp.buildPreview(win, options, fileAppContext()) },
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
     monitor: { name: 'System', icon: '⌁', width: 760, height: 560, singleton: true, build: buildMonitor },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 760, height: 560, singleton: true, build: buildTaskManager },
@@ -459,9 +463,11 @@
     if (!raw) return;
 
     if (raw.toLowerCase() === 'null.user') {
-      print(term, 'Erasing PocketVM local data…', 'error');
-      localStorage.clear();
-      setTimeout(() => location.reload(), 350);
+      print(term, 'Erasing PocketVM local data and virtual drive…', 'error');
+      PocketDisk.destroy().catch(() => {}).finally(() => {
+        localStorage.clear();
+        setTimeout(() => location.reload(), 350);
+      });
       return;
     }
 
@@ -1002,7 +1008,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       status.textContent = 'Loading…';
     }
 
-    function navigate(raw, push = true) {
+    async function navigate(raw, push = true) {
       const tab = activeTab();
       if (!tab) return;
       const target = normalizeInput(raw);
@@ -1016,7 +1022,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       }
 
       if (target.kind === 'home') showHome(tab);
-      else if (target.kind === 'local') showLocal(tab, target.url);
+      else if (target.kind === 'local') await showLocal(tab, target.url);
       else if (target.kind === 'web') showWeb(tab, target.url);
       else {
         tab.kind = 'error';
@@ -1613,15 +1619,10 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     }
   }
 
-  function setAuthWallpaper() {
+  async function setAuthWallpaper() {
     const el = $('.auth-wallpaper');
     if (!el) return;
-    if (state.wallpaper.type === 'custom' && state.wallpaper.dataUrl) {
-      el.style.background = `linear-gradient(rgba(3,7,14,.44), rgba(3,7,14,.62)), url("${state.wallpaper.dataUrl}") center / cover no-repeat`;
-    } else {
-      const key = wallpapers[state.wallpaper.value] ? state.wallpaper.value : 'aurora';
-      el.style.background = wallpapers[key];
-    }
+    el.style.background = await wallpaperCSS('auth');
   }
 
   function enterDesktop() {
@@ -1993,20 +1994,25 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     if(ev.clientX>=innerWidth-18){snapWindow(win,'right');}
   }
 
-  function createDesktopItem(kind){
+  async function createDesktopItem(kind){
     let name=prompt(kind==='dir'?'Folder name':kind==='html'?'HTML file name':'Text file name');
     if(!name)return;
-    name=name.trim().replace(/[\\/:*?"<>|]/g,'').slice(0,80);
+    name=String(name).trim().replace(/[\\/:*?"<>|]/g,'').slice(0,80);
     if(!name)return;
     if(kind==='txt'&&!/\.txt$/i.test(name))name+='.txt';
     if(kind==='html'&&!/\.html$/i.test(name))name+='.html';
-    const p=norm(name,'/home/user');
+    const p=norm(name,'/home/user/Desktop');
+    await refreshFS();
     if(state.fs[p]){alert('That name already exists.');return;}
-    if(kind==='dir')state.fs[p]={type:'dir',createdAt:Date.now()};
-    else state.fs[p]={type:'file',content:kind==='html'?htmlStarter(name):'',createdAt:Date.now(),modifiedAt:Date.now()};
-    persistFS();
-    notify(kind==='dir'?'Folder created':'File created',name,kind==='dir'?'📁':'📄');
-    if(kind!=='dir')openApp('editor',{file:p}); else openApp('files',{path:'/home/user'});
+    try {
+      if(kind==='dir') await PocketDisk.ensureDir(p);
+      else await PocketDisk.writeText(p,kind==='html'?PocketFilesApp.htmlStarter(name):'',kind==='html'?'text/html':'text/plain');
+      await refreshFS();
+      notify(kind==='dir'?'Folder created':'File created',name,kind==='dir'?'📁':'📄');
+      if(kind!=='dir')openApp('editor',{file:p}); else openApp('files',{path:'/home/user/Desktop'});
+    } catch(err) {
+      alert(err.message || 'Could not create the item.');
+    }
   }
 
   function renderDesktopContext(x,y){
