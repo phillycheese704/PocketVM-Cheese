@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111c15"/><stop offset="1" stop-color="#050907"/></linearGradient>
+ <linearGradient id="sn" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#92f4aa"/><stop offset="1" stop-color="#4bcf75"/></linearGradient>
+ <filter id="g"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>
+<rect width="512" height="512" rx="112" fill="#060a07"/>
+<circle cx="395" cy="92" r="150" fill="#5cff8a" opacity=".11" filter="url(#g)"/>
+<rect x="18" y="18" width="476" height="476" rx="102" fill="url(#bg)" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+<g opacity=".055" stroke="#fff"><path d="M70 128h372M70 192h372M70 256h372M70 320h372M70 384h372"/><path d="M128 70v372M192 70v372M256 70v372M320 70v372M384 70v372"/></g>
+<g fill="url(#sn)">
+ <rect x="105" y="310" width="66" height="66" rx="20"/><rect x="164" y="310" width="66" height="66" rx="20"/>
+ <rect x="223" y="310" width="66" height="66" rx="20"/><rect x="282" y="310" width="66" height="66" rx="20"/>
+ <rect x="282" y="251" width="66" height="66" rx="20"/><rect x="282" y="192" width="66" height="66" rx="20"/>
+ <rect x="341" y="192" width="78" height="66" rx="22"/>
+</g>
+<g fill="#f7fff8"><circle cx="387" cy="211" r="7"/><circle cx="387" cy="239" r="7"/></g>
+<g fill="#15251a"><circle cx="390" cy="211" r="3.2"/><circle cx="390" cy="239" r="3.2"/></g>
+<g><circle cx="150" cy="202" r="28" fill="#ff5965"/><circle cx="172" cy="202" r="28" fill="#ff6671"/><path d="M161 178q8-22 22-28" fill="none" stroke="#856445" stroke-width="7" stroke-linecap="round"/><ellipse cx="188" cy="151" rx="17" ry="8" fill="#65d97f" transform="rotate(-24 188 151)"/></g>
+</svg>

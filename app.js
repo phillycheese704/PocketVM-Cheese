@@ -280,6 +280,15 @@
     };
   }
 
+  function storeAppContext() {
+    return {
+      state,
+      queryOne: (selector, root = document) => root.querySelector(selector),
+      queryAll: (selector, root = document) => Array.from(root.querySelectorAll(selector)),
+      escapeHTML, openApp, closeWindow, notify, refreshFS, setWindowTitle, initDesktopGrid, applyPreferences
+    };
+  }
+
   const apps = {
     terminal: { name: 'Terminal', icon: '›_', width: 790, height: 500, singleton: false, build: buildTerminal },
     files: { name: 'Files', icon: '▤', width: 920, height: 600, singleton: true, build: (win, options) => PocketFilesApp.buildFiles(win, options, fileAppContext()) },
@@ -289,6 +298,8 @@
     editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: (win, options) => PocketFilesApp.buildEditor(win, options, fileAppContext()) },
     preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: (win, options) => PocketFilesApp.buildPreview(win, options, fileAppContext()) },
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
+    store: { name: 'Store', icon: '▣', width: 980, height: 650, singleton: true, build: (win, options) => PocketStoreApp.buildStore(win, options, storeAppContext()) },
+    snake: { name: 'Snake', icon: '🐍', width: 1040, height: 720, singleton: true, build: (win, options) => PocketStoreApp.buildSnake(win, options, storeAppContext()) },
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
@@ -1052,7 +1063,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       });
 
       const desktopChoices = [
-        ['browser','Browser'],['files','Files'],['calculator','Calculator'],['terminal','Terminal'],
+        ['browser','Browser'],['store','Store'],['files','Files'],['calculator','Calculator'],['terminal','Terminal'],
         ['notes','Notes'],['monitor','System'],['taskmanager','Task Manager'],['settings','Settings']
       ];
       const toggleWrap = $('.desktop-icon-toggles', page);
@@ -1683,7 +1694,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   }
 
   function buildAbout(win) {
-    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.1</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM uses a 1 GB IndexedDB virtual drive and includes a windowed desktop, Files, image support, Browser, Photos, Calculator, Task Manager, System, notifications and local accounts.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Virtual drive</span><strong>1 GB max</strong></div><div class="setting-row"><span>Files</span><strong>TXT / HTML / images</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
+    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.1</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM uses a 1 GB IndexedDB virtual drive and includes a windowed desktop, Files, image support, Browser, Store, games, Photos, Calculator, Task Manager, System, notifications and local accounts.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Virtual drive</span><strong>1 GB max</strong></div><div class="setting-row"><span>Files</span><strong>TXT / HTML / images</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
   }
 
   // ---------- PocketVM desktop layer ----------
@@ -1937,12 +1948,16 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       const action = button.dataset.iconAction;
       if (action === 'open') openApp(id);
       if (action === 'remove') {
-        const hidden = new Set(state.preferences.desktopHidden || []);
-        hidden.add(id);
-        state.preferences.desktopHidden = [...hidden];
-        applyPreferences();
-        initDesktopGrid();
-        notify('Removed from desktop', label + ' is still available from Start.', '−');
+        if (icon.dataset.storeLaunch === 'snake-desktop' && window.PocketStoreApp) {
+          PocketStoreApp.toggleDesktopPin(false);
+        } else {
+          const hidden = new Set(state.preferences.desktopHidden || []);
+          hidden.add(id);
+          state.preferences.desktopHidden = [...hidden];
+          applyPreferences();
+          initDesktopGrid();
+          notify('Removed from desktop', label + ' is still available from Start.', '−');
+        }
       }
       if (action === 'settings') openApp('settings');
     }));
@@ -2108,11 +2123,13 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     showAuthScreen(state.auth ? 'login' : 'setup');
   }
 
-  $$('[data-open]').forEach(b => b.addEventListener('click', () => {
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-open]');
+    if (!b) return;
     openApp(b.dataset.open);
     $('#start-menu').hidden = true;
     $('#start-btn').classList.remove('active');
-  }));
+  });
   $('#start-about').addEventListener('click', () => {
     openApp('about');
     $('#start-menu').hidden = true;
@@ -2144,6 +2161,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   });
 
   initDesktopExperience();
+  PocketStoreApp.init(storeAppContext());
   updateClock();
   setInterval(updateClock, 1000);
   renderUserChrome();

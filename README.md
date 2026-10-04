@@ -14,6 +14,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 - Photos viewer and image wallpapers
 - Draggable desktop icon grid with iPad long-press context menus
 - Browser, Calculator, Notes, Terminal, System and Task Manager
+- PocketVM Store with real virtual-drive installs; first title: Snake
 - Themes, wallpaper presets, avatar borders and desktop customization
 - Installable/offline-capable PWA
 
@@ -27,6 +28,8 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 ├── storage.js              IndexedDB virtual drive
 ├── files.js                Files, Editor, HTML Preview and Photos
 ├── system.js               System and Task Manager
+├── store.js                Store, installs and game launcher
+├── store/                   Store package sources
 ├── sw.js                   PWA service worker
 ├── manifest.webmanifest    PWA manifest
 ├── icons/                  Canonical app/PWA icons
