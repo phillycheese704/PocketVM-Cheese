@@ -1414,7 +1414,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     const salt = bytesToBase64(saltBytes);
     const algorithm = globalThis.crypto?.subtle ? 'pbkdf2' : 'fallback';
     const hash = await derivePassword(password, salt, algorithm);
-    state.auth = {
+    const nextAuth = {
       version: 1,
       algorithm,
       salt,
@@ -1424,7 +1424,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       createdAt: state.auth?.createdAt || Date.now(),
       updatedAt: Date.now()
     };
-    if (!saveJSON(AUTH_KEY, state.auth)) throw new Error('PocketVM could not save the password. Browser storage may be full.');
+    if (!saveJSON(AUTH_KEY, nextAuth)) throw new Error('PocketVM could not save the password. Browser storage may be full.');
+    state.auth = nextAuth;
   }
 
   async function verifyPassword(password) {
