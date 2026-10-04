@@ -33,6 +33,25 @@
     fs: initialFS
   };
 
+  const asObject = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  state.user = { name:'Guest', avatar:'', borderStyle:'ring', borderColor:'#8fc6ff', ...asObject(state.user) };
+  state.wallpaper = { type:'preset', value:'aurora', dataUrl:'', ...asObject(state.wallpaper) };
+  if (!['preset','custom','file'].includes(state.wallpaper.type)) state.wallpaper = { type:'preset', value:'aurora', dataUrl:'' };
+  state.preferences = {
+    transparency:true, animations:true, taskbarCentered:false, clockSeconds:false, focusMode:false,
+    desktopIconSize:'medium', desktopHidden:[], ...asObject(state.preferences)
+  };
+  if (!['small','medium','large'].includes(state.preferences.desktopIconSize)) state.preferences.desktopIconSize = 'medium';
+  if (!Array.isArray(state.preferences.desktopHidden)) state.preferences.desktopHidden = [];
+  state.preferences.desktopHidden = state.preferences.desktopHidden.filter(value => typeof value === 'string');
+  state.notifications = Array.isArray(state.notifications) ? state.notifications.filter(item => item && typeof item === 'object') : [];
+  state.browserData = { bookmarks:[], history:[], ...asObject(state.browserData) };
+  if (!Array.isArray(state.browserData.bookmarks)) state.browserData.bookmarks = [];
+  if (!Array.isArray(state.browserData.history)) state.browserData.history = [];
+  state.desktopLayout = asObject(state.desktopLayout);
+  if (!state.auth || typeof state.auth !== 'object' || Array.isArray(state.auth) ||
+      typeof state.auth.hash !== 'string' || typeof state.auth.salt !== 'string') state.auth = null;
+
   const themes = {
     blue: ['#65a7ff', '#8f7cff'],
     mint: ['#5ee7c4', '#4da6ff'],
@@ -164,7 +183,10 @@
     el.classList.add('avatar-border-' + style);
     el.style.setProperty('--avatar-border-color', state.user.borderColor || '#8fc6ff');
     if (state.user.avatar) {
-      el.innerHTML = `<img src="${state.user.avatar}" alt="" />`;
+      const img = document.createElement('img');
+      img.src = String(state.user.avatar);
+      img.alt = '';
+      el.replaceChildren(img);
     } else {
       el.textContent = initials(state.user.name);
     }
@@ -1407,8 +1429,12 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
   async function verifyPassword(password) {
     if (!state.auth?.hash || !state.auth?.salt) return false;
-    const hash = await derivePassword(password, state.auth.salt, state.auth.algorithm || 'pbkdf2');
-    return hash === state.auth.hash;
+    try {
+      const hash = await derivePassword(password, state.auth.salt, state.auth.algorithm || 'pbkdf2');
+      return hash === state.auth.hash;
+    } catch {
+      return false;
+    }
   }
 
   function saveAuthState() {
