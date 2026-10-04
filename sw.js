@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v12';
+const CACHE = 'pocketvm-shell-v13';
 const ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,10 @@ const ASSETS = [
   './manifest.webmanifest',
   './icon.svg',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon.svg'
 ];
 
 self.addEventListener('install', event => {
@@ -42,6 +45,11 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE).then(cache => cache.put(event.request, copy));
         return response;
       })
-      .catch(() => caches.match(event.request).then(hit => hit || caches.match('./index.html')))
+      .catch(async () => {
+        const hit = await caches.match(event.request);
+        if (hit) return hit;
+        if (event.request.mode === 'navigate') return caches.match('./index.html');
+        return new Response('Offline', { status: 503, statusText: 'Offline' });
+      })
   );
 });
