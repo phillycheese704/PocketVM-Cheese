@@ -297,7 +297,17 @@
     state.windows.set(id, win);
     wireWindow(win);
     addTaskbarButton(win);
-    app.build(win, options);
+    const showBuildError = err => {
+      console.error('PocketVM app failed:', appId, err);
+      if (!state.windows.has(id)) return;
+      content.innerHTML = '<div class="app-pad"><h2>' + escapeHTML(app.name) + ' could not open</h2><p style="color:var(--muted)">' + escapeHTML(err?.message || 'An unexpected error occurred.') + '</p></div>';
+    };
+    try {
+      const result = app.build(win, options);
+      if (result && typeof result.then === 'function') result.catch(showBuildError);
+    } catch (err) {
+      showBuildError(err);
+    }
     focusWindow(id);
     if (matchMedia('(max-width: 620px)').matches) maximizeWindow(id);
     return win;
@@ -400,6 +410,13 @@
     win.el.classList.add('focused');
     win.el.style.zIndex = ++state.z;
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.classList.add('active');
+  }
+
+  function focusTopVisibleWindow(excludeId = '') {
+    const next = [...state.windows.values()]
+      .filter(w => w.id !== excludeId && !w.el.classList.contains('minimized'))
+      .sort((a, b) => Number(b.el.style.zIndex || 0) - Number(a.el.style.zIndex || 0))[0];
+    if (next) focusWindow(next.id);
   }
 
   function closeWindow(id) {
@@ -1952,9 +1969,9 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         }
       });
 
-      const finish = e => {
+      const finish = (e, commit = true) => {
         clearTimeout(holdTimer);
-        if (dragging) {
+        if (dragging && commit) {
           const target = desktopSlotFromPoint(e.clientX, e.clientY);
           moveDesktopIcon(icon.dataset.open, target);
           suppressClick = true;
@@ -1966,8 +1983,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         try { icon.releasePointerCapture(e.pointerId); } catch {}
       };
 
-      icon.addEventListener('pointerup', finish);
-      icon.addEventListener('pointercancel', finish);
+      icon.addEventListener('pointerup', e => finish(e, true));
+      icon.addEventListener('pointercancel', e => finish(e, false));
       icon.addEventListener('click', e => {
         if (suppressClick) {
           e.preventDefault();
