@@ -234,8 +234,8 @@
     editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: (win, options) => PocketFilesApp.buildEditor(win, options, fileAppContext()) },
     preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: (win, options) => PocketFilesApp.buildPreview(win, options, fileAppContext()) },
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
-    monitor: { name: 'System', icon: '⌁', width: 760, height: 560, singleton: true, build: buildMonitor },
-    taskmanager: { name: 'Task Manager', icon: '▦', width: 760, height: 560, singleton: true, build: buildTaskManager },
+    monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
+    taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
     about: { name: 'About PocketVM', icon: 'ⓘ', width: 500, height: 410, singleton: true, build: buildAbout }
   };
@@ -2031,7 +2031,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     $('#shutdown-btn')?.addEventListener('click',shutdown);
 
     const search=$('#start-search-input');
-    search?.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();$('.start-grid button').forEach(b=>b.hidden=q&&!b.textContent.toLowerCase().includes(q));});
+    search?.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();$('.start-grid button').forEach(b=>b.hidden=!!q&&!b.textContent.toLowerCase().includes(q));});
     search?.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('.start-grid button').find(x=>!x.hidden);if(b)b.click();}});
 
     $('#desktop')?.addEventListener('contextmenu',e=>{if(e.target.closest('.window,.taskbar,.start-menu,.shell-flyout'))return;e.preventDefault();renderDesktopContext(e.clientX,e.clientY);});
@@ -2056,7 +2056,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       const mod=e.metaKey||e.ctrlKey;
       if(e.key==='Escape'){hideShellFlyouts();$('#desktop-context').hidden=true;return;}
       if(e.altKey&&e.key==='F4'){const w=focusedWindow();if(w){e.preventDefault();closeWindow(w.id);}return;}
-      if(e.ctrlKey&&e.shiftKey&&e.key==='Escape'){e.preventDefault();openApp('monitor');return;}
+      if(e.ctrlKey&&e.shiftKey&&e.key==='Escape'){e.preventDefault();openApp('taskmanager');return;}
       if(!mod)return;
       const k=e.key.toLowerCase();
       if(k==='e'){e.preventDefault();openApp('files');}
