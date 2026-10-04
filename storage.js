@@ -31,9 +31,22 @@
         if (!db.objectStoreNames.contains('data')) db.createObjectStore('data', { keyPath: 'path' });
         if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'key' });
       };
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error || new Error('Could not open the PocketVM drive.'));
-      req.onblocked = () => reject(new Error('PocketVM storage is blocked by another open tab.'));
+      req.onsuccess = () => {
+        const db = req.result;
+        db.onversionchange = () => {
+          db.close();
+          dbPromise = null;
+        };
+        resolve(db);
+      };
+      req.onerror = () => {
+        dbPromise = null;
+        reject(req.error || new Error('Could not open the PocketVM drive.'));
+      };
+      req.onblocked = () => {
+        dbPromise = null;
+        reject(new Error('PocketVM storage is blocked by another open tab.'));
+      };
     });
     return dbPromise;
   }
@@ -113,6 +126,15 @@
 
   async function usedBytes() {
     return Number(await getMeta('usedBytes', 0)) || 0;
+  }
+
+  async function reconcileUsedBytes() {
+    const db = await openDB();
+    const tx = db.transaction(['nodes'], 'readonly');
+    const nodes = await request(tx.objectStore('nodes').getAll());
+    const total = nodes.reduce((sum, node) => sum + (node.type === 'file' ? Number(node.size || 0) : 0), 0);
+    await setMeta('usedBytes', total);
+    return total;
   }
 
   async function ensureCapacity(delta) {
@@ -211,7 +233,10 @@
     const db = await openDB();
     const tx = db.transaction(['data'], 'readonly');
     const row = await request(tx.objectStore('data').get(p));
-    return { ...node, content: row?.content ?? '' };
+    if (!row || !Object.prototype.hasOwnProperty.call(row, 'content')) {
+      throw new Error('File data is missing or corrupted.');
+    }
+    return { ...node, content: row.content };
   }
 
   async function readText(path) {
@@ -268,7 +293,8 @@
         const db = await openDB();
         const tx = db.transaction(['data'], 'readonly');
         const row = await request(tx.objectStore('data').get(node.path));
-        dataRows.push([node.path, row?.content ?? '']);
+        if (!row || !Object.prototype.hasOwnProperty.call(row, 'content')) throw new Error('File data is missing or corrupted.');
+        dataRows.push([node.path, row.content]);
       }
     }
     const dataMap = new Map(dataRows);
@@ -302,7 +328,8 @@
         const db = await openDB();
         const tx = db.transaction(['data'], 'readonly');
         const row = await request(tx.objectStore('data').get(node.path));
-        dataMap.set(node.path, row?.content ?? '');
+        if (!row || !Object.prototype.hasOwnProperty.call(row, 'content')) throw new Error('File data is missing or corrupted.');
+        dataMap.set(node.path, row.content);
       }
     }
     const now = Date.now();
@@ -395,6 +422,7 @@
     await openDB();
     for (const dir of STANDARD_DIRS) await ensureDir(dir);
     await migrateLegacy();
+    await reconcileUsedBytes();
     try { await navigator.storage?.persist?.(); } catch {}
     return snapshot();
   }
