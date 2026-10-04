@@ -268,8 +268,8 @@
   function featureArt() {
     return `<div class="store-snake-art" aria-hidden="true">
       <div class="ssa-grid"></div>
-      <i style="--x:2;--y:5"></i><i style="--x:3;--y:5"></i><i style="--x:4;--y:5"></i><i style="--x:5;--y:5"></i>
-      <i style="--x:6;--y:5"></i><i style="--x:6;--y:4"></i><i style="--x:6;--y:3" class="head"></i>
+      <i style="--x:48px;--y:120px"></i><i style="--x:72px;--y:120px"></i><i style="--x:96px;--y:120px"></i><i style="--x:120px;--y:120px"></i>
+      <i style="--x:144px;--y:120px"></i><i style="--x:144px;--y:96px"></i><i style="--x:144px;--y:72px" class="head"></i>
       <b class="apple"></b>
     </div>`;
   }
