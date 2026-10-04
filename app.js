@@ -568,6 +568,7 @@
 
     let tabCounter = 0;
     let activeId = '';
+    let navigationToken = 0;
     const tabs = [];
 
     const activeTab = () => tabs.find(t => t.id === activeId);
@@ -718,9 +719,10 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       status.textContent = 'Pocket Browser home';
     }
 
-    async function showLocal(tab, url) {
+    async function showLocal(tab, url, token) {
       const path = localPathFromURL(url);
       await refreshFS();
+      if (token !== navigationToken || activeId !== tab.id) return false;
       const node = path && state.fs[path];
       tab.kind = 'local';
       if (!node || node.type !== 'file' || !/\.html$/i.test(path)) {
@@ -729,19 +731,23 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
         frame.srcdoc = errorPage('Local page not found', 'Use an address like local://website.html for an HTML file stored in PocketVM Home.');
         status.textContent = 'Local page not found';
-        return;
+        return true;
       }
       tab.title = basename(path);
       frame.removeAttribute('src');
       // Deliberately no allow-same-origin: local HTML cannot reach PocketVM storage.
       frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups allow-downloads');
       try {
-        frame.srcdoc = await PocketDisk.readText(path);
+        const html = await PocketDisk.readText(path);
+        if (token !== navigationToken || activeId !== tab.id) return false;
+        frame.srcdoc = html;
         status.textContent = 'Local PocketVM page · sandboxed';
       } catch {
+        if (token !== navigationToken || activeId !== tab.id) return false;
         frame.srcdoc = errorPage('Could not read local page', 'The file may have been moved or deleted.');
         status.textContent = 'Local page unavailable';
       }
+      return true;
     }
 
     function showWeb(tab, url) {
@@ -763,6 +769,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     async function navigate(raw, push = true) {
       const tab = activeTab();
       if (!tab) return;
+      const token = ++navigationToken;
       const target = normalizeInput(raw);
       tab.url = target.url;
       if (push) {
@@ -774,7 +781,10 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       }
 
       if (target.kind === 'home') showHome(tab);
-      else if (target.kind === 'local') await showLocal(tab, target.url);
+      else if (target.kind === 'local') {
+        const rendered = await showLocal(tab, target.url, token);
+        if (!rendered) return;
+      }
       else if (target.kind === 'web') showWeb(tab, target.url);
       else {
         tab.kind = 'error';
@@ -784,6 +794,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         frame.srcdoc = errorPage('Unsupported address', target.message || 'That address cannot be opened.');
         status.textContent = 'Unsupported address';
       }
+      if (token !== navigationToken || activeId !== tab.id) return;
       updateControls();
     }
 
@@ -812,8 +823,13 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         createTab();
         return;
       }
-      if (wasActive) activeId = tabs[Math.max(0, idx - 1)].id;
-      switchTab(activeId);
+      if (wasActive) {
+        activeId = tabs[Math.max(0, idx - 1)].id;
+        switchTab(activeId);
+      } else {
+        renderTabs();
+        updateControls();
+      }
     }
 
     $('.web-address-form', win.el).addEventListener('submit', e => {
@@ -1620,7 +1636,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.1</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM uses a 1 GB IndexedDB virtual drive and includes a windowed desktop, Files, image support, Browser, Photos, Calculator, Task Manager, System, notifications and local accounts.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Virtual drive</span><strong>1 GB max</strong></div><div class="setting-row"><span>Files</span><strong>TXT / HTML / images</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
   }
 
-  // ---------- PocketVM 2.0 desktop layer ----------
+  // ---------- PocketVM desktop layer ----------
   function buildCalculator(win) {
     setWindowTitle(win, 'Calculator', '＋');
     win.content.innerHTML = '<div class="calculator-app"><div class="calc-mode">STANDARD</div><div class="calc-display"><div class="calc-expression"></div><div class="calc-value">0</div></div><div class="calc-grid"></div></div>';
@@ -2011,7 +2027,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       else if(e.key==='ArrowUp'){const w=focusedWindow();if(w){e.preventDefault();snapWindow(w,'full');}}
     });
 
-    if(!localStorage.getItem('pocketvm.welcome2')) setTimeout(()=>{notify('Welcome to PocketVM 2.0','Desktop upgrades are ready. Long-press/right-click the desktop or try the taskbar controls.','PV');localStorage.setItem('pocketvm.welcome2','1');},1500);
+    if(!localStorage.getItem('pocketvm.welcome21')) setTimeout(()=>{notify('Welcome to PocketVM 2.1','Files, storage, image support and desktop polish are ready.','PV');localStorage.setItem('pocketvm.welcome21','1');},1500);
   }
 
 
