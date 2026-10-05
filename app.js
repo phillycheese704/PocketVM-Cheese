@@ -300,6 +300,7 @@
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
     store: { name: 'Store', icon: '▣', width: 980, height: 650, singleton: true, build: (win, options) => PocketStoreApp.buildStore(win, options, storeAppContext()) },
     snake: { name: 'Snake', icon: '🐍', width: 1040, height: 720, singleton: true, build: (win, options) => PocketStoreApp.buildSnake(win, options, storeAppContext()) },
+    deadwave: { name: 'Deadwave', icon: '☣', width: 1080, height: 740, singleton: true, build: (win, options) => PocketStoreApp.buildDeadwave(win, options, storeAppContext()) },
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
@@ -1998,6 +1999,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (action === 'remove') {
         if (icon.dataset.storeLaunch === 'snake-desktop' && window.PocketStoreApp) {
           PocketStoreApp.toggleDesktopPin(false);
+        } else if (icon.dataset.storeLaunch === 'deadwave-desktop' && window.PocketStoreApp) {
+          PocketStoreApp.toggleDeadwavePin(false);
         } else {
           const hidden = new Set(state.preferences.desktopHidden || []);
           hidden.add(id);

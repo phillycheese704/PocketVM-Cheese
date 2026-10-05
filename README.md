@@ -14,7 +14,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 - Photos viewer and image wallpapers
 - Draggable desktop icon grid with iPad long-press context menus
 - Browser, Calculator, Notes, Terminal, System and Task Manager
-- PocketVM Store with real virtual-drive installs; first title: Snake
+- PocketVM Store with real virtual-drive installs; games include Snake and Deadwave
 - Themes, wallpaper presets, avatar borders and desktop customization
 - Installable/offline-capable PWA
 
