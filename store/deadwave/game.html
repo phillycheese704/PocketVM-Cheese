@@ -130,7 +130,7 @@ function updateHUD(){killsEl.textContent=kills;waveEl.textContent=wave;timerEl.t
 function ensureAudio(){if(!audioCtx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;audioCtx=new A()}if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}
 function tone(freq=220,dur=.05,type='square',vol=.025,slide=0,delay=0){if(!sfxOn)return;const ac=ensureAudio();if(!ac)return;const t=ac.currentTime+delay,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(Math.max(30,freq),t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,freq+slide),t+dur);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+dur+.02)}
 function noise(dur=.05,vol=.02,cut=900,delay=0){if(!sfxOn)return;const ac=ensureAudio();if(!ac)return;if(!noiseBuffer){noiseBuffer=ac.createBuffer(1,ac.sampleRate*.3,ac.sampleRate);const a=noiseBuffer.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1}const t=ac.currentTime+delay,s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=noiseBuffer;f.type='bandpass';f.frequency.value=cut;f.Q.value=.7;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(ac.destination);s.start(t);s.stop(t+dur)}
-function sfxGun(){const v=(Math.random()-.5)*35;tone(145+v,.035,'square',.022,-50);noise(.035,.014,1300)}function sfxHit(){tone(90+Math.random()*30,.025,'triangle',.012,-25)}function sfxKill(){tone(155,.04,'triangle',.014,-70);noise(.045,.01,500)}function sfxHurt(){noise(.11,.04,260);tone(100,.09,'sawtooth',.025,-45)}function sfxMage(){tone(430,.08,'sine',.018,210);tone(650,.11,'triangle',.012,-110,.03)}function sfxMech(){tone(115,.04,'square',.024,-20);noise(.05,.015,1700)}function sfxKing(){tone(85,.35,'sawtooth',.035,-28);tone(54,.42,'triangle',.035,-12,.08);noise(.34,.025,130)}function sfxCard(){tone(420,.06,'triangle',.025,160);tone(720,.09,'sine',.026,180,.045)}function sfxWave(){tone(330,.07,'triangle',.025,70);tone(480,.08,'triangle',.03,110,.07);tone(690,.11,'triangle',.032,130,.14)}function sfxStart(){tone(220,.07,'square',.018,70);tone(330,.08,'square',.02,100,.07);tone(520,.11,'triangle',.025,120,.14)}function sfxGameOver(){tone(260,.16,'sawtooth',.025,-120);tone(150,.2,'square',.024,-70,.12);tone(80,.3,'triangle',.03,-25,.28)}function sfxUI(p=1){tone(430*p,.045,'triangle',.017,90)}
+function sfxGun(){const v=(Math.random()-.5)*35;tone(145+v,.035,'square',.022,-50);noise(.035,.014,1300)}function sfxHit(){tone(90+Math.random()*30,.025,'triangle',.012,-25)}function sfxKill(){tone(155,.04,'triangle',.014,-70);noise(.045,.01,500)}function sfxHurt(){noise(.11,.04,260);tone(100,.09,'sawtooth',.025,-45)}function sfxMage(){tone(430,.08,'sine',.018,210);tone(650,.11,'triangle',.012,-110,.03)}function sfxMech(){tone(115,.04,'square',.024,-20);noise(.05,.015,1700)}function sfxKing(){tone(85,.35,'sawtooth',.035,-28);tone(54,.42,'triangle',.035,-12,.08);noise(.34,.025,130)}function sfxNecromancer(){tone(340,.20,'sine',.022,-150);tone(180,.34,'triangle',.026,-70,.05);noise(.22,.016,520)}function sfxTitan(){tone(60,.38,'sawtooth',.042,-16);tone(40,.48,'triangle',.038,-7,.06);noise(.32,.034,170)}function sfxCard(){tone(420,.06,'triangle',.025,160);tone(720,.09,'sine',.026,180,.045)}function sfxWave(){tone(330,.07,'triangle',.025,70);tone(480,.08,'triangle',.03,110,.07);tone(690,.11,'triangle',.032,130,.14)}function sfxStart(){tone(220,.07,'square',.018,70);tone(330,.08,'square',.02,100,.07);tone(520,.11,'triangle',.025,120,.14)}function sfxGameOver(){tone(260,.16,'sawtooth',.025,-120);tone(150,.2,'square',.024,-70,.12);tone(80,.3,'triangle',.03,-25,.28)}function sfxUI(p=1){tone(430*p,.045,'triangle',.017,90)}
 function playMusic(){if(musicOn&&music.src&&state==='playing'){ensureAudio();music.play().catch(()=>{})}}function syncMusic(){musicBtn.setAttribute('aria-pressed',String(musicOn));if(musicOn)playMusic();else music.pause();save()}
 if(window.__POCKETVM_MUSIC)music.src=window.__POCKETVM_MUSIC;music.volume=.31;musicBtn.setAttribute('aria-pressed',String(musicOn));sfxBtn.setAttribute('aria-pressed',String(sfxOn));
 function rand(a,b){return a+Math.random()*(b-a)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function dist2(a,b){const x=a.x-b.x,y=a.y-b.y;return x*x+y*y}function norm(x,y){const l=Math.hypot(x,y)||1;return{x:x/l,y:y/l}}
@@ -162,7 +162,7 @@ function createEnemy(type,x,y,elite=false){
   const damageScale=1+preCap*.030+postCap*.055;
   const boss=BOSS_TYPES.includes(type);
   const e={id:enemyId++,type,x,y,vx:0,vy:0,r:t.r*(elite?1.12:1),hp:t.hp*hpScale*(elite?1.55:1),maxHp:t.hp*hpScale*(elite?1.55:1),speed:t.speed*speedScale,damage:t.damage*damageScale,score:t.score,colour:t.colors[Math.floor(Math.random()*t.colors.length)],hit:0,attack:rand(type==='mech'?1.8:boss?1.1:.35,type==='mech'?3.2:boss?2.0:1.25),special:rand(boss?1.8:.8,boss?3.2:2.4),elite,dead:false,angle:0,dash:rand(.7,1.6)};
-  enemies.push(e);if(boss)sfxKing();return e;
+  enemies.push(e);if(type==='king')sfxKing();else if(type==='necromancer')sfxNecromancer();else if(type==='titan')sfxTitan();return e;
 }
 function spawnEnemy(){if(enemies.length>=MAX_ENEMIES)return;const p=edgeSpawn(44);createEnemy(pickEnemyType(),p.x,p.y)}
 function bossForWave(w){
@@ -173,7 +173,7 @@ function bossForWave(w){
   return null;
 }
 function spawnBoss(type){
-  if(!type||enemies.some(e=>BOSS_TYPES.includes(e.type)))return;
+  if(!type||enemies.length>=MAX_ENEMIES)return;
   const p=edgeSpawn(type==='titan'?80:65),e=createEnemy(type,p.x,p.y,true);
   const title=type==='king'?'KING WAVE':type==='necromancer'?'NECROMANCER':'TITAN WAVE';
   const copy=type==='king'?'The crown returns.':type==='necromancer'?'The dead are answering.':'Something massive is coming.';
@@ -311,15 +311,16 @@ function updateEnemies(dt){
     }
     e.vx=moveX*e.speed*move;e.vy=moveY*e.speed*move;e.x+=e.vx*dt;e.y+=e.vy*dt;
     if(d<e.r+player.r+2){
+      const landed=player.invuln<=0;
       hurtPlayer(e.damage);
-      if(e.type==='vampire'){const heal=e.damage*.75;e.hp=Math.min(e.maxHp,e.hp+heal);floatText(e.x,e.y-18,'+'+Math.round(heal),'#ff8caf')}
+      if(e.type==='vampire'&&landed){const heal=e.damage*.75;e.hp=Math.min(e.maxHp,e.hp+heal);floatText(e.x,e.y-18,'+'+Math.round(heal),'#ff8caf');addParticle(e.x,e.y,'#d95f88',6,80)}
       const push=norm(player.x-e.x,player.y-e.y);player.x=clamp(player.x+push.x*(e.type==='titan'?22:12),player.r,W-player.r);player.y=clamp(player.y+push.y*(e.type==='titan'?22:12),player.r,H-player.r);
     }
   }
   enemies=enemies.filter(e=>!e.dead);
 }
 function updateBullets(dt){for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;for(const e of enemies){if(e.dead||b.hit.has(e.id))continue;const rr=b.r+e.r,dx=e.x-b.x,dy=e.y-b.y;if(dx*dx+dy*dy<=rr*rr){b.hit.add(e.id);const crit=Math.random()<player.crit,dmg=b.damage*(crit?player.critMult:1);const n=norm(b.vx,b.vy);damageEnemy(e,dmg,crit,player.knockback,n.x,n.y);sfxHit();if(b.pierce>0)b.pierce--;else{b.life=0;break}}}}bullets=bullets.filter(b=>b.life>0&&b.x>-30&&b.x<W+30&&b.y>-30&&b.y<H+30)}
-function updateEnemyBullets(dt){for(const b of enemyBullets){if(b.type==='mage'){const n=norm(player.x-b.x,player.y-b.y);b.vx+=n.x*28*dt;b.vy+=n.y*28*dt}b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;const rr=b.r+player.r,dx=b.x-player.x,dy=b.y-player.y;if(dx*dx+dy*dy<rr*rr){hurtPlayer(b.damage);b.life=0}}enemyBullets=enemyBullets.filter(b=>b.life>0&&b.x>-60&&b.x<W+60&&b.y>-60&&b.y<H+60)}
+function updateEnemyBullets(dt){for(const b of enemyBullets){if(b.type==='mage'||b.type==='necro'){const n=norm(player.x-b.x,player.y-b.y),turn=b.type==='necro'?18:28;b.vx+=n.x*turn*dt;b.vy+=n.y*turn*dt}b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;const rr=b.r+player.r,dx=b.x-player.x,dy=b.y-player.y;if(dx*dx+dy*dy<rr*rr){hurtPlayer(b.damage);b.life=0}}enemyBullets=enemyBullets.filter(b=>b.life>0&&b.x>-60&&b.x<W+60&&b.y>-60&&b.y<H+60)}
 function updateHazards(dt){
   for(const h of hazards){
     h.life-=dt;
