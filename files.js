@@ -116,7 +116,7 @@
           '<div class="files-view-v3"></div>' +
           '<div class="files-statusbar"><span data-files-count>0 items</span><span class="files-spacer"></span><span data-files-status>Ready</span></div>' +
           '<div class="files-context-menu" hidden></div>' +
-          '<input class="hidden-file-input" id="files-import-v3" type="file" accept=".txt,.html,.png,.jpg,.jpeg,.webp,.gif,.svg,text/plain,text/html,image/png,image/jpeg,image/webp,image/gif,image/svg+xml" multiple />' +
+          '<input class="hidden-file-input" id="files-import-v3" type="file" accept=".txt,.html,.pvmod,.png,.jpg,.jpeg,.webp,.gif,.svg,text/plain,text/html,application/x-pocketvm-mod+json,image/png,image/jpeg,image/webp,image/gif,image/svg+xml" multiple />' +
         '</section>' +
       '</div>';
 
@@ -259,9 +259,9 @@
     }
 
     function targetFolderAt(x, y, sourcePaths) {
-      const hit = document.elementFromPoint(x, y)?.closest?.('.file-entry-v3');
+      const hit = document.elementFromPoint(x, y)?.closest?.('.file-entry-v3,[data-files-path]');
       if (!hit || !win.el.contains(hit)) return null;
-      const path = hit.dataset.filePath;
+      const path = hit.dataset.filePath || hit.dataset.filesPath;
       if (!path || !ctx.state.fs[path] || ctx.state.fs[path].type !== 'dir') return null;
       if (sourcePaths.some(source => path === source || path.startsWith(source + '/'))) return null;
       return hit;
@@ -332,7 +332,7 @@
         });
         entry.addEventListener('dragend', () => {
           entry.classList.remove('file-drag-source');
-          qa('.file-drop-target').forEach(el => el.classList.remove('file-drop-target'));
+          qa('.file-drop-target').forEach(el => el.classList.remove('file-drop-target','sidebar-drop-target-v3'));
           dragPaths = [];
         });
         if (info.node?.type === 'dir') {
@@ -536,7 +536,7 @@
       let skipped = 0;
       for (const file of files) {
         const name = cleanName(file.name);
-        if (!name || !/\.(txt|html|png|jpe?g|webp|gif|svg)$/i.test(name)) {
+        if (!name || !/\.(txt|html|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
           skipped++;
           continue;
         }
@@ -560,8 +560,8 @@
       if (!info.node) return;
       const name = cleanName(prompt('Rename', ctx.basename(path)));
       if (!name || name === ctx.basename(path)) return;
-      if (info.node.type === 'file' && !/\.(txt|html|png|jpe?g|webp|gif|svg)$/i.test(name)) {
-        alert('Supported files: TXT, HTML, PNG, JPG, WebP, GIF and SVG.');
+      if (info.node.type === 'file' && !/\.(txt|html|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
+        alert('Supported files: TXT, HTML, PVMOD, PNG, JPG, WebP, GIF and SVG.');
         return;
       }
       const target = ctx.norm(name, ctx.parentPath(path));
@@ -696,7 +696,32 @@
       }));
     }
 
-    qa('[data-files-path]').forEach(button => button.addEventListener('click', () => go(button.dataset.filesPath)));
+    qa('[data-files-path]').forEach(button => {
+      button.addEventListener('click', () => go(button.dataset.filesPath));
+      button.addEventListener('dragover', event => {
+        let paths = dragPaths;
+        if (!paths.length) {
+          try { paths = JSON.parse(event.dataTransfer.getData('application/x-pocketvm-paths') || '[]'); } catch { paths = []; }
+        }
+        const destination = button.dataset.filesPath;
+        if (!paths.length || paths.some(source => destination === source || destination.startsWith(source + '/'))) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        button.classList.add('file-drop-target','sidebar-drop-target-v3');
+      });
+      button.addEventListener('dragleave', event => {
+        if (!button.contains(event.relatedTarget)) button.classList.remove('file-drop-target','sidebar-drop-target-v3');
+      });
+      button.addEventListener('drop', event => {
+        event.preventDefault();
+        button.classList.remove('file-drop-target','sidebar-drop-target-v3');
+        let paths = dragPaths;
+        if (!paths.length) {
+          try { paths = JSON.parse(event.dataTransfer.getData('application/x-pocketvm-paths') || '[]'); } catch { paths = []; }
+        }
+        moveIntoFolder(paths, button.dataset.filesPath);
+      });
+    });
     q('[data-files-nav]').addEventListener('click', () => {
       win.content.querySelector('.files-v3')?.classList.toggle('files-nav-open');
     });
