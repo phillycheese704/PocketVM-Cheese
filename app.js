@@ -703,6 +703,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     function normalizeInput(raw) {
       const value = String(raw || '').trim();
       if (!value || value.toLowerCase() === 'pocket://home') return { kind:'home', url:'pocket://home' };
+      if (value.toLowerCase() === 'pocket:mods' || value.toLowerCase() === 'pocket://mods') return { kind:'mods', url:'pocket:mods' };
       if (/^local:\/\//i.test(value)) return { kind:'local', url:value };
       if (/^https?:\/\//i.test(value)) {
         try {
@@ -760,7 +761,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       address.value = tab.url || 'pocket://home';
       backBtn.disabled = tab.index <= 0;
       forwardBtn.disabled = tab.index >= tab.history.length - 1;
-      externalBtn.disabled = tab.kind === 'home' || tab.kind === 'error';
+      externalBtn.disabled = tab.kind === 'home' || tab.kind === 'mods' || tab.kind === 'error';
       renderTabs();
       renderBookmarksBar();
       setWindowTitle(win, (tab.title || 'New tab') + ' — Pocket Browser', '◎');
@@ -773,6 +774,25 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
       frame.srcdoc = homePage();
       status.textContent = 'Pocket Browser home';
+    }
+
+    async function showMods(tab, token) {
+      tab.kind = 'mods';
+      tab.title = 'Snake Mods';
+      frame.removeAttribute('src');
+      frame.setAttribute('sandbox', 'allow-scripts');
+      try {
+        const html = await PocketStoreApp.modsPage();
+        if (token !== navigationToken || activeId !== tab.id) return false;
+        frame.srcdoc = html;
+        status.textContent = 'PocketVM local mods index';
+      } catch (err) {
+        if (token !== navigationToken || activeId !== tab.id) return false;
+        frame.setAttribute('sandbox', '');
+        frame.srcdoc = errorPage('Mods unavailable', err?.message || 'The local mods page could not be opened.');
+        status.textContent = 'Mods unavailable';
+      }
+      return true;
     }
 
     async function showLocal(tab, url, token) {
@@ -837,6 +857,10 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       }
 
       if (target.kind === 'home') showHome(tab);
+      else if (target.kind === 'mods') {
+        const rendered = await showMods(tab, token);
+        if (!rendered) return;
+      }
       else if (target.kind === 'local') {
         const rendered = await showLocal(tab, target.url, token);
         if (!rendered) return;
@@ -914,7 +938,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       navigate(tab.url, false);
     });
     bookmarkBtn.addEventListener('click', () => {
-      const tab=activeTab(); if(!tab || tab.kind==='home' || tab.kind==='error') return;
+      const tab=activeTab(); if(!tab || tab.kind==='home' || tab.kind==='mods' || tab.kind==='error') return;
       const items=state.browserData.bookmarks||[];
       const i=items.findIndex(x=>x.url===tab.url);
       if(i>=0){items.splice(i,1);notify('Bookmark removed',bookmarkLabel(tab.url),'☆');}
@@ -938,6 +962,21 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       if (tab?.kind === 'web') status.textContent = 'Loaded · if the page is blocked, use ↗';
     });
 
+    const modsMessage = async event => {
+      if (event.source !== frame.contentWindow || event.data?.type !== 'pocketvm-mods-action') return;
+      try {
+        await PocketStoreApp.handleModAction(event.data.action, event.data.id);
+        if (event.data.action === 'open-files') return;
+        const tab = activeTab();
+        if (tab?.kind === 'mods') navigate('pocket:mods', false);
+      } catch (err) {
+        notify('Mod action failed', err?.message || 'Could not update the mod.', '!');
+        const tab = activeTab();
+        if (tab?.kind === 'mods') navigate('pocket:mods', false);
+      }
+    };
+    window.addEventListener('message', modsMessage);
+
     const browserKeys=e=>{
       if(!win.el.classList.contains('focused'))return;
       const mod=e.metaKey||e.ctrlKey;
@@ -949,7 +988,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       else if(k==='r'){e.preventDefault();const t=activeTab();if(t)navigate(t.url,false);}
     };
     document.addEventListener('keydown',browserKeys);
-    win.cleanup=()=>document.removeEventListener('keydown',browserKeys);
+    win.cleanup=()=>{document.removeEventListener('keydown',browserKeys);window.removeEventListener('message',modsMessage);};
 
     renderBookmarksBar();
     createTab();
