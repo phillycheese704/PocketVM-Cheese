@@ -419,7 +419,7 @@
       const id = await identity();
       const size = installed ? await installedBytes() : TOTAL_BYTES;
       const stats = await PocketDisk.stats().catch(() => null);
-      const freeText = stats ? formatBytes(stats.free) + ' free after install space' : 'Local install';
+      const freeText = stats ? formatBytes(stats.free) + ' free on drive' : 'Local install';
       page.innerHTML = `<section class="store-hero store-featured" data-tone="mint">
         <div class="store-hero-copy">
           <div class="store-feature-label"><span class="live-dot"></span><span data-feature-kicker></span><em>Featured game</em></div>
