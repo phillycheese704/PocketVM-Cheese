@@ -27,7 +27,7 @@
       return '📁';
     }
     if (info.image) return '▧';
-    if (info.code) return '</>';
+    if (info.code) return '⌘';
     if (info.html) return '◎';
     if (info.mod) return '◇';
     return '📄';
