@@ -174,7 +174,7 @@ function bossForWave(w){
 }
 function spawnBoss(type){
   if(!type||enemies.length>=MAX_ENEMIES)return;
-  const p=edgeSpawn(type==='titan'?80:65),e=createEnemy(type,p.x,p.y,true);
+  const p=edgeSpawn(type==='titan'?80:65),e=createEnemy(type,p.x,p.y,false);
   const title=type==='king'?'KING WAVE':type==='necromancer'?'NECROMANCER':'TITAN WAVE';
   const copy=type==='king'?'The crown returns.':type==='necromancer'?'The dead are answering.':'Something massive is coming.';
   showWave(title,copy);return e;
@@ -187,7 +187,9 @@ function spawnInterval(){
 function spawnRate(){return 1/spawnInterval()}
 function spawnBatchSize(){
   if(wave<3)return 1+Math.floor(Math.random()*3);
-  return 2+Math.floor(Math.random()*10);
+  let bias=Math.max(1,5.4-Math.max(0,wave-3)*.32);
+  if(wave>=5&&wave%5===0)bias+=1.15;
+  return 2+Math.min(9,Math.floor(Math.pow(Math.random(),bias)*10));
 }
 function launchMechMissile(e){
   const tx=clamp(player.x+rand(-18,18),46,W-46),ty=clamp(player.y+rand(-18,18),46,H-46);
