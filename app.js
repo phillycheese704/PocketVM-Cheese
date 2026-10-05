@@ -980,7 +980,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       const tab = activeTab();
       if (tab?.kind !== 'mods') return;
       const path = String(event.detail?.path || '');
-      if (!path.includes('/Downloads/Snake')) return;
+      if (!path.startsWith('/home/user/Downloads')) return;
       clearTimeout(tab._modsRefresh);
       tab._modsRefresh = setTimeout(() => navigate('pocket:mods', false), 120);
     };
