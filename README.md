@@ -29,7 +29,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 ├── files.js                Files, Editor, HTML Preview and Photos
 ├── system.js               System and Task Manager
 ├── store.js                Store, installs and game launcher
-├── store/                   Store package sources
+├── store/                   Store package sources (Snake + Deadwave)
 ├── sw.js                   PWA service worker
 ├── manifest.webmanifest    PWA manifest
 ├── icons/                  Canonical app/PWA icons
