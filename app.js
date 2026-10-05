@@ -976,6 +976,15 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       }
     };
     window.addEventListener('message', modsMessage);
+    const browserDiskRefresh = event => {
+      const tab = activeTab();
+      if (tab?.kind !== 'mods') return;
+      const path = String(event.detail?.path || '');
+      if (!path.includes('/Downloads/Snake')) return;
+      clearTimeout(tab._modsRefresh);
+      tab._modsRefresh = setTimeout(() => navigate('pocket:mods', false), 120);
+    };
+    window.addEventListener('pocketdiskchange', browserDiskRefresh);
 
     const browserKeys=e=>{
       if(!win.el.classList.contains('focused'))return;
@@ -988,7 +997,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
       else if(k==='r'){e.preventDefault();const t=activeTab();if(t)navigate(t.url,false);}
     };
     document.addEventListener('keydown',browserKeys);
-    win.cleanup=()=>{document.removeEventListener('keydown',browserKeys);window.removeEventListener('message',modsMessage);};
+    win.cleanup=()=>{document.removeEventListener('keydown',browserKeys);window.removeEventListener('message',modsMessage);window.removeEventListener('pocketdiskchange',browserDiskRefresh);};
 
     renderBookmarksBar();
     createTab();
