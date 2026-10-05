@@ -247,7 +247,7 @@
   }
 
   function allowedFileName(name) {
-    return /\.(txt|html|png|jpe?g|webp|gif|svg)$/i.test(String(name || ''));
+    return /\.(txt|html|py|java|css|cs|json|png|jpe?g|webp|gif|svg)$/i.test(String(name || ''));
   }
 
   function isImagePath(path) {
@@ -296,6 +296,7 @@
     imageviewer: { name: 'Photos', icon: '▧', width: 860, height: 620, singleton: false, build: (win, options) => PocketFilesApp.buildImageViewer(win, options, fileAppContext()) },
     notes: { name: 'Notes', icon: '✎', width: 680, height: 480, singleton: true, build: buildNotes },
     editor: { name: 'Editor', icon: '⌘', width: 790, height: 560, singleton: false, build: (win, options) => PocketFilesApp.buildEditor(win, options, fileAppContext()) },
+    pocketcode: { name: 'Pocket Code', icon: '<>', width: 1040, height: 680, singleton: true, build: (win, options) => PocketCodeApp.buildCode(win, options, fileAppContext()) },
     preview: { name: 'HTML Preview', icon: '◉', width: 850, height: 600, singleton: false, build: (win, options) => PocketFilesApp.buildPreview(win, options, fileAppContext()) },
     browser: { name: 'Pocket Browser', icon: '◎', width: 980, height: 650, singleton: true, build: buildWebBrowser },
     store: { name: 'Store', icon: '▣', width: 980, height: 650, singleton: true, build: (win, options) => PocketStoreApp.buildStore(win, options, storeAppContext()) },
@@ -1113,7 +1114,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
       const desktopChoices = [
         ['browser','Browser'],['store','Store'],['files','Files'],['calculator','Calculator'],['terminal','Terminal'],
-        ['notes','Notes'],['monitor','System'],['taskmanager','Task Manager'],['settings','Settings']
+        ['notes','Notes'],['pocketcode','Pocket Code'],['monitor','System'],['taskmanager','Task Manager'],['settings','Settings']
       ];
       const toggleWrap = $('.desktop-icon-toggles', page);
       desktopChoices.forEach(([id,label]) => {
@@ -2202,7 +2203,9 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   $('#kbd-btn').addEventListener('click', () => {
     const activeTerminal = $('.window.focused .term-input');
     const activeEditor = $('.window.focused .editor-area');
+    const activeCode = $('.window.focused .pocket-code-input');
     if (activeTerminal) activeTerminal.focus();
+    else if (activeCode) activeCode.focus();
     else if (activeEditor) activeEditor.focus();
     else {
       const i = $('#mobile-keyboard');
