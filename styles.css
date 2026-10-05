@@ -1394,3 +1394,24 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
   .store-feature-grid{grid-template-columns:1fr}.store-featured{min-height:590px}.store-scoreline{gap:8px}.store-feature-label em{display:none}
   .store-game-preview{inset:7% 5% 8% 7%;transform:none}.store-featured .store-hero-visual>img{width:90px;height:90px;right:8%;bottom:7%}
 }
+
+
+/* ---------- Files sidebar drop targets ---------- */
+.files-locations [data-files-path].file-drop-target{
+  position:relative;
+  background:color-mix(in srgb,var(--accent) 16%,rgba(255,255,255,.045))!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 42%,transparent),0 8px 24px rgba(0,0,0,.10);
+  transform:translateX(2px);
+}
+.files-locations [data-files-path].file-drop-target:after{
+  content:"Move here";
+  margin-left:auto;
+  padding:3px 6px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 18%,rgba(0,0,0,.12));
+  color:var(--text);
+  font-size:7px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.files-locations [data-files-path].file-drop-target strong{color:var(--text)}
