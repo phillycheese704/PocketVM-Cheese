@@ -90,6 +90,11 @@
     const lower = String(name || '').toLowerCase();
     if (lower.endsWith('.html') || lower.endsWith('.htm')) return 'text/html';
     if (lower.endsWith('.txt')) return 'text/plain';
+    if (lower.endsWith('.py')) return 'text/x-python';
+    if (lower.endsWith('.java')) return 'text/x-java-source';
+    if (lower.endsWith('.css')) return 'text/css';
+    if (lower.endsWith('.cs')) return 'text/x-csharp';
+    if (lower.endsWith('.json')) return 'application/json';
     if (lower.endsWith('.png')) return 'image/png';
     if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
     if (lower.endsWith('.webp')) return 'image/webp';
@@ -103,7 +108,7 @@
   }
 
   function isTextMime(mime) {
-    return /^text\/(plain|html)$/i.test(String(mime || ''));
+    return /^(?:text\/(?:plain|html|css|x-python|x-java-source|x-csharp)|application\/json)$/i.test(String(mime || ''));
   }
 
   function byteLength(value) {
