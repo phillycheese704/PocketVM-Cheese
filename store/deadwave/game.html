@@ -162,6 +162,10 @@ function spawnInterval(){
   return Math.max(.50,2.5-(wave-2)*.25);
 }
 function spawnRate(){return 1/spawnInterval()}
+function spawnBatchSize(){
+  if(wave<3)return 1+Math.floor(Math.random()*3);
+  return 2+Math.floor(Math.random()*10);
+}
 function launchMechMissile(e){
   const tx=clamp(player.x+rand(-18,18),46,W-46),ty=clamp(player.y+rand(-18,18),46,H-46);
   hazards.push({type:'missile',x:tx,y:ty,r:44,life:1.35,maxLife:1.35,damage:e.damage*1.35,color:'#ff5365'});
@@ -327,7 +331,7 @@ function autoCardValue(u){
   return v;
 }
 function showCards(){cardsEl.innerHTML='';const choices=cardChoices(),buttons=[];for(const u of choices){const c=document.createElement('button');buttons.push(c);c.className='card';const color=rarityColor(u.rarity);c.style.setProperty('--rarity',color);c.style.setProperty('--glow',color);const level=(stacks[u.id]||0)+1;c.innerHTML='<span class="rarity">'+u.rarity+'</span><div class="card-icon">'+u.icon+'</div><h3>'+u.name+'</h3><p>'+u.desc+'</p><div class="stack"><span>Next stack '+level+'</span><span>CHOOSE</span></div>';c.addEventListener('click',()=>{if(state!=='cards')return;u.apply(player);stacks[u.id]=level;sfxCard();cardsOverlay.hidden=true;nextWave()});cardsEl.appendChild(c)}cardsOverlay.hidden=false;if(autoBotOn&&hasAutoBot){let best=0,bestValue=-Infinity;choices.forEach((u,i)=>{const v=autoCardValue(u);if(v>bestValue){bestValue=v;best=i}});setTimeout(()=>{if(state==='cards'&&autoBotOn)buttons[best]?.click()},650)}}
-function update(dt){if(state!=='playing')return;totalTime+=dt;waveTime-=dt;if(waveTime<=0){waveTime=0;endWave();return}updatePlayer(dt);spawnAcc+=spawnRate()*dt;let spawned=0;while(spawnAcc>=1&&spawned++<6){spawnAcc--;spawnEnemy()}updateEnemies(dt);updateBullets(dt);updateEnemyBullets(dt);updateHazards(dt);updateFX(dt);updateHUD()}
+function update(dt){if(state!=='playing')return;totalTime+=dt;waveTime-=dt;if(waveTime<=0){waveTime=0;endWave();return}updatePlayer(dt);spawnAcc+=spawnRate()*dt;let ticks=0;while(spawnAcc>=1&&ticks++<4){spawnAcc--;const batch=spawnBatchSize();for(let i=0;i<batch&&enemies.length<MAX_ENEMIES;i++)spawnEnemy()}updateEnemies(dt);updateBullets(dt);updateEnemyBullets(dt);updateHazards(dt);updateFX(dt);updateHUD()}
 function drawGrid(){ctx.fillStyle='#070a0c';ctx.fillRect(0,0,W,H);const grd=ctx.createRadialGradient(player?player.x:W/2,player?player.y:H/2,20,player?player.x:W/2,player?player.y:H/2,Math.max(W,H)*.62);grd.addColorStop(0,'#111918');grd.addColorStop(1,'#06080a');ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,.018)';ctx.lineWidth=1;const size=42,ox=((player?.x||0)*-.035)%size,oy=((player?.y||0)*-.035)%size;ctx.beginPath();for(let x=ox;x<W;x+=size){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=oy;y<H;y+=size){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke();for(let i=0;i<18;i++){const x=(i*193+37)%W,y=(i*113+77)%H;ctx.fillStyle=i%3?'rgba(106,126,108,.045)':'rgba(104,80,128,.035)';ctx.fillRect(x,y,10+(i*7)%16,2+(i%4))}}
 function drawHazards(){
   for(const h of hazards){
