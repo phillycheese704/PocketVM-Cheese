@@ -1451,3 +1451,55 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
   .deadwave-preview{inset:6% 5% 7% 6%;transform:none}
   .deadwave-preview .z5{display:none}
 }
+
+
+/* Pocket Code */
+.pocket-code{height:100%;min-height:0;display:grid;grid-template-columns:232px minmax(0,1fr);overflow:hidden;background:#0d1117;color:#d8e0eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+.pc-sidebar{position:relative;min-width:0;border-right:1px solid rgba(255,255,255,.075);background:#0b0f14;display:flex;flex-direction:column;overflow:hidden}
+.pc-brand{height:58px;display:flex;align-items:center;gap:11px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.065)}
+.pc-logo{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font:800 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#dbeaff;background:linear-gradient(145deg,#1769aa,#2388d1);box-shadow:0 8px 24px rgba(24,105,170,.24)}
+.pc-brand strong{display:block;font-size:13px}.pc-brand small{display:block;margin-top:2px;color:#778394;font-size:10px}
+.pc-explorer-head{height:36px;display:flex;align-items:center;padding:0 8px 0 13px;color:#8c97a6;font-size:10px;letter-spacing:.12em}
+.pc-explorer-head button{margin-left:auto;width:26px;height:26px;border:0;border-radius:6px;background:transparent;color:#aeb9c7;font-size:17px}
+.pc-explorer-head button:hover{background:rgba(255,255,255,.07);color:#fff}
+.pc-workspace-title{height:31px;display:flex;align-items:center;gap:5px;padding:0 10px;border-top:1px solid rgba(255,255,255,.045);border-bottom:1px solid rgba(255,255,255,.045);font-size:11px;text-transform:uppercase;color:#c9d2dd}
+.pc-tree{flex:1;overflow:auto;padding:5px 0 16px}
+.pc-tree-row{width:100%;height:28px;border:0;background:transparent;color:#b9c3cf;display:flex;align-items:center;gap:7px;text-align:left;font-size:12px;white-space:nowrap}
+.pc-tree-row:hover,.pc-tree-row.active{background:rgba(84,151,213,.13);color:#eef6ff}.pc-tree-row.active{box-shadow:inset 2px 0 #4da3e6}
+.pc-tree-icon{width:24px;flex:0 0 24px;color:#8f9dab;text-align:center;font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace}
+.pc-file-python{color:#ffd35a}.pc-file-html{color:#ff875f}.pc-file-java{color:#e69b65}.pc-file-css{color:#68a8ff}.pc-file-csharp{color:#b58cff}.pc-file-json{color:#e6cf68}
+.pc-tree-empty{padding:18px 14px;color:#687585;font-size:11px;line-height:1.55}
+.pc-new-menu{position:absolute;z-index:6;left:12px;right:12px;top:93px;padding:6px;border:1px solid rgba(255,255,255,.11);border-radius:10px;background:#151b23;box-shadow:0 18px 55px rgba(0,0,0,.48)}
+.pc-new-menu button{width:100%;border:0;border-radius:7px;background:transparent;color:#d5dce5;display:flex;align-items:center;gap:10px;padding:8px;text-align:left}
+.pc-new-menu button:hover{background:rgba(255,255,255,.075)}.pc-new-menu button>span{width:27px;text-align:center;font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:#7eb8e8}
+.pc-new-menu strong{display:block;font-size:11px}.pc-new-menu small{display:block;color:#768394;font-size:9px;margin-top:1px}
+.pc-main{min-width:0;min-height:0;display:flex;flex-direction:column;background:#0d1117}
+.pc-topbar{height:43px;display:flex;min-width:0;border-bottom:1px solid rgba(255,255,255,.075);background:#0b0f14}
+.pc-tabs{display:flex;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden}
+.pc-tab{min-width:132px;max-width:220px;height:43px;border:0;border-right:1px solid rgba(255,255,255,.06);background:#0b0f14;color:#8894a3;display:flex;align-items:center;gap:7px;padding:0 9px}
+.pc-tab.active{background:#0d1117;color:#e6edf3;box-shadow:inset 0 2px #4da3e6}
+.pc-tab-lang{width:23px;flex:0 0 23px;font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace;color:#79b8e8}.pc-tab-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.pc-tab-close{margin-left:auto;font-size:15px;color:#697688}
+.pc-tab:hover .pc-tab-close{color:#c9d2dd}
+.pc-actions{display:flex;align-items:center;gap:5px;padding:0 8px;border-left:1px solid rgba(255,255,255,.06)}
+.pc-actions button{border:1px solid rgba(255,255,255,.08);border-radius:6px;background:#151b23;color:#aeb9c7;font-size:10px;padding:6px 9px}
+.pc-actions button:hover{background:#1c2530;color:#fff}.pc-actions [data-pc-preview]{border-color:rgba(71,167,112,.28);color:#81d69d}
+.pc-editor-shell{position:relative;flex:1;min-height:0;overflow:hidden}
+.pc-empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;color:#687585;padding:30px}
+.pc-empty-logo{font:800 48px ui-monospace,SFMono-Regular,Menlo,monospace;color:#23384b;margin-bottom:14px}.pc-empty strong{font-size:18px;color:#8c99a8}.pc-empty span{font-size:12px;margin-top:7px}
+.pc-editor{height:100%;min-height:0;display:grid;grid-template-columns:54px minmax(0,1fr);overflow:hidden;background:#0d1117}
+.pc-lines{margin:0;padding:14px 11px 40px 0;overflow:hidden;background:#0d1117;color:#45515f;text-align:right;user-select:none;font:12.5px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border-right:1px solid rgba(255,255,255,.035)}
+.pc-code-layer{position:relative;min-width:0;min-height:0;overflow:hidden}
+.pc-highlight,.pocket-code-input{position:absolute;inset:0;margin:0;padding:14px 18px 70px;border:0;outline:0;white-space:pre;tab-size:2;font:12.5px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.pc-highlight{overflow:auto;pointer-events:none;color:#c8d3df;background:#0d1117}
+.pocket-code-input{width:100%;height:100%;resize:none;overflow:auto;background:transparent;color:transparent;-webkit-text-fill-color:transparent;caret-color:#f1f6fc}
+.pocket-code-input::selection{background:rgba(76,145,210,.35)}
+.pc-tok-key{color:#ff7ab2}.pc-tok-string{color:#a8d279}.pc-tok-number{color:#79c0ff}.pc-tok-comment{color:#637083;font-style:italic}.pc-tok-tag{color:#7ee787}
+.pc-status{height:25px;display:flex;align-items:center;gap:14px;padding:0 10px;background:#1265a3;color:#e5f3ff;font-size:10px;white-space:nowrap;overflow:hidden}
+.pc-status [data-pc-message]{overflow:hidden;text-overflow:ellipsis}.pc-status [data-pc-message].bad{color:#ffd0d0}.pc-spacer{flex:1}
+@media(max-width:760px){
+  .pocket-code{grid-template-columns:168px minmax(0,1fr)}
+  .pc-brand{padding-left:9px}.pc-brand small{display:none}.pc-tab{min-width:115px}.pc-actions button{padding:6px}.pc-actions [data-pc-check]{display:none}
+}
+@media(max-width:560px){
+  .pocket-code{grid-template-columns:1fr}.pc-sidebar{display:none}.pc-actions [data-pc-save]{font-size:0}.pc-actions [data-pc-save]:after{content:"✓";font-size:12px}
+}
