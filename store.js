@@ -15,7 +15,28 @@
   const NAME_FILE = 'name.txt';
   const DEFAULT_NAME = 'Snake';
   const TOTAL_BYTES = PACKAGE.reduce((n, file) => n + file.size, 0) + DEFAULT_ICON_ESTIMATE + DEFAULT_NAME.length;
-  const FEATURE_ROTATE_MS = 15 * 60 * 1000;
+  const MOD_DOWNLOAD_ROOT = '/home/user/Downloads/Snake Mods';
+  const MODS = Object.freeze({
+    autobot: {
+      id:'autobot',
+      name:'Auto Bot',
+      file:'auto-bot.pvmod',
+      icon:'◇',
+      tagline:'Let Snake drive itself.',
+      description:'Adds a toggleable pathfinding bot that plans safe routes toward food while avoiding walls and its own body.',
+      payload:{ pocketvmMod:1, game:'snake', id:'autobot', version:'1.0.0', name:'Auto Bot' }
+    },
+    cheese: {
+      id:'cheese',
+      name:'Cheese Mod',
+      file:'cheese-mod.pvmod',
+      icon:'▰',
+      tagline:'A little extra temptation.',
+      description:'Adds cheese alongside the apple. Cheese is worth 2 points and gives Snake a short one-second speed boost.',
+      payload:{ pocketvmMod:1, game:'snake', id:'cheese', version:'1.0.0', name:'Cheese Mod' }
+    }
+  });
+    const FEATURE_ROTATE_MS = 15 * 60 * 1000;
   const featureVariants = [
     { kicker:'FEATURED', title:'The classic, done properly.', copy:'Fast, clean Snake built for keyboard and touch. No power-ups. No nonsense.', tone:'mint' },
     { kicker:'PLAY SOMETHING', title:'One apple. One more run.', copy:'Simple rules, smooth movement, instant restarts. The dangerous kind of simple.', tone:'lime' },
@@ -265,6 +286,88 @@
     shellCtx?.notify?.(value ? 'Added to desktop' : 'Removed from desktop', DEFAULT_NAME, value ? '＋' : '−');
   }
 
+  async function modStatus(id) {
+    const mod = MODS[id];
+    if (!mod) return { downloaded:false, installed:false };
+    const [downloaded, installed] = await Promise.all([
+      PocketDisk.getNode(MOD_DOWNLOAD_ROOT + '/' + mod.file).catch(() => null),
+      PocketDisk.getNode(ROOT + '/' + mod.file).catch(() => null)
+    ]);
+    return { downloaded:!!downloaded, installed:!!installed };
+  }
+
+  async function installedMods() {
+    const result = {};
+    const snapshot = await PocketDisk.snapshot().catch(() => ({}));
+    const prefix = ROOT + '/';
+    const candidates = Object.entries(snapshot)
+      .filter(([path,node]) => node?.type === 'file' && path.startsWith(prefix) && !path.slice(prefix.length).includes('/') && /\.pvmod$/i.test(path))
+      .map(([path]) => path);
+    for (const path of candidates) {
+      try {
+        const data = JSON.parse(await PocketDisk.readText(path));
+        if (data?.pocketvmMod === 1 && data?.game === 'snake' && MODS[data.id]) result[data.id] = true;
+      } catch {}
+    }
+    return result;
+  }
+
+  async function downloadMod(id) {
+    const mod = MODS[id];
+    if (!mod) throw new Error('Unknown mod.');
+    await PocketDisk.ensureDir(MOD_DOWNLOAD_ROOT);
+    await PocketDisk.writeText(
+      MOD_DOWNLOAD_ROOT + '/' + mod.file,
+      JSON.stringify(mod.payload, null, 2) + '\n',
+      'application/x-pocketvm-mod+json'
+    );
+    await shellCtx?.refreshFS?.();
+    shellCtx?.notify?.(mod.name + ' downloaded', 'Find it in Downloads → Snake Mods.', '↓');
+  }
+
+  async function uninstallMod(id) {
+    const mod = MODS[id];
+    if (!mod) return;
+    const paths = [MOD_DOWNLOAD_ROOT + '/' + mod.file, ROOT + '/' + mod.file];
+    let changed = false;
+    for (const path of paths) {
+      if (await PocketDisk.getNode(path).catch(() => null)) {
+        await PocketDisk.remove(path);
+        changed = true;
+      }
+    }
+    if (changed) {
+      for (const win of [...(shellCtx?.state?.windows?.values?.() || [])]) {
+        if (win.appId === GAME_ID) shellCtx.closeWindow?.(win.id);
+      }
+      await shellCtx?.refreshFS?.();
+      shellCtx?.notify?.(mod.name + ' removed', 'Snake will run without that mod.', '×');
+    }
+  }
+
+  async function modsPage() {
+    const snakeInstalled = await isInstalled().catch(() => false);
+    const cards = [];
+    for (const mod of Object.values(MODS)) {
+      const status = await modStatus(mod.id);
+      const state = status.installed ? 'Installed' : status.downloaded ? 'Downloaded' : 'Not downloaded';
+      const button = status.installed || status.downloaded
+        ? '<button class="danger" data-action="uninstall" data-id="' + mod.id + '">Uninstall</button>'
+        : '<button class="primary" data-action="download" data-id="' + mod.id + '">Download</button>';
+      cards.push(
+        '<article class="mod-card"><div class="mod-icon">' + mod.icon + '</div><div class="mod-copy"><div class="mod-head"><div><strong>' + mod.name + '</strong><span>' + mod.tagline + '</span></div><em class="' + (status.installed ? 'on' : status.downloaded ? 'ready' : '') + '">' + state + '</em></div><p>' + mod.description + '</p><div class="mod-file"><span>' + mod.file + '</span><small>' + (status.installed ? 'Snake folder' : status.downloaded ? 'Downloads / Snake Mods' : 'PocketVM mod file') + '</small></div></div><div class="mod-actions">' + button + '</div></article>'
+      );
+    }
+    return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' +
+      '*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#07090d;color:#e9eef7;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{padding:34px 24px 52px;background:radial-gradient(circle at 82% 8%,rgba(255,55,75,.13),transparent 28%),radial-gradient(circle at 10% 80%,rgba(94,231,133,.06),transparent 31%),#07090d}.wrap{max-width:900px;margin:auto}.eyebrow{font-size:10px;letter-spacing:.18em;color:#ff6273;font-weight:850}.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:8px 0 6px}.title-row h1{margin:0;font-size:38px;letter-spacing:-.045em}.ghost{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:#5d697c;padding-top:10px}.lead{max-width:650px;margin:0 0 24px;color:#8896a8;font-size:13px;line-height:1.65}.notice{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 12px;padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.028)}.notice div{display:flex;flex-direction:column;gap:2px}.notice strong{font-size:11px}.notice span{color:#738196;font-size:9px}.notice button{height:34px;padding:0 11px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.045);color:#d8e0eb;font-size:9px;font-weight:750}.mods{display:grid;gap:10px}.mod-card{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:15px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));box-shadow:0 18px 50px rgba(0,0,0,.14)}.mod-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#1d2028,#10131a);border:1px solid rgba(255,255,255,.08);font-size:22px;color:#ffd55c}.mod-copy{min-width:0}.mod-head{display:flex;justify-content:space-between;gap:14px}.mod-head>div{display:flex;flex-direction:column;gap:2px}.mod-head strong{font-size:13px}.mod-head span{font-size:9px;color:#7c899c}.mod-head em{height:23px;padding:0 8px;display:grid;place-items:center;border-radius:999px;background:rgba(255,255,255,.045);color:#6f7c8d;font-size:8px;font-style:normal;font-weight:750;white-space:nowrap}.mod-head em.on{background:rgba(92,225,132,.09);color:#7ee8a0}.mod-head em.ready{background:rgba(255,205,82,.08);color:#e4c26e}.mod-copy p{margin:8px 0;color:#8290a3;font-size:10px;line-height:1.55}.mod-file{display:flex;gap:8px;align-items:center}.mod-file span{font:9px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8b4c4}.mod-file small{font-size:8px;color:#59677a}.mod-actions button{min-width:84px;height:35px;border-radius:9px;font-size:9px;font-weight:800}.primary{border:0;background:#edf2f8;color:#0b0d11}.danger{border:1px solid rgba(255,91,106,.18);background:rgba(255,91,106,.07);color:#ff9ca7}.steps{margin-top:16px;padding:15px;border:1px dashed rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.015)}.steps strong{display:block;font-size:10px;margin-bottom:7px}.steps p{margin:0;color:#708095;font-size:9px;line-height:1.7}.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:' + (snakeInstalled ? '#65dc88' : '#596476') + '}.footer{margin-top:28px;color:#3f4857;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;text-align:center}@media(max-width:650px){body{padding:24px 14px}.title-row h1{font-size:31px}.ghost{display:none}.mod-card{grid-template-columns:46px 1fr}.mod-icon{width:46px;height:46px}.mod-actions{grid-column:2}.mod-head{flex-direction:column;gap:5px;align-items:flex-start}.mod-head em{width:max-content}.notice{align-items:flex-start;flex-direction:column}}</style></head><body><main class="wrap"><span class="eyebrow">POCKET://MODS</span><div class="title-row"><h1>Snake Mods</h1><span class="ghost">unsupported on purpose.</span></div><p class="lead">Small local add-ons for the installed Snake package. Download a mod file, then move it into the Snake folder. Snake checks its own folder every time it starts.</p><div class="notice"><div><strong><i class="status-dot"></i>' + (snakeInstalled ? 'Snake is installed' : 'Snake is not installed') + '</strong><span>Mod files live entirely inside PocketVM storage.</span></div><button data-action="open-files">Open Downloads</button></div><section class="mods">' + cards.join('') + '</section><section class="steps"><strong>Install manually</strong><p>1. Download a mod here. &nbsp; 2. Open Downloads. &nbsp; 3. Drag the .pvmod file from “Snake Mods” into the “Snake” folder. &nbsp; 4. Restart Snake. To remove it, uninstall here or delete the .pvmod file from the Snake folder.</p></section><div class="footer">PocketVM local package index · nothing here leaves your browser</div></main><script>document.addEventListener("click",function(e){var b=e.target.closest("[data-action]");if(!b)return;b.disabled=true;parent.postMessage({type:"pocketvm-mods-action",action:b.dataset.action,id:b.dataset.id||""},"*")});<\/script></body></html>';
+  }
+
+  async function handleModAction(action, id) {
+    if (action === 'download') await downloadMod(id);
+    else if (action === 'uninstall') await uninstallMod(id);
+    else if (action === 'open-files') shellCtx?.openApp?.('files', { path:'/home/user/Downloads' });
+  }
+
   function featureArt() {
     return `<div class="store-snake-art" aria-hidden="true">
       <div class="ssa-grid"></div>
@@ -315,16 +418,33 @@
       const installed = await isInstalled();
       const id = await identity();
       const size = installed ? await installedBytes() : TOTAL_BYTES;
-      page.innerHTML = `<section class="store-hero" data-tone="mint">
-        <div class="store-hero-copy"><span class="store-kicker" data-feature-kicker></span><h1 data-feature-title></h1><p data-feature-copy></p>
-          <div class="store-hero-meta"><span>Snake</span><span>Classic</span><span>${installed ? formatBytes(size) + ' installed' : formatBytes(TOTAL_BYTES)}</span></div>
-          <div class="store-actions"><button class="store-primary" data-store-main>${installed ? 'Play' : 'Install'}</button>${installed ? `<button class="store-secondary" data-store-pin>${pinned() ? 'Remove from desktop' : 'Add to desktop'}</button>` : ''}</div>
+      const stats = await PocketDisk.stats().catch(() => null);
+      const freeText = stats ? formatBytes(stats.free) + ' free after install space' : 'Local install';
+      page.innerHTML = `<section class="store-hero store-featured" data-tone="mint">
+        <div class="store-hero-copy">
+          <div class="store-feature-label"><span class="live-dot"></span><span data-feature-kicker></span><em>Featured game</em></div>
+          <h1 data-feature-title></h1><p data-feature-copy></p>
+          <div class="store-scoreline"><div><strong>Snake</strong><span>Arcade</span></div><i></i><div><strong>Touch + keys</strong><span>Controls</span></div><i></i><div><strong>Offline</strong><span>After install</span></div></div>
+          <div class="store-actions"><button class="store-primary store-main-cta" data-store-main>${installed ? '▶ Play Snake' : '↓ Install Snake'}</button>${installed ? `<button class="store-secondary" data-store-pin>${pinned() ? 'Remove from desktop' : 'Add to desktop'}</button>` : ''}</div>
           <div class="store-progress" data-store-progress hidden><i></i><span></span></div>
+          <div class="store-install-note"><span>${installed ? 'Installed locally' : formatBytes(TOTAL_BYTES) + ' download'}</span><span>•</span><span>${installed ? formatBytes(size) + ' on drive' : freeText}</span></div>
         </div>
-        <div class="store-hero-visual"><img src="${ctx.escapeHTML(id.icon)}" alt=""><div class="store-icon-glow"></div>${featureArt()}</div>
+        <div class="store-hero-visual">
+          <div class="store-feature-chip">POCKETVM ORIGINAL</div>
+          <div class="store-game-preview">
+            <div class="preview-grid"></div><b class="preview-apple"></b>
+            <i style="--px:36%;--py:64%"></i><i style="--px:44%;--py:64%"></i><i style="--px:52%;--py:64%"></i><i style="--px:60%;--py:64%"></i><i style="--px:60%;--py:50%" class="head"></i>
+          </div>
+          <img src="${ctx.escapeHTML(id.icon)}" alt=""><div class="store-icon-glow"></div>
+        </div>
       </section>
-      <section class="store-section"><div class="store-section-head"><div><span>ONLY ON POCKETVM</span><h2>Games</h2></div><small>More later.</small></div>
-        <article class="store-game-row"><img src="${ctx.escapeHTML(id.icon)}" alt=""><div><strong>${ctx.escapeHTML(id.name)}</strong><span>Classic arcade · Touch + keyboard</span></div><em>${installed ? 'Installed' : formatBytes(TOTAL_BYTES)}</em><button data-store-row>${installed ? 'Play' : 'Get'}</button></article>
+      <section class="store-feature-grid">
+        <article><span>01</span><div><strong>Classic rules</strong><p>Apple, walls, your own tail. Nothing extra unless you put it there.</p></div></article>
+        <article><span>02</span><div><strong>Built for iPad</strong><p>Swipe controls, touch D-pad, keyboard support and responsive rendering.</p></div></article>
+        <article><span>03</span><div><strong>Actually installed</strong><p>The game, icon and soundtrack consume real space on PocketVM's 1 GB drive.</p></div></article>
+      </section>
+      <section class="store-section"><div class="store-section-head"><div><span>GAME LIBRARY</span><h2>Available now</h2></div><small>1 title</small></div>
+        <article class="store-game-row store-game-row-rich"><img src="${ctx.escapeHTML(id.icon)}" alt=""><div><strong>${ctx.escapeHTML(id.name)}</strong><span>Classic Snake · Smooth animation · Original soundtrack</span><small>${installed ? 'Installed and ready' : 'Instant local install'}</small></div><em>${installed ? 'Installed' : formatBytes(TOTAL_BYTES)}</em><button data-store-row>${installed ? 'Play' : 'Get'}</button></article>
       </section>`;
       heroVariant();
       const main = ctx.queryOne('[data-store-main]', page);
@@ -343,17 +463,26 @@
             progressState = { loaded,total,file };
             const pct = Math.max(0, Math.min(100, loaded / total * 100));
             ctx.queryOne('i', progress).style.width = pct + '%';
-            ctx.queryOne('span', progress).textContent = 'Installing · ' + Math.round(pct) + '%';
+            ctx.queryOne('span', progress).textContent = 'Installing ' + file + ' · ' + Math.round(pct) + '%';
           });
           await refreshDrive();
           await renderHome();
         } catch (err) {
           ctx.queryOne('span', progress).textContent = err?.message || 'Install failed';
-          main.disabled = false; row.disabled = false;
-        } finally { busy = false; }
+          main.disabled = false; row.disabled = false; busy = false;
+        } finally {
+          busy = false;
+        }
       };
-      main.addEventListener('click', runMain); row.addEventListener('click', runMain);
+      main.addEventListener('click', runMain);
+      row.addEventListener('click', runMain);
       pin?.addEventListener('click', async () => { await toggleDesktopPin(!pinned()); await renderHome(); });
+      if (progressState && busy) {
+        progress.hidden = false;
+        const pct = Math.max(0, Math.min(100, progressState.loaded / progressState.total * 100));
+        ctx.queryOne('i', progress).style.width = pct + '%';
+        ctx.queryOne('span', progress).textContent = 'Installing ' + progressState.file + ' · ' + Math.round(pct) + '%';
+      }
     }
 
     async function renderLibrary() {
@@ -417,13 +546,14 @@
     const loading = ctx.queryOne('.store-game-loading', win.content);
 
     try {
-      const [html, musicBlob] = await Promise.all([
+      const [html, musicBlob, mods] = await Promise.all([
         PocketDisk.readText(ROOT + '/game.html'),
-        PocketDisk.readBlob(ROOT + '/music.ogg')
+        PocketDisk.readBlob(ROOT + '/music.ogg'),
+        installedMods()
       ]);
       const musicData = await blobToDataURL(musicBlob);
       const save = (() => { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}') || {}; } catch { return {}; } })();
-      const bootstrap = '<script>window.__POCKETVM_MUSIC=' + JSON.stringify(musicData) + ';window.__POCKETVM_SAVE=' + JSON.stringify(save) + ';</' + 'script>';
+      const bootstrap = '<script>window.__POCKETVM_MUSIC=' + JSON.stringify(musicData) + ';window.__POCKETVM_SAVE=' + JSON.stringify(save) + ';window.__POCKETVM_MODS=' + JSON.stringify(mods) + ';</' + 'script>';
       const srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head([^>]*)>/i, '<head$1>' + bootstrap) : bootstrap + html;
       frame.srcdoc = srcdoc;
     } catch (err) {
@@ -455,5 +585,5 @@
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncShell, buildStore, buildSnake, isInstalled, installSnake, uninstallSnake, toggleDesktopPin });
+  window.PocketStoreApp = Object.freeze({ init, syncShell, buildStore, buildSnake, isInstalled, installSnake, uninstallSnake, toggleDesktopPin, modsPage, handleModAction, installedMods });
 })();
