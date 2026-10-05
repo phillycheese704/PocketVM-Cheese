@@ -8,6 +8,8 @@ const ASSETS = [
   './files.js',
   './system.js',
   './store.js',
+  './store/snake/icon.svg',
+  './store/deadwave/icon.svg',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
