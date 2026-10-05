@@ -713,5 +713,5 @@
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncShell, buildStore, buildSnake, isInstalled, installSnake, uninstallSnake, toggleDesktopPin, modsPage, handleModAction, installedMods });
+  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, buildStore, buildSnake, buildDeadwave, isInstalled, deadwaveInstalled, installSnake, installDeadwave, uninstallSnake, uninstallDeadwave, toggleDesktopPin, toggleDeadwavePin, modsPage, handleModAction, installedMods, installedDeadwaveSkins });
 })();
