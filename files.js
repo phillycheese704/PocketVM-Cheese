@@ -258,10 +258,14 @@
       }
     }
 
+    function dropPathFor(element) {
+      return element?.dataset?.filePath || element?.dataset?.filesPath || '';
+    }
+
     function targetFolderAt(x, y, sourcePaths) {
       const hit = document.elementFromPoint(x, y)?.closest?.('.file-entry-v3,[data-files-path]');
       if (!hit || !win.el.contains(hit)) return null;
-      const path = hit.dataset.filePath || hit.dataset.filesPath;
+      const path = dropPathFor(hit);
       if (!path || !ctx.state.fs[path] || ctx.state.fs[path].type !== 'dir') return null;
       if (sourcePaths.some(source => path === source || path.startsWith(source + '/'))) return null;
       return hit;
@@ -418,7 +422,7 @@
           clearTimeout(dragArmTimer);
           suppressNextClick = true;
           if (touchDragActive) {
-            const targetPath = dropTarget?.dataset.filePath;
+            const targetPath = dropPathFor(dropTarget);
             const paths = dragPaths.slice();
             removeDragGhost();
             touchMoved = false;
