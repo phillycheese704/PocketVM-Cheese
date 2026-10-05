@@ -11,6 +11,7 @@
       mime,
       image: !!node && node.type === 'file' && PocketDisk.isImageMime(mime),
       html: !!node && node.type === 'file' && /\.html$/i.test(path),
+      code: !!node && node.type === 'file' && /\.(py|html|java|css|cs|json)$/i.test(path),
       text: !!node && node.type === 'file' && /\.(txt|pvmod)$/i.test(path),
       mod: !!node && node.type === 'file' && /\.pvmod$/i.test(path)
     };
@@ -26,6 +27,7 @@
       return '📁';
     }
     if (info.image) return '▧';
+    if (info.code) return '</>';
     if (info.html) return '◎';
     if (info.mod) return '◇';
     return '📄';
@@ -36,6 +38,7 @@
     if (!info.node) return 'File';
     if (info.node.type === 'dir') return 'Folder';
     if (info.image) return 'Image';
+    if (info.code) { const ext=path.toLowerCase().split('.').pop(); return ({py:'Python source',html:'HTML document',java:'Java source',css:'CSS stylesheet',cs:'C# source',json:'JSON document'})[ext] || 'Code file'; }
     if (info.html) return 'HTML document';
     if (info.mod) return 'PocketVM mod';
     if (info.text) return 'Text document';
@@ -116,7 +119,7 @@
           '<div class="files-view-v3"></div>' +
           '<div class="files-statusbar"><span data-files-count>0 items</span><span class="files-spacer"></span><span data-files-status>Ready</span></div>' +
           '<div class="files-context-menu" hidden></div>' +
-          '<input class="hidden-file-input" id="files-import-v3" type="file" accept=".txt,.html,.pvmod,.png,.jpg,.jpeg,.webp,.gif,.svg,text/plain,text/html,application/x-pocketvm-mod+json,image/png,image/jpeg,image/webp,image/gif,image/svg+xml" multiple />' +
+          '<input class="hidden-file-input" id="files-import-v3" type="file" accept=".txt,.html,.py,.java,.css,.cs,.json,.pvmod,.png,.jpg,.jpeg,.webp,.gif,.svg,text/plain,text/html,text/css,application/json,application/x-pocketvm-mod+json,image/png,image/jpeg,image/webp,image/gif,image/svg+xml" multiple />' +
         '</section>' +
       '</div>';
 
@@ -493,7 +496,8 @@
         ctx.openApp('imageviewer', { file:path });
         return;
       }
-      if (info.html || info.text) ctx.openApp('editor', { file:path });
+      if (info.code) { ctx.openApp('pocketcode', { file:path }); return; }
+      if (info.text) ctx.openApp('editor', { file:path });
     }
 
     async function createFolder() {
@@ -529,7 +533,7 @@
         await ctx.refreshFS();
         ctx.notify('File created', name, kind === 'html' ? '◎' : '📄');
         render();
-        ctx.openApp('editor', { file:path });
+        ctx.openApp(kind === 'html' ? 'pocketcode' : 'editor', { file:path });
       } catch (err) {
         alert(err.message || 'Could not create the file.');
       }
@@ -540,7 +544,7 @@
       let skipped = 0;
       for (const file of files) {
         const name = cleanName(file.name);
-        if (!name || !/\.(txt|html|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
+        if (!name || !/\.(txt|html|py|java|css|cs|json|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
           skipped++;
           continue;
         }
@@ -556,7 +560,7 @@
       await ctx.refreshFS();
       render();
       if (added) ctx.notify('Files imported', added + ' file' + (added === 1 ? '' : 's') + ' added.', '↓');
-      if (skipped) ctx.notify('Some files were skipped', 'Supported: TXT, HTML, PNG, JPG, WebP, GIF and SVG.', '!');
+      if (skipped) ctx.notify('Some files were skipped', 'Supported: TXT, HTML, PY, JAVA, CSS, CS, JSON, PVMOD and images.', '!');
     }
 
     async function renameItem(path) {
@@ -564,8 +568,8 @@
       if (!info.node) return;
       const name = cleanName(prompt('Rename', ctx.basename(path)));
       if (!name || name === ctx.basename(path)) return;
-      if (info.node.type === 'file' && !/\.(txt|html|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
-        alert('Supported files: TXT, HTML, PVMOD, PNG, JPG, WebP, GIF and SVG.');
+      if (info.node.type === 'file' && !/\.(txt|html|py|java|css|cs|json|pvmod|png|jpe?g|webp|gif|svg)$/i.test(name)) {
+        alert('Supported files: TXT, HTML, PY, JAVA, CSS, CS, JSON, PVMOD and images.');
         return;
       }
       const target = ctx.norm(name, ctx.parentPath(path));
