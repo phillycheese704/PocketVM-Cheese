@@ -15,7 +15,8 @@
   const NAME_FILE = 'name.txt';
   const DEFAULT_NAME = 'Snake';
   const TOTAL_BYTES = PACKAGE.reduce((n, file) => n + file.size, 0) + DEFAULT_ICON_ESTIMATE + DEFAULT_NAME.length;
-  const MOD_DOWNLOAD_ROOT = '/home/user/Downloads/Snake Mods';
+  const MOD_DOWNLOAD_ROOT = '/home/user/Downloads';
+  const LEGACY_MOD_DOWNLOAD_ROOT = '/home/user/Downloads/Snake Mods';
   const MODS = Object.freeze({
     autobot: {
       id:'autobot',
@@ -288,12 +289,19 @@
 
   async function modStatus(id) {
     const mod = MODS[id];
-    if (!mod) return { downloaded:false, installed:false };
-    const [downloaded, installed] = await Promise.all([
-      PocketDisk.getNode(MOD_DOWNLOAD_ROOT + '/' + mod.file).catch(() => null),
+    if (!mod) return { downloaded:false, installed:false, downloadPath:'' };
+    const currentPath = MOD_DOWNLOAD_ROOT + '/' + mod.file;
+    const legacyPath = LEGACY_MOD_DOWNLOAD_ROOT + '/' + mod.file;
+    const [current, legacy, installed] = await Promise.all([
+      PocketDisk.getNode(currentPath).catch(() => null),
+      PocketDisk.getNode(legacyPath).catch(() => null),
       PocketDisk.getNode(ROOT + '/' + mod.file).catch(() => null)
     ]);
-    return { downloaded:!!downloaded, installed:!!installed };
+    return {
+      downloaded:!!(current || legacy),
+      installed:!!installed,
+      downloadPath:current ? currentPath : legacy ? legacyPath : currentPath
+    };
   }
 
   async function installedMods() {
@@ -316,19 +324,28 @@
     const mod = MODS[id];
     if (!mod) throw new Error('Unknown mod.');
     await PocketDisk.ensureDir(MOD_DOWNLOAD_ROOT);
+    const currentPath = MOD_DOWNLOAD_ROOT + '/' + mod.file;
+    const legacyPath = LEGACY_MOD_DOWNLOAD_ROOT + '/' + mod.file;
     await PocketDisk.writeText(
-      MOD_DOWNLOAD_ROOT + '/' + mod.file,
+      currentPath,
       JSON.stringify(mod.payload, null, 2) + '\n',
       'application/x-pocketvm-mod+json'
     );
+    if (await PocketDisk.getNode(legacyPath).catch(() => null)) {
+      await PocketDisk.remove(legacyPath).catch(() => {});
+    }
     await shellCtx?.refreshFS?.();
-    shellCtx?.notify?.(mod.name + ' downloaded', 'Find it in Downloads → Snake Mods.', '↓');
+    shellCtx?.notify?.(mod.name + ' downloaded', 'Ready in Downloads, beside the Snake folder.', '↓');
   }
 
   async function uninstallMod(id) {
     const mod = MODS[id];
     if (!mod) return;
-    const paths = [MOD_DOWNLOAD_ROOT + '/' + mod.file, ROOT + '/' + mod.file];
+    const paths = [
+      MOD_DOWNLOAD_ROOT + '/' + mod.file,
+      LEGACY_MOD_DOWNLOAD_ROOT + '/' + mod.file,
+      ROOT + '/' + mod.file
+    ];
     let changed = false;
     for (const path of paths) {
       if (await PocketDisk.getNode(path).catch(() => null)) {
@@ -347,25 +364,44 @@
 
   async function modsPage() {
     const snakeInstalled = await isInstalled().catch(() => false);
-    const cards = [];
-    for (const mod of Object.values(MODS)) {
-      const status = await modStatus(mod.id);
-      const state = status.installed ? 'Installed' : status.downloaded ? 'Downloaded' : 'Not downloaded';
+    const statuses = {};
+    for (const mod of Object.values(MODS)) statuses[mod.id] = await modStatus(mod.id);
+    const activeCount = Object.values(statuses).filter(value => value.installed).length;
+    const readyCount = Object.values(statuses).filter(value => value.downloaded && !value.installed).length;
+
+    const modVisual = id => id === 'autobot'
+      ? '<div class="auto-visual"><i class="n1"></i><i class="n2"></i><i class="n3"></i><i class="n4"></i><b class="route r1"></b><b class="route r2"></b><b class="route r3"></b><span>AI</span></div>'
+      : '<div class="cheese-visual"><div class="wedge"><i></i><i></i><i></i></div><span>+2</span></div>';
+
+    const cards = Object.values(MODS).map(mod => {
+      const status = statuses[mod.id];
+      const state = status.installed ? 'Active' : status.downloaded ? 'Ready to move' : 'Available';
+      const stateClass = status.installed ? 'active' : status.downloaded ? 'ready' : '';
       const button = status.installed || status.downloaded
-        ? '<button class="danger" data-action="uninstall" data-id="' + mod.id + '">Uninstall</button>'
-        : '<button class="primary" data-action="download" data-id="' + mod.id + '">Download</button>';
-      cards.push(
-        '<article class="mod-card"><div class="mod-icon">' + mod.icon + '</div><div class="mod-copy"><div class="mod-head"><div><strong>' + mod.name + '</strong><span>' + mod.tagline + '</span></div><em class="' + (status.installed ? 'on' : status.downloaded ? 'ready' : '') + '">' + state + '</em></div><p>' + mod.description + '</p><div class="mod-file"><span>' + mod.file + '</span><small>' + (status.installed ? 'Snake folder' : status.downloaded ? 'Downloads / Snake Mods' : 'PocketVM mod file') + '</small></div></div><div class="mod-actions">' + button + '</div></article>'
-      );
-    }
+        ? '<button class="mod-btn remove" data-action="uninstall" data-id="' + mod.id + '">Remove</button>'
+        : '<button class="mod-btn get" data-action="download" data-id="' + mod.id + '">Download</button>';
+      const location = status.installed ? 'Snake/' + mod.file : status.downloaded ? 'Downloads/' + mod.file : mod.file;
+      return '<article class="mod-card mod-' + mod.id + '">' +
+        '<div class="mod-visual">' + modVisual(mod.id) + '</div>' +
+        '<div class="mod-body"><div class="mod-title-row"><div><span class="mod-type">SNAKE MOD</span><h2>' + mod.name + '</h2></div><em class="state ' + stateClass + '">' + state + '</em></div>' +
+        '<p class="tagline">' + mod.tagline + '</p><p class="desc">' + mod.description + '</p>' +
+        '<div class="mod-file"><span class="file-dot"></span><code>' + location + '</code></div></div>' +
+        '<div class="mod-cta">' + button + '</div></article>';
+    }).join('');
+
+    const installState = snakeInstalled
+      ? '<span class="status-live"></span><div><strong>Snake detected</strong><small>Installed package is ready for mods</small></div>'
+      : '<span class="status-off"></span><div><strong>Snake is not installed</strong><small>Install Snake before activating mods</small></div>';
+
     return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' +
-      '*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#07090d;color:#e9eef7;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{padding:34px 24px 52px;background:radial-gradient(circle at 82% 8%,rgba(255,55,75,.13),transparent 28%),radial-gradient(circle at 10% 80%,rgba(94,231,133,.06),transparent 31%),#07090d}.wrap{max-width:900px;margin:auto}.eyebrow{font-size:10px;letter-spacing:.18em;color:#ff6273;font-weight:850}.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:8px 0 6px}.title-row h1{margin:0;font-size:38px;letter-spacing:-.045em}.ghost{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;color:#5d697c;padding-top:10px}.lead{max-width:650px;margin:0 0 24px;color:#8896a8;font-size:13px;line-height:1.65}.notice{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 12px;padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.028)}.notice div{display:flex;flex-direction:column;gap:2px}.notice strong{font-size:11px}.notice span{color:#738196;font-size:9px}.notice button{height:34px;padding:0 11px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.045);color:#d8e0eb;font-size:9px;font-weight:750}.mods{display:grid;gap:10px}.mod-card{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:15px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));box-shadow:0 18px 50px rgba(0,0,0,.14)}.mod-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#1d2028,#10131a);border:1px solid rgba(255,255,255,.08);font-size:22px;color:#ffd55c}.mod-copy{min-width:0}.mod-head{display:flex;justify-content:space-between;gap:14px}.mod-head>div{display:flex;flex-direction:column;gap:2px}.mod-head strong{font-size:13px}.mod-head span{font-size:9px;color:#7c899c}.mod-head em{height:23px;padding:0 8px;display:grid;place-items:center;border-radius:999px;background:rgba(255,255,255,.045);color:#6f7c8d;font-size:8px;font-style:normal;font-weight:750;white-space:nowrap}.mod-head em.on{background:rgba(92,225,132,.09);color:#7ee8a0}.mod-head em.ready{background:rgba(255,205,82,.08);color:#e4c26e}.mod-copy p{margin:8px 0;color:#8290a3;font-size:10px;line-height:1.55}.mod-file{display:flex;gap:8px;align-items:center}.mod-file span{font:9px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8b4c4}.mod-file small{font-size:8px;color:#59677a}.mod-actions button{min-width:84px;height:35px;border-radius:9px;font-size:9px;font-weight:800}.primary{border:0;background:#edf2f8;color:#0b0d11}.danger{border:1px solid rgba(255,91,106,.18);background:rgba(255,91,106,.07);color:#ff9ca7}.steps{margin-top:16px;padding:15px;border:1px dashed rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.015)}.steps strong{display:block;font-size:10px;margin-bottom:7px}.steps p{margin:0;color:#708095;font-size:9px;line-height:1.7}.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:' + (snakeInstalled ? '#65dc88' : '#596476') + '}.footer{margin-top:28px;color:#3f4857;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;text-align:center}@media(max-width:650px){body{padding:24px 14px}.title-row h1{font-size:31px}.ghost{display:none}.mod-card{grid-template-columns:46px 1fr}.mod-icon{width:46px;height:46px}.mod-actions{grid-column:2}.mod-head{flex-direction:column;gap:5px;align-items:flex-start}.mod-head em{width:max-content}.notice{align-items:flex-start;flex-direction:column}}</style></head><body><main class="wrap"><span class="eyebrow">POCKET://MODS</span><div class="title-row"><h1>Snake Mods</h1><span class="ghost">unsupported on purpose.</span></div><p class="lead">Small local add-ons for the installed Snake package. Download a mod file, then move it into the Snake folder. Snake checks its own folder every time it starts.</p><div class="notice"><div><strong><i class="status-dot"></i>' + (snakeInstalled ? 'Snake is installed' : 'Snake is not installed') + '</strong><span>Mod files live entirely inside PocketVM storage.</span></div><button data-action="open-files">Open Downloads</button></div><section class="mods">' + cards.join('') + '</section><section class="steps"><strong>Install manually</strong><p>1. Download a mod here. &nbsp; 2. Open Downloads. &nbsp; 3. Drag the .pvmod file from “Snake Mods” into the “Snake” folder. &nbsp; 4. Restart Snake. To remove it, uninstall here or delete the .pvmod file from the Snake folder.</p></section><div class="footer">PocketVM local package index · nothing here leaves your browser</div></main><script>document.addEventListener("click",function(e){var b=e.target.closest("[data-action]");if(!b)return;b.disabled=true;parent.postMessage({type:"pocketvm-mods-action",action:b.dataset.action,id:b.dataset.id||""},"*")});<\/script></body></html>';
+      '*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#06080b;color:#edf2f8;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button{font:inherit}body{padding:22px;background:radial-gradient(circle at 82% -4%,rgba(255,50,70,.16),transparent 30%),radial-gradient(circle at 5% 98%,rgba(57,214,118,.07),transparent 29%),linear-gradient(180deg,#080b10,#05070a)}.shell{max-width:960px;margin:auto}.routebar{height:38px;display:flex;align-items:center;gap:8px;padding:0 11px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(255,255,255,.025);box-shadow:0 16px 50px rgba(0,0,0,.15)}.routebar>i{width:7px;height:7px;border-radius:50%;background:#ff4b5f;box-shadow:0 0 14px rgba(255,75,95,.5)}.routebar code{color:#78879b;font:9px ui-monospace,SFMono-Regular,Menlo,monospace}.routebar span{margin-left:auto;padding:4px 7px;border:1px solid rgba(255,255,255,.06);border-radius:999px;color:#566477;font:700 7px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:26px;align-items:end;padding:32px 4px 24px}.hero .eyebrow{display:flex;align-items:center;gap:7px;color:#ff6072;font-size:8px;font-weight:900;letter-spacing:.18em}.hero .eyebrow:before{content:"";width:18px;height:1px;background:#ff6072}.hero h1{margin:8px 0 7px;font-size:42px;line-height:.98;letter-spacing:-.052em}.hero p{max-width:610px;margin:0;color:#8290a2;font-size:11px;line-height:1.65}.hero-stats{display:grid;grid-template-columns:repeat(2,minmax(84px,1fr));gap:7px}.hero-stats div{min-width:92px;padding:10px;border:1px solid rgba(255,255,255,.065);border-radius:11px;background:rgba(255,255,255,.022)}.hero-stats strong{display:block;font-size:15px}.hero-stats span{display:block;margin-top:2px;color:#5c697a;font-size:7px;text-transform:uppercase;letter-spacing:.11em}.controlbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 11px;border:1px solid rgba(255,255,255,.075);border-radius:13px;background:linear-gradient(90deg,rgba(255,255,255,.032),rgba(255,255,255,.017))}.package-state{display:flex;align-items:center;gap:9px;min-width:0}.status-live,.status-off{width:8px;height:8px;flex:0 0 auto;border-radius:50%}.status-live{background:#65e28b;box-shadow:0 0 14px rgba(101,226,139,.48)}.status-off{background:#576274}.package-state div{display:flex;flex-direction:column}.package-state strong{font-size:9px}.package-state small{margin-top:2px;color:#617083;font-size:7.5px}.controlbar .spacer{flex:1}.open-files{height:34px;padding:0 11px;border:1px solid rgba(255,255,255,.085);border-radius:9px;background:rgba(255,255,255,.04);color:#dbe4ef;font-size:8px;font-weight:800}.mods{display:grid;gap:9px}.mod-card{position:relative;min-height:155px;display:grid;grid-template-columns:145px minmax(0,1fr) auto;gap:18px;align-items:center;padding:14px;border:1px solid rgba(255,255,255,.07);border-radius:17px;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.032),rgba(255,255,255,.012));box-shadow:0 18px 55px rgba(0,0,0,.16)}.mod-card:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,rgba(255,255,255,.02),transparent 34%)}.mod-visual{position:relative;height:125px;border-radius:13px;overflow:hidden;border:1px solid rgba(255,255,255,.065);background:#090d12}.mod-autobot .mod-visual{background:radial-gradient(circle at 70% 25%,rgba(86,208,255,.13),transparent 38%),linear-gradient(145deg,#0b161b,#080c11)}.mod-cheese .mod-visual{background:radial-gradient(circle at 70% 25%,rgba(255,201,67,.14),transparent 40%),linear-gradient(145deg,#181309,#0b0a08)}.auto-visual{position:absolute;inset:0}.auto-visual i{position:absolute;width:8px;height:8px;border-radius:50%;background:#72dcff;box-shadow:0 0 15px rgba(114,220,255,.45)}.auto-visual .n1{left:20%;top:66%}.auto-visual .n2{left:42%;top:48%}.auto-visual .n3{left:65%;top:58%}.auto-visual .n4{left:76%;top:27%}.auto-visual .route{position:absolute;height:1px;transform-origin:left center;background:linear-gradient(90deg,rgba(114,220,255,.2),#72dcff)}.auto-visual .r1{left:22%;top:66%;width:34%;transform:rotate(-35deg)}.auto-visual .r2{left:44%;top:49%;width:30%;transform:rotate(19deg)}.auto-visual .r3{left:66%;top:57%;width:37%;transform:rotate(-56deg)}.auto-visual span{position:absolute;right:11px;bottom:8px;color:#5b7181;font:900 24px ui-monospace,SFMono-Regular,Menlo,monospace}.cheese-visual{position:absolute;inset:0;display:grid;place-items:center}.cheese-visual .wedge{position:relative;width:74px;height:54px;clip-path:polygon(0 22%,100% 0,84% 100%,0 82%);background:linear-gradient(145deg,#ffe072,#dca632);filter:drop-shadow(0 15px 20px rgba(0,0,0,.22))}.cheese-visual .wedge i{position:absolute;border-radius:50%;background:#b87e24}.cheese-visual .wedge i:nth-child(1){width:10px;height:10px;left:18px;top:15px}.cheese-visual .wedge i:nth-child(2){width:8px;height:8px;right:19px;top:9px}.cheese-visual .wedge i:nth-child(3){width:12px;height:12px;right:25px;bottom:9px}.cheese-visual span{position:absolute;right:10px;bottom:8px;color:#7b632b;font:900 19px ui-monospace,SFMono-Regular,Menlo,monospace}.mod-body{min-width:0;z-index:1}.mod-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.mod-type{display:block;color:#526176;font-size:7px;font-weight:900;letter-spacing:.14em}.mod-title-row h2{margin:3px 0 0;font-size:19px;letter-spacing:-.025em}.state{height:23px;display:grid;place-items:center;padding:0 8px;border-radius:999px;background:rgba(255,255,255,.04);color:#677587;font-size:7px;font-style:normal;font-weight:850;white-space:nowrap}.state.ready{background:rgba(255,203,74,.07);color:#dfbe68}.state.active{background:rgba(92,225,133,.08);color:#7be59b}.tagline{margin:8px 0 3px;color:#bcc7d4;font-size:9px;font-weight:700}.desc{max-width:580px;margin:0;color:#728095;font-size:9px;line-height:1.55}.mod-file{display:flex;align-items:center;gap:6px;margin-top:11px}.file-dot{width:5px;height:5px;border-radius:50%;background:#4c5969}.mod-file code{min-width:0;overflow:hidden;text-overflow:ellipsis;color:#59687a;font:7.5px ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}.mod-cta{z-index:1}.mod-btn{min-width:92px;height:37px;border-radius:10px;font-size:8px;font-weight:850}.mod-btn.get{border:0;background:#edf3fa;color:#090c10;box-shadow:0 8px 25px rgba(0,0,0,.16)}.mod-btn.remove{border:1px solid rgba(255,91,105,.16);background:rgba(255,91,105,.055);color:#ff96a2}.flow{margin-top:10px;padding:15px;border:1px solid rgba(255,255,255,.065);border-radius:15px;background:rgba(255,255,255,.018)}.flow-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}.flow-head strong{font-size:9px}.flow-head span{color:#4e5b6d;font:7px ui-monospace,SFMono-Regular,Menlo,monospace}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.step{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start;padding:10px;border-radius:11px;background:rgba(255,255,255,.018)}.step>span{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.04);color:#8997a9;font-size:8px;font-weight:900}.step strong{display:block;font-size:8px}.step p{margin:3px 0 0;color:#5f6e81;font-size:7.5px;line-height:1.45}.footer{margin-top:22px;color:#353e4c;text-align:center;font:7px ui-monospace,SFMono-Regular,Menlo,monospace}@media(max-width:700px){body{padding:14px}.hero{grid-template-columns:1fr;padding-top:24px}.hero h1{font-size:34px}.hero-stats{width:max-content}.mod-card{grid-template-columns:92px 1fr}.mod-visual{height:100px}.mod-cta{grid-column:2}.steps{grid-template-columns:1fr}.controlbar{align-items:flex-start}.package-state small{max-width:210px}.mod-title-row{flex-direction:column}.state{width:max-content}}</style></head><body><main class="shell"><div class="routebar"><i></i><code>pocket:mods</code><span>LOCAL INDEX</span></div><section class="hero"><div><span class="eyebrow">SNAKE / MOD LAB</span><h1>Change the rules.</h1><p>Small local extensions for Snake. Download the file, drop it onto the Snake folder, then launch the game. Nothing is injected unless its .pvmod file is physically inside the package.</p></div><div class="hero-stats"><div><strong>' + activeCount + '</strong><span>Active</span></div><div><strong>' + readyCount + '</strong><span>Ready</span></div></div></section><div class="controlbar"><div class="package-state">' + installState + '</div><div class="spacer"></div><button class="open-files" data-action="open-files">Open Downloads</button></div><section class="mods">' + cards + '</section><section class="flow"><div class="flow-head"><strong>Manual install flow</strong><span>NO RESTART OF POCKETVM REQUIRED</span></div><div class="steps"><div class="step"><span>01</span><div><strong>Download</strong><p>The .pvmod file appears directly in Downloads beside the Snake folder.</p></div></div><div class="step"><span>02</span><div><strong>Drop onto Snake</strong><p>Drag the mod file onto the Snake folder. Sidebar destinations work too.</p></div></div><div class="step"><span>03</span><div><strong>Launch Snake</strong><p>The game scans its folder on startup and enables the mods it finds.</p></div></div></div></section><div class="footer">PocketVM package extension index · local virtual drive only</div></main><script>document.addEventListener("click",function(e){var b=e.target.closest("[data-action]");if(!b||b.disabled)return;b.disabled=true;parent.postMessage({type:"pocketvm-mods-action",action:b.dataset.action,id:b.dataset.id||""},"*")});<\/script></body></html>';
   }
 
   async function handleModAction(action, id) {
     if (action === 'download') await downloadMod(id);
     else if (action === 'uninstall') await uninstallMod(id);
     else if (action === 'open-files') shellCtx?.openApp?.('files', { path:'/home/user/Downloads' });
+    else if (action === 'open-store') shellCtx?.openApp?.('store');
   }
 
   function featureArt() {
