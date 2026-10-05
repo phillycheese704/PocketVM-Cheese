@@ -137,20 +137,22 @@ function pickEnemyType(){
 }
 function createEnemy(type,x,y,elite=false){
   const t=ENEMY_TYPES[type];
-  const hpScale=1+Math.max(0,wave-2)*.055+Math.max(0,wave-9)*.018;
-  const speedScale=1+Math.min(.34,Math.max(0,wave-3)*.014);
-  const damageScale=1+Math.max(0,wave-2)*.042;
+  const preCap=Math.max(0,Math.min(wave,10)-2);
+  const postCap=Math.max(0,wave-10);
+  const hpScale=1+preCap*.045+postCap*.085;
+  const speedScale=1+Math.max(0,Math.min(wave,10)-3)*.012;
+  const damageScale=1+preCap*.030+postCap*.055;
   const e={id:enemyId++,type,x,y,vx:0,vy:0,r:t.r*(elite?1.12:1),hp:t.hp*hpScale*(elite?1.55:1),maxHp:t.hp*hpScale*(elite?1.55:1),speed:t.speed*speedScale,damage:t.damage*damageScale,score:t.score,colour:t.colors[Math.floor(Math.random()*t.colors.length)],hit:0,attack:rand(type==='mech'?1.8:.35,type==='mech'?3.2:1.25),special:rand(.8,2.4),elite,dead:false,angle:0};
   enemies.push(e);if(type==='king')sfxKing();return e;
 }
 function spawnEnemy(){if(enemies.length>=MAX_ENEMIES)return;const p=edgeSpawn(44);createEnemy(pickEnemyType(),p.x,p.y)}
 function spawnKing(){if(enemies.some(e=>e.type==='king'))return;const p=edgeSpawn(65);createEnemy('king',p.x,p.y,true);showWave('KING WAVE','Something worse is here')}
-function spawnRate(){
-  if(wave===1)return 1.05;
-  if(wave===2)return 1.30;
-  if(wave===3)return 1.70;
-  return Math.min(13.2,1.05+wave*.38+Math.pow(Math.max(0,wave-3),1.13)*.16);
+function spawnInterval(){
+  if(wave===1)return 3.5;
+  if(wave===2)return 2.5;
+  return Math.max(.50,2.5-(wave-2)*.25);
 }
+function spawnRate(){return 1/spawnInterval()}
 function launchMechMissile(e){
   const tx=clamp(player.x+rand(-18,18),46,W-46),ty=clamp(player.y+rand(-18,18),46,H-46);
   hazards.push({type:'missile',x:tx,y:ty,r:44,life:1.35,maxLife:1.35,damage:e.damage*1.35,color:'#ff5365'});
@@ -225,7 +227,7 @@ function updateHazards(dt){
 }
 function updateFX(dt){for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96}particles=particles.filter(p=>p.life>0);for(const t of texts){t.life-=dt;t.y-=28*dt}texts=texts.filter(t=>t.life>0);screenShake*=Math.pow(.001,dt)}
 function endWave(){if(state!=='playing')return;state='cards';music.volume=.20;enemyBullets=[];hazards=[];player.hp=Math.min(player.maxHp,player.hp+player.maxHp*.18);sfxWave();showCards()}
-function nextWave(){wave++;waveTime=WAVE_SECONDS;spawnAcc=0;state='playing';last=performance.now();music.volume=.31;if(wave>=5&&wave%5===0)setTimeout(()=>{if(state==='playing')spawnKing()},800);showWave('WAVE '+wave,wave<3?'More movement detected':wave<6?'Mutations increasing':'Containment failing');updateHUD()}
+function nextWave(){wave++;waveTime=WAVE_SECONDS;spawnAcc=0;state='playing';last=performance.now();music.volume=.31;if(wave>=5&&wave%5===0)setTimeout(()=>{if(state==='playing')spawnKing()},800);showWave('WAVE '+wave,wave<3?'The horde is still thin':wave<10?'More dead are arriving':'Spawn rate capped · mutations increasing');updateHUD()}
 function cardWeight(upgrade){
   const rarity=RARITIES[upgrade.rarity]||RARITIES.COMMON;
   const late=Math.max(0,wave-1);
