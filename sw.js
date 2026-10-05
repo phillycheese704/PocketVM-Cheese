@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v23';
+const CACHE = 'pocketvm-shell-v24';
 const ASSETS = [
   './',
   './index.html',
