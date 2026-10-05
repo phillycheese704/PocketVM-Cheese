@@ -38,7 +38,7 @@
     return '';
   }
 
-  function balanced(text, pairs) {
+  function balanced(text, pairs, hashComments) {
     const stack = [];
     const opening = Object.keys(pairs);
     const closing = Object.values(pairs);
@@ -56,7 +56,7 @@
       if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
       if (ch === '/' && next === '/') { lineComment = true; i++; continue; }
       if (ch === '/' && next === '*') { blockComment = true; i++; continue; }
-      if (ch === '#') { lineComment = true; continue; }
+      if (hashComments && ch === '#') { lineComment = true; continue; }
       if (opening.includes(ch)) stack.push(ch);
       else if (closing.includes(ch)) {
         const expected = opening[closing.indexOf(ch)];
@@ -72,7 +72,7 @@
       try { JSON.parse(text); return { ok:true, message:'Valid JSON.' }; }
       catch (err) { return { ok:false, message:err.message || 'Invalid JSON.' }; }
     }
-    const issue = balanced(text, {'(':')','[':']','{':'}'});
+    const issue = balanced(text, {'(':')','[':']','{':'}'}, lang.id === 'python');
     if (issue) return { ok:false, message:issue };
     if (lang.id === 'python') {
       const mixed = text.split('\n').findIndex(line => /^ +\t|^\t+ /.test(line));
