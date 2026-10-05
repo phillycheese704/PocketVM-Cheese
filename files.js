@@ -11,7 +11,8 @@
       mime,
       image: !!node && node.type === 'file' && PocketDisk.isImageMime(mime),
       html: !!node && node.type === 'file' && /\.html$/i.test(path),
-      text: !!node && node.type === 'file' && /\.txt$/i.test(path)
+      text: !!node && node.type === 'file' && /\.(txt|pvmod)$/i.test(path),
+      mod: !!node && node.type === 'file' && /\.pvmod$/i.test(path)
     };
   }
 
@@ -26,6 +27,7 @@
     }
     if (info.image) return '▧';
     if (info.html) return '◎';
+    if (info.mod) return '◇';
     return '📄';
   }
 
@@ -35,6 +37,7 @@
     if (info.node.type === 'dir') return 'Folder';
     if (info.image) return 'Image';
     if (info.html) return 'HTML document';
+    if (info.mod) return 'PocketVM mod';
     if (info.text) return 'Text document';
     return info.mime || 'File';
   }
@@ -71,6 +74,12 @@
     let holdX = 0;
     let holdY = 0;
     let touchMoved = false;
+    let dragArmTimer = null;
+    let touchDragReady = false;
+    let touchDragActive = false;
+    let dragPaths = [];
+    let dragGhost = null;
+    let dropTarget = null;
 
     ctx.setWindowTitle(win, 'Files', '▤');
     win.content.innerHTML =
@@ -205,6 +214,74 @@
       await render();
     }
 
+    function clearDropTarget() {
+      if (dropTarget) dropTarget.classList.remove('file-drop-target');
+      dropTarget = null;
+    }
+
+    function removeDragGhost() {
+      clearDropTarget();
+      dragGhost?.remove();
+      dragGhost = null;
+      touchDragActive = false;
+      touchDragReady = false;
+      dragPaths = [];
+    }
+
+    function dragSelectionFor(path) {
+      return selected.has(path) && selected.size ? selectedPaths() : [path];
+    }
+
+    async function moveIntoFolder(paths, destination) {
+      await ctx.refreshFS();
+      const destNode = ctx.state.fs[destination];
+      if (!destNode || destNode.type !== 'dir') return;
+      let moved = 0;
+      for (const source of paths) {
+        if (!ctx.state.fs[source] || source === destination || destination.startsWith(source + '/')) continue;
+        if (ctx.parentPath(source) === destination) continue;
+        const target = await uniqueTarget(ctx, ctx.norm(ctx.basename(source), destination), destination);
+        try {
+          await PocketDisk.move(source, target);
+          moved++;
+          await ctx.refreshFS();
+        } catch (err) {
+          alert(err?.message || ('Could not move ' + ctx.basename(source)));
+          break;
+        }
+      }
+      if (moved) {
+        selected.clear();
+        await ctx.refreshFS();
+        await render();
+        ctx.notify('Moved', moved + ' item' + (moved === 1 ? '' : 's') + ' to ' + ctx.basename(destination), '↗');
+      }
+    }
+
+    function targetFolderAt(x, y, sourcePaths) {
+      const hit = document.elementFromPoint(x, y)?.closest?.('.file-entry-v3');
+      if (!hit || !win.el.contains(hit)) return null;
+      const path = hit.dataset.filePath;
+      if (!path || !ctx.state.fs[path] || ctx.state.fs[path].type !== 'dir') return null;
+      if (sourcePaths.some(source => path === source || path.startsWith(source + '/'))) return null;
+      return hit;
+    }
+
+    function updateTouchDrag(x, y) {
+      if (!touchDragActive) return;
+      if (dragGhost) {
+        const rect = win.content.getBoundingClientRect();
+        dragGhost.style.left = Math.max(8, Math.min(x - rect.left + 12, rect.width - 170)) + 'px';
+        dragGhost.style.top = Math.max(8, Math.min(y - rect.top + 12, rect.height - 58)) + 'px';
+      }
+      const target = targetFolderAt(x, y, dragPaths);
+      if (target !== dropTarget) {
+        clearDropTarget();
+        dropTarget = target;
+        dropTarget?.classList.add('file-drop-target');
+      }
+    }
+
     async function render() {
       revokeThumbs();
       await ctx.refreshFS();
@@ -246,6 +323,41 @@
           '<span class="file-size-v3">' + (node.type === 'dir' ? '' : ctx.escapeHTML(PocketDisk.formatBytes(node.size || 0))) + '</span>';
 
         const info = fileContext(ctx, path);
+        entry.draggable = true;
+        entry.addEventListener('dragstart', event => {
+          dragPaths = dragSelectionFor(path);
+          try { event.dataTransfer.setData('application/x-pocketvm-paths', JSON.stringify(dragPaths)); } catch {}
+          event.dataTransfer.effectAllowed = 'move';
+          entry.classList.add('file-drag-source');
+        });
+        entry.addEventListener('dragend', () => {
+          entry.classList.remove('file-drag-source');
+          qa('.file-drop-target').forEach(el => el.classList.remove('file-drop-target'));
+          dragPaths = [];
+        });
+        if (info.node?.type === 'dir') {
+          entry.addEventListener('dragover', event => {
+            const paths = dragPaths.length ? dragPaths : (() => {
+              try { return JSON.parse(event.dataTransfer.getData('application/x-pocketvm-paths') || '[]'); } catch { return []; }
+            })();
+            if (!paths.length || paths.some(source => path === source || path.startsWith(source + '/'))) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            entry.classList.add('file-drop-target');
+          });
+          entry.addEventListener('dragleave', event => {
+            if (!entry.contains(event.relatedTarget)) entry.classList.remove('file-drop-target');
+          });
+          entry.addEventListener('drop', event => {
+            event.preventDefault();
+            entry.classList.remove('file-drop-target');
+            let paths = dragPaths;
+            if (!paths.length) {
+              try { paths = JSON.parse(event.dataTransfer.getData('application/x-pocketvm-paths') || '[]'); } catch { paths = []; }
+            }
+            moveIntoFolder(paths, path);
+          });
+        }
         if (info.image) {
           PocketDisk.readBlob(path).then(blob => {
             if (!entry.isConnected) return;
@@ -285,21 +397,35 @@
           if (event.pointerType !== 'touch') return;
           holdTriggered = false;
           touchMoved = false;
+          touchDragReady = false;
           holdX = event.clientX;
           holdY = event.clientY;
+          clearTimeout(dragArmTimer);
+          dragArmTimer = setTimeout(() => { touchDragReady = true; }, 320);
           holdTimer = setTimeout(() => {
+            touchDragReady = false;
             holdTriggered = true;
             selected.clear();
             selected.add(path);
             updateSelectionUI();
             showContext(path, holdX, holdY);
             if (navigator.vibrate) navigator.vibrate(18);
-          }, 600);
+          }, 650);
         });
         entry.addEventListener('pointerup', event => {
           if (event.pointerType !== 'touch') return;
           clearTimeout(holdTimer);
+          clearTimeout(dragArmTimer);
           suppressNextClick = true;
+          if (touchDragActive) {
+            const targetPath = dropTarget?.dataset.filePath;
+            const paths = dragPaths.slice();
+            removeDragGhost();
+            touchMoved = false;
+            if (targetPath) moveIntoFolder(paths, targetPath);
+            return;
+          }
+          touchDragReady = false;
           if (holdTriggered) {
             holdTriggered = false;
             return;
@@ -311,11 +437,38 @@
           if (selectMode) toggleSelection(path, true);
           else openItem(path);
         });
-        entry.addEventListener('pointercancel', () => clearTimeout(holdTimer));
+        entry.addEventListener('pointercancel', () => {
+          clearTimeout(holdTimer);
+          clearTimeout(dragArmTimer);
+          removeDragGhost();
+        });
         entry.addEventListener('pointermove', event => {
-          if (Math.hypot(event.clientX - holdX, event.clientY - holdY) > 12) {
+          const distance = Math.hypot(event.clientX - holdX, event.clientY - holdY);
+          if (touchDragReady && distance > 10 && !touchDragActive) {
+            clearTimeout(holdTimer);
+            touchDragActive = true;
+            touchMoved = true;
+            suppressNextClick = true;
+            dragPaths = dragSelectionFor(path);
+            selected.clear();
+            dragPaths.forEach(item => selected.add(item));
+            updateSelectionUI();
+            dragGhost = document.createElement('div');
+            dragGhost.className = 'files-touch-drag';
+            dragGhost.innerHTML = '<span>' + iconFor(ctx, path) + '</span><strong>' + ctx.escapeHTML(dragPaths.length > 1 ? dragPaths.length + ' items' : ctx.basename(path)) + '</strong>';
+            win.content.appendChild(dragGhost);
+            navigator.vibrate?.(12);
+          }
+          if (touchDragActive) {
+            event.preventDefault();
+            updateTouchDrag(event.clientX, event.clientY);
+            return;
+          }
+          if (distance > 12) {
             touchMoved = true;
             clearTimeout(holdTimer);
+            clearTimeout(dragArmTimer);
+            touchDragReady = false;
           }
         });
         fileView.appendChild(entry);
@@ -613,6 +766,8 @@
     win.cleanup = () => {
       revokeThumbs();
       clearTimeout(holdTimer);
+      clearTimeout(dragArmTimer);
+      removeDragGhost();
       window.removeEventListener('pocketdiskchange', diskListener);
     };
     render().catch(showRenderFailure);
