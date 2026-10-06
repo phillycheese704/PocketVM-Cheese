@@ -107,7 +107,7 @@
   const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg';
   const BLOCKBLAST_ICON_ESTIMATE = 26000;
   const BLOCKBLAST_PACKAGE = [
-    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:14523 }
+    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:19887 }
   ];
   const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
   const BLOCKBLAST_MODS = Object.freeze({
@@ -784,7 +784,7 @@
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
       if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'Auto-fire arena survival · 3-card upgrades · 12 zombie types',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
-      if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Row & column clears · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
+      if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Ghost clear helper · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       const installed=await isInstalled(),ident=await identity();return{id:'snake',app:'snake',name:ident.name,icon:ident.icon,installed,pinned:pinned(),size:installed?await installedBytes():TOTAL_BYTES,category:'Arcade',summary:'Classic Snake · Smooth touch controls · Original soundtrack',install:installSnake,pin:toggleDesktopPin,uninstall:uninstallSnake};
     }
     function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:featureVariants;return arr[variant%arr.length];}
