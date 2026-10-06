@@ -9,12 +9,12 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 - Local account, password lockout and puzzle-based recovery
 - 1 GB IndexedDB virtual drive
 - Files with folders, grid/list views, sorting, multi-select, import/export, copy/cut/paste and properties
-- TXT and HTML editor with sandboxed HTML preview
+- Text/HTML editor with sandboxed HTML preview, plus Pocket Code for Python, HTML, Java, CSS, C# and JSON
 - PNG, JPG/JPEG, WebP, GIF and SVG support
 - Photos viewer and image wallpapers
 - Draggable desktop icon grid with iPad long-press context menus
 - Browser, Calculator, Notes, Terminal, System and Task Manager
-- PocketVM Store with real virtual-drive installs; games include Snake and Deadwave
+- PocketVM Store with real virtual-drive installs; games include Snake, Deadwave, Block Blast and Crumb Clicker, with local `.pvmod` support
 - Themes, wallpaper presets, avatar borders and desktop customization
 - Installable/offline-capable PWA
 
@@ -28,8 +28,9 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 ├── storage.js              IndexedDB virtual drive
 ├── files.js                Files, Editor, HTML Preview and Photos
 ├── system.js               System and Task Manager
-├── store.js                Store, installs and game launcher
-├── store/                   Store package sources (Snake + Deadwave)
+├── store.js                Store, installs, Mods Hub and game launchers
+├── code.js                 Pocket Code editor
+├── store/                   Store package sources for all four games
 ├── sw.js                   PWA service worker
 ├── manifest.webmanifest    PWA manifest
 ├── icons/                  Canonical app/PWA icons
