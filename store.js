@@ -687,15 +687,16 @@
         ['Crumb Portal','Candy Portal'],['Imports baked goods from somewhere else.','Imports sweets from somewhere else.'],
         ['Moon Bakery','Moon Candyworks'],['Low gravity. High margins.','Low gravity. High sugar.'],
         ['Baker Reflex','Candy Reflex'],['Crumb Impact','Sugar Impact'],['Warm Kitchen','Warm Candy Shop'],
-        ['Cookie Jar','Candy Jar'],['Bakery','Candy Shop'],['Runaway Oven','Runaway Candy Cooker'],['Lucky crumb!','Lucky candy!'],
+        ['Cookie Jar','Candy Jar'],['First Crumb','First Candy'],['This bakery','This candy shop'],['Bakery','Candy Shop'],['Runaway Oven','Runaway Candy Cooker'],['Lucky crumb!','Lucky candy!'],
         ['Lucky crumbs','Lucky candies'],['Bakery stars','Sugar stars'],['Second Bakery','Second Candy Shop'],['New bakery legacy','New candy legacy']
       ];
       for(const [a,b] of swaps)out=out.split(a).join(b);
-      out=out.replace("const txt=fmt(state.biscuits)+' biscuits';","const txt=fmt(state.biscuits)+' candies';");
+      out=out.split(' biscuits').join(' candies');
+    out=out.replace("const txt=fmt(state.biscuits)+' candies';","const txt=fmt(state.biscuits)+' candies';");
       out=out.replace("showToast('Lucky candy!','+'+fmt(reward)+' biscuits');","showToast('Lucky candy!','+'+fmt(reward)+' candies');");
       out=out.replace("showToast('Welcome back','Your bakery made '+fmt(gain)+' biscuits while you were away.')","showToast('Welcome back','Your candy shop made '+fmt(gain)+' candies while you were away.')");
       out=out.replace("prestigeBtn.textContent=gain>0?'Restart & gain '+gain+' star'+(gain===1?'':'s'):'Next star at '+fmt(Math.pow(state.stars+1,3)*1e8)+' all-time'","prestigeBtn.textContent=gain>0?'Restart & gain '+gain+' star'+(gain===1?'':'s'):'Next sugar star at '+fmt(Math.pow(state.stars+1,3)*1e8)+' candies all-time'");
-      out=out.replace("modalCopy.textContent='This resets biscuits, buildings and regular upgrades. You will keep achievements and gain '+gain+' Bakery Star'+(gain===1?'':'s')+', permanently boosting all production.'","modalCopy.textContent='This resets candies, buildings and regular upgrades. You will keep achievements and gain '+gain+' Sugar Star'+(gain===1?'':'s')+', permanently boosting all production.'");
+      out=out.replace("modalCopy.textContent='This resets candies, buildings and regular upgrades. You will keep achievements and gain '+gain+' Candy Shop Star'+(gain===1?'':'s')+', permanently boosting all production.'","modalCopy.textContent='This resets candies, buildings and regular upgrades. You will keep achievements and gain '+gain+' Sugar Star'+(gain===1?'':'s')+', permanently boosting all production.'");
       out=out.replace("showToast('New candy legacy','Banked '+gain+' permanent star'+(gain===1?'':'s')+'.')","showToast('New candy legacy','Banked '+gain+' permanent Sugar Star'+(gain===1?'':'s')+'.')");
     }
     return out;
