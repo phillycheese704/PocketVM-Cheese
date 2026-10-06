@@ -1515,3 +1515,13 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
 .bb-mini-grid i{border-radius:4px;background:rgba(52,91,133,.35)}.bb-mini-grid i.on{background:#5caeff;box-shadow:inset 0 2px rgba(255,255,255,.18)}.bb-mini-grid i.b1{background:#63d987}.bb-mini-grid i.b2{background:#ffb34b}.bb-mini-grid i.b3{background:#9c7cff}
 .bb-mini-pieces{display:flex;gap:16px}.bb-mini-pieces b{width:30px;height:30px;border-radius:7px;background:#ff7482;box-shadow:30px 0 #ff7482}.bb-mini-pieces b:nth-child(2){background:#65d6cf;box-shadow:0 30px #65d6cf}.bb-mini-pieces b:nth-child(3){background:#ffb54b;box-shadow:30px 0 #ffb54b,0 30px #ffb54b}
 @media(max-width:760px){.blockblast-preview{inset:7% 6%;transform:none}.bb-mini-grid{width:min(220px,72%)}}
+
+/* Desktop mouse dragging */
+@media (pointer:fine){
+  .file-entry-v3{cursor:grab}
+  .file-entry-v3:active{cursor:grabbing}
+  .file-entry-v3.file-drag-source{cursor:grabbing;opacity:.34;transform:scale(.98)}
+  .files-view-v3.files-native-dragging .file-entry-v3:not(.file-drag-source){transition:background .1s ease,border-color .1s ease,transform .1s ease}
+  .files-view-v3.files-native-dragging .file-entry-v3[data-file-path]:hover{border-color:rgba(255,255,255,.10)}
+  .files-locations [data-files-path]{transition:background .1s ease,box-shadow .1s ease,transform .1s ease}
+}
