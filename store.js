@@ -40,6 +40,7 @@
     const DEADWAVE_ID = 'deadwave';
   const DEADWAVE_ROOT = '/home/user/Downloads/Deadwave';
   const DEADWAVE_SOURCE = './store/deadwave/';
+  const DEADWAVE_GAME_REVISION = 'weapons-v1';
   const DEADWAVE_PIN_KEY = 'pocketvm.store.deadwave.desktop';
   const DEADWAVE_SAVE_KEY = 'pocketvm.game.deadwave';
   const DEADWAVE_NAME = 'Deadwave';
@@ -47,7 +48,7 @@
   const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg';
   const DEADWAVE_ICON_ESTIMATE = 48000;
   const DEADWAVE_PACKAGE = [
-    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:64205 },
+    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:64264 },
     { name:'music.mp3', url:'https://raw.githubusercontent.com/VincentLinta/Joc-practica-Lava-Adventure/f965d167f6ed2d72d4c3f3e9e50737f3f690590a/alex-morgan-video-game-pixel-chiptune-music-583271.mp3', mime:'audio/mpeg', size:4700160 }
   ];
   const DEADWAVE_TOTAL_BYTES = DEADWAVE_PACKAGE.reduce((n,file)=>n+file.size,0) + DEADWAVE_ICON_ESTIMATE + DEADWAVE_NAME.length;
@@ -437,6 +438,27 @@
     const reader=response.body.getReader(),chunks=[]; let loaded=0;
     while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);loaded+=value.byteLength;progress?.(baseLoaded+Math.min(loaded,file.size),DEADWAVE_TOTAL_BYTES,file.name);}
     return new Blob(chunks,{type:file.mime});
+  }
+
+  async function loadDeadwaveGameHTML() {
+    const path=DEADWAVE_ROOT+'/game.html';
+    let html=await PocketDisk.readText(path);
+    const marker='name="pocketvm-deadwave-build" content="'+DEADWAVE_GAME_REVISION+'"';
+    if(html.includes(marker)) return html;
+    try {
+      const file=DEADWAVE_PACKAGE.find(item=>item.name==='game.html');
+      const response=await fetch(new URL(file.url,location.href).href,{cache:'no-cache'});
+      if(response.ok){
+        const fresh=await response.text();
+        if(fresh.includes(marker)){
+          await PocketDisk.writeText(path,fresh,'text/html');
+          await shellCtx?.refreshFS?.();
+          html=fresh;
+          shellCtx?.notify?.('Deadwave updated','Weapon upgrade cards are ready.','☣');
+        }
+      }
+    } catch {}
+    return html;
   }
 
   async function installDeadwave(progress) {
@@ -894,7 +916,7 @@
     win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Starting ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
     try{
-      const [html,musicBlob,skins,mods]=await Promise.all([PocketDisk.readText(DEADWAVE_ROOT+'/game.html'),PocketDisk.readBlob(DEADWAVE_ROOT+'/music.mp3'),installedDeadwaveSkins(),installedDeadwaveMods()]);
+      const [html,musicBlob,skins,mods]=await Promise.all([loadDeadwaveGameHTML(),PocketDisk.readBlob(DEADWAVE_ROOT+'/music.mp3'),installedDeadwaveSkins(),installedDeadwaveMods()]);
       const musicData=await blobToDataURL(musicBlob);
       const save=(()=>{try{return JSON.parse(localStorage.getItem(DEADWAVE_SAVE_KEY)||'{}')||{};}catch{return{};}})();
       const bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(musicData)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';window.__POCKETVM_SKINS='+JSON.stringify(skins)+';window.__POCKETVM_MODS='+JSON.stringify(mods)+';</'+'script>';
