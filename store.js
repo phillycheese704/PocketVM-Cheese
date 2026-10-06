@@ -141,7 +141,7 @@
 
   const CRUMBCLICKER_ID='crumbclicker',CRUMBCLICKER_ROOT='/home/user/Downloads/Crumb Clicker',CRUMBCLICKER_SOURCE='./store/crumbclicker/',CRUMBCLICKER_GAME_REVISION='v1',CRUMBCLICKER_PIN_KEY='pocketvm.store.crumbclicker.desktop',CRUMBCLICKER_SAVE_KEY='pocketvm.game.crumbclicker',CRUMBCLICKER_NAME='Crumb Clicker',CRUMBCLICKER_NAME_FILE='name.txt',CRUMBCLICKER_ICON_URL=CRUMBCLICKER_SOURCE+'icon.svg',CRUMBCLICKER_ICON_ESTIMATE=24000;
   const CRUMBCLICKER_BUILDING_IDS=['finger','baker','oven','farm','mill','line','market','royal','time','portal','moon'];
-  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778602}];
+  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778601}];
   const CRUMBCLICKER_TOTAL_BYTES=CRUMBCLICKER_PACKAGE.reduce((n,file)=>n+file.size,0)+CRUMBCLICKER_ICON_ESTIMATE+CRUMBCLICKER_NAME.length;
   const crumbClickerFeatureVariants=[
     {kicker:'NEW RELEASE',title:'One biscuit becomes an empire.',copy:'Tap the biscuit, hire production, buy upgrades and watch the numbers stop behaving normally.',tone:'crumb'},
