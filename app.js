@@ -312,11 +312,13 @@
   function openApp(appId, options = {}) {
     const app = apps[appId];
     if (!app) return;
+    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast';
     if (app.singleton) {
       const existing = [...state.windows.values()].find(w => w.appId === appId);
       if (existing) {
         restoreWindow(existing.id);
         focusWindow(existing.id);
+        if (autoMaximize) maximizeWindow(existing.id);
         return existing;
       }
     }
@@ -347,7 +349,7 @@
       showBuildError(err);
     }
     focusWindow(id);
-    if (matchMedia('(max-width: 620px)').matches) maximizeWindow(id);
+    if (autoMaximize || matchMedia('(max-width: 620px)').matches) maximizeWindow(id);
     return win;
   }
 
