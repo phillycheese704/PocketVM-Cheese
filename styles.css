@@ -1503,3 +1503,15 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
 @media(max-width:560px){
   .pocket-code{grid-template-columns:1fr}.pc-sidebar{display:none}.pc-actions [data-pc-save]{font-size:0}.pc-actions [data-pc-save]:after{content:"✓";font-size:12px}
 }
+
+.store-featured[data-feature-kind="blockblast"]{background:radial-gradient(circle at 76% 12%,rgba(83,169,255,.2),transparent 30%),radial-gradient(circle at 92% 78%,rgba(255,183,73,.14),transparent 28%),linear-gradient(145deg,#0b213f,#091627 62%,#101526)}
+.store-featured[data-feature-kind="blockblast"] .store-kicker,.store-featured[data-feature-kind="blockblast"] .store-feature-label{color:#70b8ff}
+.store-featured[data-feature-kind="blockblast"] .live-dot{background:#ffb54d;box-shadow:0 0 12px rgba(255,181,77,.65)}
+.store-featured[data-feature-kind="blockblast"] .store-primary{background:linear-gradient(135deg,#65b2ff,#3878d8);color:#061426;box-shadow:0 10px 30px rgba(48,122,218,.2)}
+.store-featured[data-feature-kind="blockblast"] .store-icon-glow{background:#5dadff;opacity:.14}
+.store-featured[data-feature-kind="blockblast"] .store-game-preview,.store-featured[data-feature-kind="blockblast"] .deadwave-preview{display:none}
+.blockblast-preview{position:absolute;inset:11% 10% 12% 12%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:1px solid rgba(255,255,255,.065);border-radius:24px;background:rgba(4,14,28,.5);transform:perspective(720px) rotateY(-5deg) rotateX(3deg);box-shadow:inset 0 0 65px rgba(0,0,0,.24)}
+.bb-mini-grid{width:min(245px,70%);aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);gap:3px;padding:5px;border-radius:13px;background:#102b50}
+.bb-mini-grid i{border-radius:4px;background:rgba(52,91,133,.35)}.bb-mini-grid i.on{background:#5caeff;box-shadow:inset 0 2px rgba(255,255,255,.18)}.bb-mini-grid i.b1{background:#63d987}.bb-mini-grid i.b2{background:#ffb34b}.bb-mini-grid i.b3{background:#9c7cff}
+.bb-mini-pieces{display:flex;gap:16px}.bb-mini-pieces b{width:30px;height:30px;border-radius:7px;background:#ff7482;box-shadow:30px 0 #ff7482}.bb-mini-pieces b:nth-child(2){background:#65d6cf;box-shadow:0 30px #65d6cf}.bb-mini-pieces b:nth-child(3){background:#ffb54b;box-shadow:30px 0 #ffb54b,0 30px #ffb54b}
+@media(max-width:760px){.blockblast-preview{inset:7% 6%;transform:none}.bb-mini-grid{width:min(220px,72%)}}
