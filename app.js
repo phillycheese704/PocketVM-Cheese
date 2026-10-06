@@ -303,6 +303,7 @@
     snake: { name: 'Snake', icon: '🐍', width: 1040, height: 720, singleton: true, build: (win, options) => PocketStoreApp.buildSnake(win, options, storeAppContext()) },
     deadwave: { name: 'Deadwave', icon: '☣', width: 1080, height: 740, singleton: true, build: (win, options) => PocketStoreApp.buildDeadwave(win, options, storeAppContext()) },
     blockblast: { name: 'Block Blast', icon: '▦', width: 760, height: 760, singleton: true, build: (win, options) => PocketStoreApp.buildBlockBlast(win, options, storeAppContext()) },
+    crumbclicker: { name: 'Crumb Clicker', icon: '◉', width: 1120, height: 760, singleton: true, build: (win, options) => PocketStoreApp.buildCrumbClicker(win, options, storeAppContext()) },
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
@@ -312,7 +313,7 @@
   function openApp(appId, options = {}) {
     const app = apps[appId];
     if (!app) return;
-    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast';
+    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast' || appId === 'crumbclicker';
     if (app.singleton) {
       const existing = [...state.windows.values()].find(w => w.appId === appId);
       if (existing) {
@@ -2007,6 +2008,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           PocketStoreApp.toggleDeadwavePin(false);
         } else if (icon.dataset.storeLaunch === 'blockblast-desktop' && window.PocketStoreApp) {
           PocketStoreApp.toggleBlockBlastPin(false);
+        } else if (icon.dataset.storeLaunch === 'crumbclicker-desktop' && window.PocketStoreApp) {
+          PocketStoreApp.toggleCrumbClickerPin(false);
         } else {
           const hidden = new Set(state.preferences.desktopHidden || []);
           hidden.add(id);

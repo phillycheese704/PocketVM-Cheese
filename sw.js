@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v41';
+const CACHE = 'pocketvm-shell-v42';
 const ASSETS = [
   './',
   './index.html',
@@ -13,6 +13,8 @@ const ASSETS = [
   './store/deadwave/icon.svg',
   './store/blockblast/icon.svg',
   './store/blockblast/game.html',
+  './store/crumbclicker/icon.svg',
+  './store/crumbclicker/game.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
