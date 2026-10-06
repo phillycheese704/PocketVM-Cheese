@@ -783,7 +783,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
     async function showMods(tab, token) {
       tab.kind = 'mods';
-      tab.title = 'Snake Mods';
+      tab.title = 'Mods';
       frame.removeAttribute('src');
       frame.setAttribute('sandbox', 'allow-scripts');
       try {
