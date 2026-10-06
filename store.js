@@ -110,6 +110,26 @@
     { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:14523 }
   ];
   const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
+  const BLOCKBLAST_MODS = Object.freeze({
+    themes:{
+      id:'themes',name:'Theme Packs',file:'blockblast-theme-packs.pvmod',kind:'cosmetic',icon:'◫',
+      tagline:'Four extra looks for the board.',
+      description:'Adds Neon, Red / Black, Pastel and Mono themes with matching block palettes. Cycle them from the in-game THEME button.',
+      payload:{pocketvmMod:1,game:'blockblast',kind:'cosmetic',id:'themes',version:'1.0.0',name:'Theme Packs',themes:['neon','red','pastel','mono']}
+    },
+    chaos:{
+      id:'chaos',name:'Chaos Shapes',file:'blockblast-chaos-shapes.pvmod',kind:'gameplay',icon:'✣',
+      tagline:'Make the tray considerably less polite.',
+      description:'Expands the normal piece pool with long bars, crosses, stairs, chunky corners and other awkward shapes.',
+      payload:{pocketvmMod:1,game:'blockblast',kind:'gameplay',id:'chaos',version:'1.0.0',name:'Chaos Shapes'}
+    },
+    undo:{
+      id:'undo',name:'Undo Mod',file:'blockblast-undo.pvmod',kind:'gameplay',icon:'↶',
+      tagline:'One second chance per tray.',
+      description:'Adds an UNDO button that can restore the board, score and tray to before your last placement once per three-piece tray.',
+      payload:{pocketvmMod:1,game:'blockblast',kind:'gameplay',id:'undo',version:'1.0.0',name:'Undo Mod'}
+    }
+  });
   const blockBlastFeatureVariants = [
     {kicker:'NEW & TINY',title:'Make the board disappear.',copy:'Drop three pieces at a time, clear full rows and columns, and keep making room.',tone:'blocks'},
     {kicker:'QUICK PLAY',title:'One more piece.',copy:'Simple placement, satisfying clears and no loading screen. Built for quick iPad sessions.',tone:'blocks'},
@@ -539,6 +559,47 @@
     if(desktop){if(blockBlastPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=BLOCKBLAST_ID;desk.dataset.storeLaunch='blockblast-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}
     for(const win of ctx.state.windows.values()){if(win.appId!==BLOCKBLAST_ID)continue;ctx.setWindowTitle(win,id.name,'▦');applyWindowIcon(win,id.icon,ctx);}
     ctx.initDesktopGrid?.();
+  }
+
+  async function installedBlockBlastMods() {
+    const result={},snap=await PocketDisk.snapshot().catch(()=>({})),prefix=BLOCKBLAST_ROOT+'/';
+    const paths=Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(prefix)&&!path.slice(prefix.length).includes('/')&&/\.pvmod$/i.test(path)).map(([path])=>path);
+    for(const path of paths){
+      try{
+        const data=JSON.parse(await PocketDisk.readText(path));
+        if(data?.pocketvmMod===1&&data?.game==='blockblast'&&BLOCKBLAST_MODS[data.id])result[data.id]=true;
+      }catch{}
+    }
+    return result;
+  }
+
+  async function blockBlastModStatus(id) {
+    const mod=BLOCKBLAST_MODS[id];if(!mod)return{downloaded:false,installed:false};
+    const [downloaded,installed]=await Promise.all([
+      PocketDisk.getNode(MOD_DOWNLOAD_ROOT+'/'+mod.file).catch(()=>null),
+      PocketDisk.getNode(BLOCKBLAST_ROOT+'/'+mod.file).catch(()=>null)
+    ]);
+    return{downloaded:!!downloaded,installed:!!installed};
+  }
+
+  async function downloadBlockBlastMod(id) {
+    const mod=BLOCKBLAST_MODS[id];if(!mod)throw new Error('Unknown Block Blast mod.');
+    await PocketDisk.ensureDir(MOD_DOWNLOAD_ROOT);
+    await PocketDisk.writeText(MOD_DOWNLOAD_ROOT+'/'+mod.file,JSON.stringify(mod.payload,null,2)+'\n','application/x-pocketvm-mod+json');
+    await shellCtx?.refreshFS?.();
+    shellCtx?.notify?.(mod.name+' downloaded','Move it into the Block Blast folder to activate it.','↓');
+  }
+
+  async function uninstallBlockBlastMod(id) {
+    const mod=BLOCKBLAST_MODS[id];if(!mod)return;let changed=false;
+    for(const path of [MOD_DOWNLOAD_ROOT+'/'+mod.file,BLOCKBLAST_ROOT+'/'+mod.file]){
+      if(await PocketDisk.getNode(path).catch(()=>null)){await PocketDisk.remove(path);changed=true;}
+    }
+    if(changed){
+      for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===BLOCKBLAST_ID)shellCtx.closeWindow?.(win.id);
+      await shellCtx?.refreshFS?.();
+      shellCtx?.notify?.(mod.name+' removed','Relaunch Block Blast to continue without it.','×');
+    }
   }
 
   async function installedDeadwaveMods() {
