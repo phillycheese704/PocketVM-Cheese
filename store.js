@@ -93,8 +93,28 @@
   const deadwaveFeatureVariants = [
     {kicker:'NEW RELEASE',title:'The dead do not stop.',copy:'Endless arena survival. Move, let the gun work, then rebuild your survivor one card at a time.',tone:'blood'},
     {kicker:'FEATURED',title:'Twenty-five seconds. Then choose.',copy:'Survive each wave and pick one of three permanent upgrades before the next crowd arrives.',tone:'violet'},
-    {kicker:'ENDLESS',title:'How broken can your build get?',copy:'Stack multishot, crits, pierce, armour, regen and more while seven zombie classes pile into the arena.',tone:'toxic'},
+    {kicker:'ENDLESS',title:'How broken can your build get?',copy:'Stack multishot, crits, pierce, armour, regen and more while twelve zombie types pile into the arena.',tone:'toxic'},
     {kicker:'BUILT FOR TOUCH',title:'One thumb. A lot of zombies.',copy:'Virtual joystick movement with automatic targeting and firing, designed around iPad play.',tone:'night'}
+  ];
+
+  const BLOCKBLAST_ID = 'blockblast';
+  const BLOCKBLAST_ROOT = '/home/user/Downloads/Block Blast';
+  const BLOCKBLAST_SOURCE = './store/blockblast/';
+  const BLOCKBLAST_PIN_KEY = 'pocketvm.store.blockblast.desktop';
+  const BLOCKBLAST_SAVE_KEY = 'pocketvm.game.blockblast';
+  const BLOCKBLAST_NAME = 'Block Blast';
+  const BLOCKBLAST_NAME_FILE = 'name.txt';
+  const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg';
+  const BLOCKBLAST_ICON_ESTIMATE = 26000;
+  const BLOCKBLAST_PACKAGE = [
+    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:14523 }
+  ];
+  const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
+  const blockBlastFeatureVariants = [
+    {kicker:'NEW & TINY',title:'Make the board disappear.',copy:'Drop three pieces at a time, clear full rows and columns, and keep making room.',tone:'blocks'},
+    {kicker:'QUICK PLAY',title:'One more piece.',copy:'Simple placement, satisfying clears and no loading screen. Built for quick iPad sessions.',tone:'blocks'},
+    {kicker:'PUZZLE',title:'Eight by eight. No excuses.',copy:'Think ahead, protect your space and chase a bigger combo before the board locks up.',tone:'blocks'},
+    {kicker:'UNDER 50 KB',title:'Tiny game. Dangerous time sink.',copy:'No soundtrack download, no framework and no filler — just the puzzle loop.',tone:'blocks'}
   ];
 
   const FEATURE_ROTATE_MS = 15 * 60 * 1000;
@@ -448,6 +468,79 @@
     ctx.initDesktopGrid?.();
   }
 
+  async function blockBlastInstalled() {
+    for (const name of ['game.html','icon.png']) {
+      const node = await PocketDisk.getNode(BLOCKBLAST_ROOT + '/' + name).catch(() => null);
+      if (!node || node.type !== 'file') return false;
+    }
+    return true;
+  }
+
+  async function blockBlastBytes() {
+    const snap = await PocketDisk.snapshot();
+    return Object.entries(snap).filter(([path,node]) => node?.type === 'file' && path.startsWith(BLOCKBLAST_ROOT + '/')).reduce((sum,[,node]) => sum + Number(node.size||0),0);
+  }
+
+  async function blockBlastIdentity() {
+    let name=BLOCKBLAST_NAME,icon=BLOCKBLAST_ICON_URL;
+    if(await blockBlastInstalled()){
+      try{name=cleanDisplayName(await PocketDisk.readText(BLOCKBLAST_ROOT+'/'+BLOCKBLAST_NAME_FILE));}catch{}
+      try{icon=await blobToDataURL(await PocketDisk.readBlob(BLOCKBLAST_ROOT+'/icon.png'));}catch{}
+    }
+    return{name,icon};
+  }
+
+  function blockBlastPinned(){return localStorage.getItem(BLOCKBLAST_PIN_KEY)==='1';}
+  function setBlockBlastPinned(value){if(value)localStorage.setItem(BLOCKBLAST_PIN_KEY,'1');else localStorage.removeItem(BLOCKBLAST_PIN_KEY);}
+
+  async function createBlockBlastIconBlob(){
+    const response=await fetch(BLOCKBLAST_ICON_URL,{cache:'no-cache'});
+    if(!response.ok)throw new Error('Could not prepare the Block Blast icon.');
+    const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+    try{
+      const img=new Image();img.decoding='async';
+      await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Block Blast icon.'));img.src=source;});
+      const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);
+      const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Block Blast icon.');return png;
+    }finally{URL.revokeObjectURL(source);}
+  }
+
+  async function installBlockBlast(progress){
+    if(await blockBlastInstalled())return;
+    await PocketDisk.ensureDir(BLOCKBLAST_ROOT);let completed=0;
+    try{
+      for(const file of BLOCKBLAST_PACKAGE){
+        const response=await fetch(new URL(file.url,location.href).href,{cache:'no-cache'});if(!response.ok)throw new Error('Download failed: '+file.name);
+        const blob=await response.blob();await PocketDisk.writeBlob(BLOCKBLAST_ROOT+'/'+file.name,blob,file.mime);completed+=blob.size;progress?.(completed,BLOCKBLAST_TOTAL_BYTES,file.name);
+      }
+      const iconBlob=await createBlockBlastIconBlob();await PocketDisk.writeBlob(BLOCKBLAST_ROOT+'/icon.png',iconBlob,'image/png');completed+=iconBlob.size;progress?.(Math.min(completed,BLOCKBLAST_TOTAL_BYTES),BLOCKBLAST_TOTAL_BYTES,'icon.png');
+      await PocketDisk.writeText(BLOCKBLAST_ROOT+'/'+BLOCKBLAST_NAME_FILE,BLOCKBLAST_NAME,'text/plain');progress?.(BLOCKBLAST_TOTAL_BYTES,BLOCKBLAST_TOTAL_BYTES,'Finishing');
+      await shellCtx?.refreshFS?.();await syncBlockBlastShell();shellCtx?.notify?.('Block Blast installed','Ready to play.','▦');
+    }catch(err){if(await PocketDisk.getNode(BLOCKBLAST_ROOT).catch(()=>null))await PocketDisk.remove(BLOCKBLAST_ROOT).catch(()=>{});throw err;}
+  }
+
+  async function uninstallBlockBlast(){
+    if(!await blockBlastInstalled())return;
+    for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===BLOCKBLAST_ID)shellCtx.closeWindow?.(win.id);
+    await PocketDisk.remove(BLOCKBLAST_ROOT);setBlockBlastPinned(false);await shellCtx?.refreshFS?.();await syncBlockBlastShell();shellCtx?.notify?.('Block Blast uninstalled','Its files were removed from the virtual drive.','×');
+  }
+
+  async function toggleBlockBlastPin(value){
+    setBlockBlastPinned(value);await syncBlockBlastShell();shellCtx?.notify?.(value?'Added to desktop':'Removed from desktop',BLOCKBLAST_NAME,value?'＋':'−');
+  }
+
+  async function syncBlockBlastShell(ctx=shellCtx){
+    if(!ctx)return;
+    const installed=await blockBlastInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');
+    let start=document.querySelector('[data-store-launch="blockblast-start"]'),desk=document.querySelector('[data-store-launch="blockblast-desktop"]');
+    if(!installed){start?.remove();desk?.remove();setBlockBlastPinned(false);ctx.initDesktopGrid?.();return;}
+    const id=await blockBlastIdentity();
+    if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=BLOCKBLAST_ID;start.dataset.storeLaunch='blockblast-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}
+    if(desktop){if(blockBlastPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=BLOCKBLAST_ID;desk.dataset.storeLaunch='blockblast-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}
+    for(const win of ctx.state.windows.values()){if(win.appId!==BLOCKBLAST_ID)continue;ctx.setWindowTitle(win,id.name,'▦');applyWindowIcon(win,id.icon,ctx);}
+    ctx.initDesktopGrid?.();
+  }
+
   async function installedDeadwaveMods() {
     const result={},snap=await PocketDisk.snapshot().catch(()=>({})),prefix=DEADWAVE_ROOT+'/';
     const paths=Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(prefix)&&!path.slice(prefix.length).includes('/')&&/\.pvmod$/i.test(path)).map(([path])=>path);
@@ -626,7 +719,7 @@
   async function buildStore(win, options = {}, ctx) {
     shellCtx=ctx; ctx.setWindowTitle(win,'Store','▣');
     let active=options.tab==='library'?'library':'home';
-    let featured=Math.random()<.5?'snake':'deadwave';
+    const featureIds=['snake','deadwave','blockblast'];let featured=featureIds[Math.floor(Math.random()*featureIds.length)];
     let variant=Math.floor(Math.random()*4),busy=false,progressState=null;
     win.content.innerHTML=`<div class="store-app"><header class="store-topbar"><div class="store-wordmark"><span>▣</span><div><strong>Store</strong><small>PocketVM games</small></div></div><nav class="store-tabs"><button data-store-tab="home">Home</button><button data-store-tab="library">Library</button></nav><div class="store-space"></div><div class="store-drive" data-store-drive>Checking storage…</div></header><main class="store-page" data-store-page></main></div>`;
     const page=ctx.queryOne('[data-store-page]',win.el),drive=ctx.queryOne('[data-store-drive]',win.el);
@@ -634,11 +727,13 @@
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
       if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'Auto-fire arena survival · 3-card upgrades · 12 zombie types',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
+      if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Row & column clears · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       const installed=await isInstalled(),ident=await identity();return{id:'snake',app:'snake',name:ident.name,icon:ident.icon,installed,pinned:pinned(),size:installed?await installedBytes():TOTAL_BYTES,category:'Arcade',summary:'Classic Snake · Smooth touch controls · Original soundtrack',install:installSnake,pin:toggleDesktopPin,uninstall:uninstallSnake};
     }
-    function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:featureVariants;return arr[variant%arr.length];}
+    function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:featureVariants;return arr[variant%arr.length];}
     function deadwavePreview(){return '<div class="deadwave-preview"><div class="dw-grid"></div><i class="survivor"></i><b class="z z1"></b><b class="z z2"></b><b class="z z3"></b><b class="z z4"></b><b class="z z5"></b><span class="shot s1"></span><span class="shot s2"></span></div>';}
     function snakePreview(){return '<div class="store-game-preview"><div class="preview-grid"></div><b class="preview-apple"></b><i style="--px:36%;--py:64%"></i><i style="--px:44%;--py:64%"></i><i style="--px:52%;--py:64%"></i><i style="--px:60%;--py:64%"></i><i style="--px:60%;--py:50%" class="head"></i></div>';}
+    function blockBlastPreview(){return '<div class="blockblast-preview"><div class="bb-mini-grid">'+Array.from({length:64},(_,i)=>'<i class="'+([10,11,12,18,26,34,42,50,51,52,53,54].includes(i)?'on b'+(i%4):'')+'"></i>').join('')+'</div><div class="bb-mini-pieces"><b></b><b></b><b></b></div></div>';}
 
     async function runAction(id,button,progress){
       if(busy)return;const g=await gameState(id);if(g.installed){ctx.openApp(g.app);return;}
@@ -649,13 +744,19 @@
     }
 
     async function renderHome(){
-      const [snake,dead]=await Promise.all([gameState('snake'),gameState('deadwave')]);
-      const f=featured==='deadwave'?dead:snake,o=featured==='deadwave'?snake:dead,v=featureCopy(featured);
+      const games=await Promise.all(featureIds.map(gameState)),f=games.find(g=>g.id===featured)||games[0],others=games.filter(g=>g.id!==f.id),v=featureCopy(featured);
       const stats=await PocketDisk.stats().catch(()=>null);
-      page.innerHTML=`<section class="store-hero store-featured" data-feature-kind="${f.id}" data-tone="${ctx.escapeHTML(v.tone)}"><div class="store-hero-copy"><div class="store-feature-label"><span class="live-dot"></span><span>${ctx.escapeHTML(v.kicker)}</span><em>${f.id==='deadwave'?'New in Store':'Featured game'}</em></div><h1>${ctx.escapeHTML(v.title)}</h1><p>${ctx.escapeHTML(v.copy)}</p><div class="store-scoreline"><div><strong>${ctx.escapeHTML(f.name)}</strong><span>${ctx.escapeHTML(f.category)}</span></div><i></i><div><strong>${f.id==='deadwave'?'Joystick + auto-fire':'Touch + keys'}</strong><span>Controls</span></div><i></i><div><strong>Offline</strong><span>After install</span></div></div><div class="store-actions"><button class="store-primary store-main-cta" data-feature-main>${f.installed?'▶ Play '+ctx.escapeHTML(f.name):'↓ Install '+ctx.escapeHTML(f.name)}</button>${f.installed?`<button class="store-secondary" data-feature-pin>${f.pinned?'Remove from desktop':'Add to desktop'}</button>`:''}</div><div class="store-progress" data-store-progress hidden><i></i><span></span></div><div class="store-install-note"><span>${f.installed?'Installed locally':formatBytes(f.size)+' download'}</span><span>•</span><span>${stats?formatBytes(stats.free)+' free on drive':'Local install'}</span></div></div><div class="store-hero-visual"><div class="store-feature-chip">POCKETVM ORIGINAL</div>${f.id==='deadwave'?deadwavePreview():snakePreview()}<img src="${ctx.escapeHTML(f.icon)}" alt=""><div class="store-icon-glow"></div></div></section>
-      <section class="store-feature-grid">${f.id==='deadwave'?'<article><span>01</span><div><strong>Endless waves</strong><p>Twenty-five seconds of pressure, then exactly three cards. Pick one and keep the run alive.</p></div></article><article><span>02</span><div><strong>Seven zombie classes</strong><p>Ranged, Tank, Mage, Mech, Engineer and King enemies join the basic horde as waves climb.</p></div></article><article><span>03</span><div><strong>Built around touch</strong><p>A proper virtual joystick controls movement while your weapon automatically tracks targets.</p></div></article>':'<article><span>01</span><div><strong>Classic rules</strong><p>Apple, walls, your own tail. Nothing extra unless you put it there.</p></div></article><article><span>02</span><div><strong>Built for iPad</strong><p>Swipe controls, touch D-pad, keyboard support and responsive rendering.</p></div></article><article><span>03</span><div><strong>Actually installed</strong><p>The game, icon and soundtrack consume real space on PocketVM’s 1 GB drive.</p></div></article>'}</section>
-      <section class="store-section"><div class="store-section-head"><div><span>GAME LIBRARY</span><h2>Available now</h2></div><small>2 titles</small></div>
-      ${[f,o].map(g=>`<article class="store-game-row store-game-row-rich"><img src="${ctx.escapeHTML(g.icon)}" alt=""><div><strong>${ctx.escapeHTML(g.name)}</strong><span>${ctx.escapeHTML(g.summary)}</span><small>${g.installed?'Installed and ready':'Local virtual-drive install'}</small></div><em>${g.installed?'Installed':formatBytes(g.size)}</em><button data-store-game="${g.id}">${g.installed?'Play':'Get'}</button></article>`).join('')}</section>`;
+      const control=f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':'Touch + keys';
+      const visual=f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():snakePreview();
+      const features=f.id==='deadwave'
+        ?'<article><span>01</span><div><strong>Endless waves</strong><p>Survive the pressure, then pick exactly one of three upgrade cards.</p></div></article><article><span>02</span><div><strong>Twelve zombie types</strong><p>Regular enemies and three rotating bosses keep later rounds changing.</p></div></article><article><span>03</span><div><strong>Built around touch</strong><p>A virtual joystick handles movement while your weapon automatically tracks targets.</p></div></article>'
+        :f.id==='blockblast'
+          ?'<article><span>01</span><div><strong>Three pieces</strong><p>Place the full tray before the next three pieces arrive.</p></div></article><article><span>02</span><div><strong>Clear the grid</strong><p>Complete any full row or column to open space and build your combo.</p></div></article><article><span>03</span><div><strong>Tiny by design</strong><p>No soundtrack or framework download. It starts almost immediately.</p></div></article>'
+          :'<article><span>01</span><div><strong>Classic rules</strong><p>Apple, walls, your own tail. Nothing extra unless you put it there.</p></div></article><article><span>02</span><div><strong>Built for iPad</strong><p>Swipe controls, touch D-pad, keyboard support and responsive rendering.</p></div></article><article><span>03</span><div><strong>Actually installed</strong><p>The game, icon and soundtrack consume real space on PocketVM’s 1 GB drive.</p></div></article>';
+      page.innerHTML=`<section class="store-hero store-featured" data-feature-kind="${f.id}" data-tone="${ctx.escapeHTML(v.tone)}"><div class="store-hero-copy"><div class="store-feature-label"><span class="live-dot"></span><span>${ctx.escapeHTML(v.kicker)}</span><em>${f.id==='snake'?'Featured game':'New in Store'}</em></div><h1>${ctx.escapeHTML(v.title)}</h1><p>${ctx.escapeHTML(v.copy)}</p><div class="store-scoreline"><div><strong>${ctx.escapeHTML(f.name)}</strong><span>${ctx.escapeHTML(f.category)}</span></div><i></i><div><strong>${ctx.escapeHTML(control)}</strong><span>Controls</span></div><i></i><div><strong>Offline</strong><span>After install</span></div></div><div class="store-actions"><button class="store-primary store-main-cta" data-feature-main>${f.installed?'▶ Play '+ctx.escapeHTML(f.name):'↓ Install '+ctx.escapeHTML(f.name)}</button>${f.installed?`<button class="store-secondary" data-feature-pin>${f.pinned?'Remove from desktop':'Add to desktop'}</button>`:''}</div><div class="store-progress" data-store-progress hidden><i></i><span></span></div><div class="store-install-note"><span>${f.installed?'Installed locally':formatBytes(f.size)+' download'}</span><span>•</span><span>${stats?formatBytes(stats.free)+' free on drive':'Local install'}</span></div></div><div class="store-hero-visual"><div class="store-feature-chip">POCKETVM ORIGINAL</div>${visual}<img src="${ctx.escapeHTML(f.icon)}" alt=""><div class="store-icon-glow"></div></div></section>
+      <section class="store-feature-grid">${features}</section>
+      <section class="store-section"><div class="store-section-head"><div><span>GAME LIBRARY</span><h2>Available now</h2></div><small>3 titles</small></div>
+      ${[f,...others].map(g=>`<article class="store-game-row store-game-row-rich"><img src="${ctx.escapeHTML(g.icon)}" alt=""><div><strong>${ctx.escapeHTML(g.name)}</strong><span>${ctx.escapeHTML(g.summary)}</span><small>${g.installed?'Installed and ready':'Local virtual-drive install'}</small></div><em>${g.installed?'Installed':formatBytes(g.size)}</em><button data-store-game="${g.id}">${g.installed?'Play':'Get'}</button></article>`).join('')}</section>`;
       const main=ctx.queryOne('[data-feature-main]',page),progress=ctx.queryOne('[data-store-progress]',page),pinBtn=ctx.queryOne('[data-feature-pin]',page);
       main.addEventListener('click',()=>runAction(f.id,main,progress));
       pinBtn?.addEventListener('click',async()=>{await f.pin(!f.pinned);await renderHome();});
@@ -663,8 +764,8 @@
     }
 
     async function renderLibrary(){
-      const states=await Promise.all([gameState('snake'),gameState('deadwave')]),installed=states.filter(g=>g.installed);
-      if(!installed.length){page.innerHTML='<section class="store-library-empty"><div>◇</div><h2>Your library is empty</h2><p>Install Snake or Deadwave from Home and they will appear here.</p><button class="store-primary" data-library-home>Browse Store</button></section>';ctx.queryOne('[data-library-home]',page).addEventListener('click',()=>{active='home';render();});return;}
+      const states=await Promise.all(featureIds.map(gameState)),installed=states.filter(g=>g.installed);
+      if(!installed.length){page.innerHTML='<section class="store-library-empty"><div>◇</div><h2>Your library is empty</h2><p>Install a game from Home and it will appear here.</p><button class="store-primary" data-library-home>Browse Store</button></section>';ctx.queryOne('[data-library-home]',page).addEventListener('click',()=>{active='home';render();});return;}
       page.innerHTML=`<section class="store-library"><div class="store-section-head"><div><span>YOUR GAMES</span><h2>Library</h2></div><small>${installed.length} installed</small></div>${installed.map(g=>`<article class="library-card"><img src="${ctx.escapeHTML(g.icon)}" alt=""><div class="library-copy"><strong>${ctx.escapeHTML(g.name)}</strong><span>${ctx.escapeHTML(g.category)} · ${formatBytes(g.size)}</span><small>Installed in Downloads/${ctx.escapeHTML(g.name)}</small></div><div class="library-actions"><button class="store-primary" data-lib-play="${g.id}">Play</button><button class="store-secondary" data-lib-pin="${g.id}">${g.pinned?'Remove from desktop':'Add to desktop'}</button><button class="store-danger" data-lib-uninstall="${g.id}">Uninstall</button></div></article>`).join('')}</section>`;
       ctx.queryAll('[data-lib-play]',page).forEach(b=>b.addEventListener('click',async()=>{const g=await gameState(b.dataset.libPlay);ctx.openApp(g.app);}));
       ctx.queryAll('[data-lib-pin]',page).forEach(b=>b.addEventListener('click',async()=>{const g=await gameState(b.dataset.libPin);await g.pin(!g.pinned);await renderLibrary();}));
@@ -673,8 +774,8 @@
 
     async function render(){ctx.queryAll('[data-store-tab]',win.el).forEach(b=>b.classList.toggle('active',b.dataset.storeTab===active));if(active==='library')await renderLibrary();else await renderHome();await refreshDrive();}
     ctx.queryAll('[data-store-tab]',win.el).forEach(button=>button.addEventListener('click',()=>{active=button.dataset.storeTab;render();}));
-    const featureTimer=setInterval(()=>{if(active!=='home')return;featured=featured==='snake'?'deadwave':'snake';variant=Math.floor(Math.random()*4);renderHome();},FEATURE_ROTATE_MS);
-    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();render();},80);};
+    const featureTimer=setInterval(()=>{if(active!=='home')return;featured=featureIds[(featureIds.indexOf(featured)+1)%featureIds.length];variant=Math.floor(Math.random()*4);renderHome();},FEATURE_ROTATE_MS);
+    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();syncBlockBlastShell();render();},80);};
     window.addEventListener('pocketdiskchange',diskListener);
     win.cleanup=()=>{clearInterval(featureTimer);window.removeEventListener('pocketdiskchange',diskListener);};
     await render();
@@ -746,16 +847,35 @@
     window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
+  async function buildBlockBlast(win, options = {}, ctx) {
+    shellCtx=ctx;
+    if(!await blockBlastInstalled()){
+      ctx.setWindowTitle(win,'Block Blast','▦');
+      win.content.innerHTML='<div class="store-not-installed"><div>▦</div><h2>Block Blast isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';
+      ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;
+    }
+    const id=await blockBlastIdentity();ctx.setWindowTitle(win,id.name,'▦');applyWindowIcon(win,id.icon,ctx);
+    win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Starting ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts"></iframe></div>`;
+    const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
+    try{
+      const html=await PocketDisk.readText(BLOCKBLAST_ROOT+'/game.html'),save=(()=>{try{return JSON.parse(localStorage.getItem(BLOCKBLAST_SAVE_KEY)||'{}')||{};}catch{return{};}})();
+      const bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
+      frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;
+    }catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
+    const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-blockblast-ready')loading.classList.add('done');if(event.data.type==='pocketvm-blockblast-save'){const d=event.data.data||{},safe={best:Math.max(0,Math.floor(Number(d.best)||0))};localStorage.setItem(BLOCKBLAST_SAVE_KEY,JSON.stringify(safe));}};
+    window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
+  }
+
   function init(ctx) {
     shellCtx=ctx;
-    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{});
+    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{}); syncBlockBlastShell(ctx).catch(()=>{});
     window.addEventListener('pocketdiskchange',event=>{
       const path=String(event.detail?.path||'');
-      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT))return;
+      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT))return;
       clearTimeout(syncTimer);
-      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});},90);
+      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});syncBlockBlastShell(ctx).catch(()=>{});},90);
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, buildStore, buildSnake, buildDeadwave, isInstalled, deadwaveInstalled, installSnake, installDeadwave, uninstallSnake, uninstallDeadwave, toggleDesktopPin, toggleDeadwavePin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins });
+  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, syncBlockBlastShell, buildStore, buildSnake, buildDeadwave, buildBlockBlast, isInstalled, deadwaveInstalled, blockBlastInstalled, installSnake, installDeadwave, installBlockBlast, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins });
 })();
