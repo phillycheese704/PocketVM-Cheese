@@ -92,7 +92,7 @@ function endDrag(){if(!drag)return;const{id,index,gx,gy,ok}=drag;cleanupDrag();i
 function cancelDrag(){cleanupDrag()}
 function place(index,gx,gy){
  const p=pieces[index];if(resolving||!p||p.used||!canPlace(p,gx,gy))return;
- if(hasUndo&&!undoUsed)undoState={board:board.map(row=>row.slice()),pieces:clonePieces(pieces),score,combo};
+ if(hasUndo&&!undoUsed)undoState={board:board.map(row=>row.slice()),pieces:clonePieces(pieces),score,combo,best};
  resolving=true;updateUndo();
  for(const[x,y]of p.shape)board[gy+y][gx+x]=p.color;p.used=true;selected=-1;score+=p.shape.length;sfxPlace();renderBoard();renderTray();
  const rows=[],cols=[];for(let y=0;y<SIZE;y++)if(board[y].every(Boolean))rows.push(y);for(let x=0;x<SIZE;x++)if(board.every(row=>row[x]))cols.push(x);
@@ -106,7 +106,7 @@ function place(index,gx,gy){
 }
 function undoLast(){
  if(!hasUndo||undoUsed||!undoState||resolving)return;
- board=undoState.board.map(row=>row.slice());pieces=clonePieces(undoState.pieces);score=undoState.score;combo=undoState.combo;selected=-1;undoUsed=true;undoState=null;gameOver.hidden=true;scoreEl.textContent=score;renderBoard();renderTray();updateUndo();tone(330,.07,'triangle',.02,-80);showToast('Last placement undone');
+ board=undoState.board.map(row=>row.slice());pieces=clonePieces(undoState.pieces);score=undoState.score;combo=undoState.combo;best=undoState.best;selected=-1;undoUsed=true;undoState=null;gameOver.hidden=true;scoreEl.textContent=score;bestEl.textContent=best;renderBoard();renderTray();updateUndo();save();tone(330,.07,'triangle',.02,-80);showToast('Last placement undone');
 }
 function afterMove(){if(pieces.every(p=>p.used)){refill(hasUndo&&!undoUsed&&!!undoState);return}if(!anyMove())finish()}
 function canFitAnywhere(piece){if(piece.used)return false;const b=shapeBounds(piece.shape);for(let y=0;y<=SIZE-b.h;y++)for(let x=0;x<=SIZE-b.w;x++)if(canPlace(piece,x,y))return true;return false}
