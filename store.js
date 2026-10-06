@@ -7,7 +7,7 @@
   const PIN_KEY = 'pocketvm.store.snake.desktop';
   const SAVE_KEY = 'pocketvm.game.snake';
   const PACKAGE = [
-    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:20779 },
+    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:26702 },
     { name:'music.ogg', url:'https://raw.githubusercontent.com/Anubhav9/Yellow-Olive/main/media/resources/music_files/sakura_harbour_prologue_end.ogg', mime:'audio/ogg', size:1724097 }
   ];
   const DEFAULT_ICON_URL = SOURCE + 'icon.svg';

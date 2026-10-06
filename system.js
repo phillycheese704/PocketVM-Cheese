@@ -58,6 +58,7 @@
     const render = async () => {
       if (!alive) return;
       const stats = await PocketDisk.stats();
+      if (!alive || !win.el.isConnected) return;
       const pct = Math.min(100, stats.used / stats.max * 100);
       ctx.queryOne('[data-vdisk-used]', win.el).textContent = PocketDisk.formatBytes(stats.used);
       ctx.queryOne('[data-vdisk-free]', win.el).textContent = PocketDisk.formatBytes(stats.free) + ' free';
@@ -155,7 +156,7 @@
         const row = document.createElement('div');
         row.className = 'tm-process-row';
         const app = ctx.apps[w.appId] || { name:w.appId, icon:'◇' };
-        const status = w.el.classList.contains('minimized') ? 'Suspended' : (w.el.classList.contains('focused') ? 'Active' : 'Running');
+        const status = w.el.classList.contains('minimized') ? 'Minimized' : (w.el.classList.contains('focused') ? 'Active' : 'Running');
         row.innerHTML =
           '<span class="tm-process-app"><i>' + ctx.escapeHTML(app.icon || '◇') + '</i><strong>' + ctx.escapeHTML(app.name || w.appId) + '</strong></span>' +
           '<span><em class="tm-status ' + status.toLowerCase() + '">' + ctx.escapeHTML(status) + '</em></span>' +
@@ -179,6 +180,7 @@
 
     async function renderPerformance() {
       const stats = await PocketDisk.stats();
+      if (!alive || !win.el.isConnected) return;
       const pct = Math.min(100, stats.used / stats.max * 100);
       page.innerHTML =
         '<div class="tm-performance-grid">' +

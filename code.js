@@ -318,7 +318,7 @@
 
     async function saveActive() {
       const tab = activeTab();
-      if (!tab) return;
+      if (!tab) return false;
       syncCurrent();
       const lang = languageFor(tab.path);
       try {
@@ -329,8 +329,10 @@
         renderTree();
         setStatus('Saved ' + ctx.basename(tab.path) + '.', false);
         ctx.notify('Pocket Code', ctx.basename(tab.path) + ' saved.', '<>');
+        return true;
       } catch (err) {
         setStatus(err.message || 'Could not save file.', true);
+        return false;
       }
     }
 
@@ -345,8 +347,7 @@
     async function previewActive() {
       const tab = activeTab();
       if (!tab || languageFor(tab.path)?.id !== 'html') return;
-      await saveActive();
-      ctx.openApp('preview', { file:tab.path });
+      if (await saveActive()) ctx.openApp('preview', { file:tab.path });
     }
 
     async function createFile(lang) {
@@ -415,6 +416,12 @@
     win.content.addEventListener('pointerdown', event => {
       if (!event.target.closest('.pc-new-menu,[data-pc-new]')) menuEl.hidden = true;
     });
+
+    win.beforeClose = () => {
+      syncCurrent();
+      if (!tabs.some(tab => tab.dirty)) return true;
+      return confirm('Close Pocket Code with unsaved changes?');
+    };
 
     renderNewMenu();
     Promise.resolve().then(async () => {

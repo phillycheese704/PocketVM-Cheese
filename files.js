@@ -189,8 +189,9 @@
     }
 
     function updateSelectionUI() {
-      const bar = q('.files-selectionbar');
+      for (const path of [...selected]) if (!ctx.state.fs[path]) selected.delete(path);
       const count = selected.size;
+      const bar = q('.files-selectionbar');
       bar.hidden = !count;
       q('[data-selection-count]').textContent = count + ' selected';
       qa('[data-file-path]').forEach(el => el.classList.toggle('selected', selected.has(el.dataset.filePath)));
@@ -610,9 +611,10 @@
       const existing = paths.filter(path => ctx.state.fs[path]);
       if (!existing.length) return;
       if (!confirm('Delete ' + existing.length + ' item' + (existing.length === 1 ? '' : 's') + '? Folders are deleted with their contents.')) return;
+      let deleted = 0;
       for (const path of existing) {
         try {
-          await PocketDisk.remove(path);
+          if (await PocketDisk.remove(path)) deleted++;
         } catch (err) {
           alert(err.message || ('Could not delete ' + ctx.basename(path)));
         }
@@ -620,7 +622,7 @@
       selected.clear();
       await ctx.refreshFS();
       render();
-      ctx.notify('Deleted', existing.length + ' item' + (existing.length === 1 ? '' : 's'), '×');
+      if (deleted) ctx.notify('Deleted', deleted + ' item' + (deleted === 1 ? '' : 's'), '×');
     }
 
     async function downloadItem(path) {
@@ -676,6 +678,7 @@
       await ctx.refreshFS();
       for (const source of clip.paths) {
         if (!ctx.state.fs[source]) continue;
+        if (clip.mode === 'cut' && ctx.parentPath(source) === current) continue;
         const target = await uniqueTarget(ctx, ctx.norm(ctx.basename(source), current), current);
         try {
           if (clip.mode === 'cut') await PocketDisk.move(source, target);
@@ -833,7 +836,7 @@
     const file = options.file;
     const node = file && ctx.state.fs[file];
     if (!file || !node || node.type !== 'file' || !PocketDisk.isTextMime(node.mime || PocketDisk.mimeFromName(file))) {
-      win.content.innerHTML = '<div class="app-pad"><h2>File not found</h2><p style="color:var(--muted)">The editor supports TXT and HTML files.</p></div>';
+      win.content.innerHTML = '<div class="app-pad"><h2>File not found</h2><p style="color:var(--muted)">The editor supports PocketVM text and code files.</p></div>';
       return;
     }
     const isHTML = /\.html$/i.test(file);

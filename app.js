@@ -460,15 +460,17 @@
     if (next) focusWindow(next.id);
   }
 
-  function closeWindow(id) {
+  function closeWindow(id, options = {}) {
     const win = state.windows.get(id);
-    if (!win) return;
+    if (!win) return true;
+    if (!options.force && win.beforeClose?.() === false) return false;
     const wasFocused = win.el.classList.contains('focused');
     win.cleanup?.();
     win.el.remove();
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.remove();
     state.windows.delete(id);
     if (wasFocused) focusTopVisibleWindow(id);
+    return true;
   }
 
   function minimizeWindow(id) {
@@ -1019,18 +1021,23 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     const ta = $('.notes-area', win.el), status = $('.note-state', win.el);
     ta.value = localStorage.getItem('pocketvm.notes') || '';
     let timer;
+    const saveNow = () => {
+      clearTimeout(timer);
+      try {
+        localStorage.setItem('pocketvm.notes', ta.value);
+        status.textContent = 'Saved locally';
+        return true;
+      } catch {
+        status.textContent = 'Save failed';
+        return false;
+      }
+    };
     ta.addEventListener('input', () => {
       status.textContent = 'Saving…';
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        try {
-          localStorage.setItem('pocketvm.notes', ta.value);
-          status.textContent = 'Saved locally';
-        } catch {
-          status.textContent = 'Save failed';
-        }
-      }, 250);
+      timer = setTimeout(saveNow, 250);
     });
+    win.cleanup = saveNow;
   }
 
   // ---------- System monitor ----------
@@ -1372,7 +1379,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
             applyWallpaper();
           }
           for (const w of [...state.windows.values()]) {
-            if (w.appId === 'editor' || w.appId === 'preview' || w.appId === 'imageviewer') closeWindow(w.id);
+            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker'].includes(w.appId)) closeWindow(w.id, { force:true });
           }
           renderStorage();
           notify('Drive erased', 'PocketVM files were deleted. System folders were recreated.', '◫');
@@ -2137,10 +2144,11 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
     document.addEventListener('keydown',e=>{
       const mod=e.metaKey||e.ctrlKey;
-      if(e.key==='Escape'){hideShellFlyouts();$('#desktop-context').hidden=true;return;}
+      if(e.key==='Escape'){hideShellFlyouts();$('#desktop-context').hidden=true;$('#start-menu').hidden=true;$('#start-btn').classList.remove('active');return;}
       if(e.altKey&&e.key==='F4'){const w=focusedWindow();if(w){e.preventDefault();closeWindow(w.id);}return;}
       if(e.ctrlKey&&e.shiftKey&&e.key==='Escape'){e.preventDefault();openApp('taskmanager');return;}
       if(!mod)return;
+      if(e.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
       const k=e.key.toLowerCase();
       if(k==='e'){e.preventDefault();openApp('files');}
       else if(k==='b'){e.preventDefault();openApp('browser');}
@@ -2169,7 +2177,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
   }
 
   function shutdown() {
-    for (const id of [...state.windows.keys()]) closeWindow(id);
+    for (const id of [...state.windows.keys()]) if (closeWindow(id) === false) return;
     $('#desktop').hidden = true;
     $('#auth-screen').hidden = true;
     $('#boot').hidden = false;

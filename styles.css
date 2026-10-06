@@ -1273,7 +1273,7 @@ body[data-desktop-icon-size="large"] .desktop-glyph{width:60px;height:60px;borde
 .tm-window-title{color:#7789a0;font-size:9px}
 .tm-status{font-style:normal;font-size:8px;padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.05);color:#899bb2}
 .tm-status.active{background:rgba(94,231,196,.10);color:#7be9cc}
-.tm-status.suspended{color:#dfbd78}
+.tm-status.minimized{color:#dfbd78}
 .tm-end-task{height:29px;padding:0 8px;border:1px solid rgba(255,255,255,.08);border-radius:7px;background:rgba(255,255,255,.04);color:#c5d0de;font-size:9px}
 .tm-end-task:hover{background:rgba(255,110,120,.1);color:#ffadb3}
 .tm-empty{padding:50px;text-align:center;color:#71849d;font-size:10px}
