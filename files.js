@@ -331,16 +331,33 @@
 
         const info = fileContext(ctx, path);
         entry.draggable = true;
+        entry.setAttribute('aria-grabbed','false');
         entry.addEventListener('dragstart', event => {
+          if (!selected.has(path)) {
+            selected.clear();
+            selected.add(path);
+            updateSelectionUI();
+          }
           dragPaths = dragSelectionFor(path);
-          try { event.dataTransfer.setData('application/x-pocketvm-paths', JSON.stringify(dragPaths)); } catch {}
+          try {
+            event.dataTransfer.setData('application/x-pocketvm-paths', JSON.stringify(dragPaths));
+            event.dataTransfer.setData('text/plain', dragPaths.join('\n'));
+          } catch {}
           event.dataTransfer.effectAllowed = 'move';
+          entry.setAttribute('aria-grabbed','true');
           entry.classList.add('file-drag-source');
+          fileView.classList.add('files-native-dragging');
+          const status=q('[data-files-status]');
+          if(status)status.textContent='Moving '+(dragPaths.length===1?ctx.basename(dragPaths[0]):dragPaths.length+' items')+'…';
         });
         entry.addEventListener('dragend', () => {
+          entry.setAttribute('aria-grabbed','false');
           entry.classList.remove('file-drag-source');
+          fileView.classList.remove('files-native-dragging');
           qa('.file-drop-target').forEach(el => el.classList.remove('file-drop-target','sidebar-drop-target-v3'));
           dragPaths = [];
+          const status=q('[data-files-status]');
+          if(status)status.textContent=current.replace('/home/user','Home')||'Home';
         });
         if (info.node?.type === 'dir') {
           entry.addEventListener('dragover', event => {
