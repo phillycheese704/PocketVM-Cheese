@@ -465,7 +465,7 @@
     if (!win) return true;
     if (!options.force && win.beforeClose?.() === false) return false;
     const wasFocused = win.el.classList.contains('focused');
-    win.cleanup?.();
+    win.cleanup?.(options);
     win.el.remove();
     $(`.task-app[data-window-id="${CSS.escape(id)}"]`)?.remove();
     state.windows.delete(id);

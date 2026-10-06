@@ -895,9 +895,9 @@
       await save();
       ctx.openApp('preview', { file });
     });
-    win.cleanup = () => {
+    win.cleanup = (options = {}) => {
       clearTimeout(timer);
-      if (dirty) save();
+      if (dirty && !options.force) save();
     };
   }
 
