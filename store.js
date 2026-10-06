@@ -107,7 +107,7 @@
   const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg';
   const BLOCKBLAST_ICON_ESTIMATE = 26000;
   const BLOCKBLAST_PACKAGE = [
-    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20400 }
+    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20456 }
   ];
   const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
   const BLOCKBLAST_MODS = Object.freeze({
