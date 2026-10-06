@@ -764,6 +764,8 @@
     else if(action==='uninstall-deadwave') await uninstallDeadwaveMod(id);
     else if(action==='download-skin') await downloadDeadwaveSkin(id);
     else if(action==='uninstall-skin') await uninstallDeadwaveSkin(id);
+    else if(action==='download-blockblast') await downloadBlockBlastMod(id);
+    else if(action==='uninstall-blockblast') await uninstallBlockBlastMod(id);
     else if(action==='open-files') shellCtx?.openApp?.('files',{path:'/home/user/Downloads'});
     else if(action==='open-store') shellCtx?.openApp?.('store');
   }
@@ -919,11 +921,12 @@
     win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Starting ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
     try{
-      const html=await PocketDisk.readText(BLOCKBLAST_ROOT+'/game.html'),save=(()=>{try{return JSON.parse(localStorage.getItem(BLOCKBLAST_SAVE_KEY)||'{}')||{};}catch{return{};}})();
-      const bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
+      const [html,mods]=await Promise.all([PocketDisk.readText(BLOCKBLAST_ROOT+'/game.html'),installedBlockBlastMods()]);
+      const save=(()=>{try{return JSON.parse(localStorage.getItem(BLOCKBLAST_SAVE_KEY)||'{}')||{};}catch{return{};}})();
+      const bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';window.__POCKETVM_MODS='+JSON.stringify(mods)+';</'+'script>';
       frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;
     }catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
-    const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-blockblast-ready')loading.classList.add('done');if(event.data.type==='pocketvm-blockblast-save'){const d=event.data.data||{},safe={best:Math.max(0,Math.floor(Number(d.best)||0))};localStorage.setItem(BLOCKBLAST_SAVE_KEY,JSON.stringify(safe));}};
+    const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-blockblast-ready')loading.classList.add('done');if(event.data.type==='pocketvm-blockblast-save'){const d=event.data.data||{},safe={best:Math.max(0,Math.floor(Number(d.best)||0)),theme:String(d.theme||'default').slice(0,20)};localStorage.setItem(BLOCKBLAST_SAVE_KEY,JSON.stringify(safe));}};
     window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
@@ -938,5 +941,5 @@
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, syncBlockBlastShell, buildStore, buildSnake, buildDeadwave, buildBlockBlast, isInstalled, deadwaveInstalled, blockBlastInstalled, installSnake, installDeadwave, installBlockBlast, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins });
+  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, syncBlockBlastShell, buildStore, buildSnake, buildDeadwave, buildBlockBlast, isInstalled, deadwaveInstalled, blockBlastInstalled, installSnake, installDeadwave, installBlockBlast, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins, installedBlockBlastMods });
 })();
