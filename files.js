@@ -864,16 +864,18 @@
     let dirty = false;
     const save = async () => {
       clearTimeout(timer);
-      if (!ctx.state.fs[file]) return;
+      if (!ctx.state.fs[file]) return false;
       status.textContent = 'Saving…';
       try {
         await PocketDisk.writeText(file, area.value, isHTML ? 'text/html' : 'text/plain');
         await ctx.refreshFS();
         dirty = false;
         status.textContent = 'Saved';
+        return true;
       } catch (err) {
         status.textContent = 'Save failed';
         ctx.notify('Could not save', err.message || ctx.basename(file), '!');
+        return false;
       }
     };
 
@@ -892,8 +894,7 @@
     ctx.queryOne('[data-editor-save]', win.el).addEventListener('click', save);
     const run = ctx.queryOne('[data-editor-run]', win.el);
     if (run) run.addEventListener('click', async () => {
-      await save();
-      ctx.openApp('preview', { file });
+      if (await save()) ctx.openApp('preview', { file });
     });
     win.cleanup = (options = {}) => {
       clearTimeout(timer);
