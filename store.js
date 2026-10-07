@@ -161,7 +161,7 @@
   const PVZ_NAME_FILE='name.txt';
   const PVZ_ICON_URL=PVZ_SOURCE+'icon.svg';
   const PVZ_ICON_ESTIMATE=32000;
-  const PVZ_GAME_BYTES=134243;
+  const PVZ_GAME_BYTES=134423;
   const PVZ_TRACKS=Object.freeze([
     {id:'02',name:'02.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/02CrazyDave.mp3',mime:'audio/mpeg',size:1403422},
     {id:'03',name:'03.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/03chooseYourSeeds.mp3',mime:'audio/mpeg',size:554551},
