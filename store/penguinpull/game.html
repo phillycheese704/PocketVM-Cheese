@@ -1,40 +1,333 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="pocketvm-penguin-build" content="v1"><title>Penguin Pull</title><style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081927;font-family:Inter,ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;user-select:none;touch-action:none}button{font:inherit;color:inherit}#app{position:relative;width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 18%,rgba(199,240,255,.16),transparent 34%),linear-gradient(#102c45,#081927)}#frame{position:relative;width:min(100%,900px);height:min(100%,900px);aspect-ratio:1;overflow:hidden;border-radius:24px;background:#bce9f5;box-shadow:0 24px 80px #0007,inset 0 0 0 1px #ffffff18}canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}.hud{position:absolute;z-index:5;left:18px;right:18px;top:16px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;text-shadow:0 2px 7px #07304d88}.scorebox,.bestbox{background:#0e3857cc;border:1px solid #d8f7ff38;border-radius:15px;padding:10px 14px;backdrop-filter:blur(9px);box-shadow:0 8px 24px #08263a35}.scorebox b,.bestbox b{display:block;font-size:23px;line-height:1}.scorebox span,.bestbox span{display:block;margin-top:3px;color:#bde7f3;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.bestbox{text-align:right}.top-actions{position:absolute;z-index:8;right:18px;top:86px;display:flex;gap:8px}.top-actions button{width:42px;height:42px;border-radius:12px;border:1px solid #d7f4ff36;background:#0c324fc9;box-shadow:0 7px 20px #05223842;cursor:pointer}.top-actions button:hover{background:#174a6d}.tip{position:absolute;z-index:6;left:50%;bottom:21px;translate:-50% 0;max-width:82%;padding:9px 15px;border-radius:999px;background:#071c2ec7;border:1px solid #cbefff28;font-size:12px;font-weight:750;color:#dff6ff;text-align:center;pointer-events:none;transition:.25s opacity}.tip.fade{opacity:0}.overlay{position:absolute;z-index:20;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(#071b2c7a,#03101bdd);backdrop-filter:blur(4px)}.overlay.hidden{display:none}.card{width:min(480px,92%);padding:28px;border-radius:28px;background:linear-gradient(150deg,#123b59f5,#071c2df5);border:1px solid #d7f5ff2e;box-shadow:0 30px 80px #00101e88;text-align:center}.logo{font-weight:1000;font-size:clamp(42px,9vw,72px);letter-spacing:-.055em;line-height:.85}.logo span{display:block;color:#8fe8ff;text-shadow:0 5px 0 #0a5871,0 10px 24px #001d2b99}.royal{position:relative;width:118px;height:132px;margin:6px auto 14px}.royal .body{position:absolute;left:24px;top:29px;width:72px;height:94px;border-radius:48% 48% 43% 43%;background:#111b24;box-shadow:inset -9px -7px #02070b33}.royal .belly{position:absolute;left:37px;top:54px;width:47px;height:61px;border-radius:50%;background:#f4faf7}.royal .beak{position:absolute;left:84px;top:58px;border-left:24px solid #f1a128;border-top:10px solid transparent;border-bottom:10px solid transparent}.royal .eye{position:absolute;left:71px;top:49px;width:8px;height:8px;border-radius:50%;background:#f9ffff;box-shadow:inset -2px -1px #727f84}.royal .crown{position:absolute;left:37px;top:5px;width:48px;height:34px;background:#f2c745;clip-path:polygon(0 25%,18% 50%,32% 0,50% 47%,68% 0,82% 50%,100% 25%,90% 100%,10% 100%);filter:drop-shadow(0 3px #76580f)}.royal .z{position:absolute;right:2px;top:9px;font-weight:1000;color:#dff8ff;transform:rotate(-9deg)}.card p{margin:12px auto 20px;max-width:355px;color:#c7e6ef;font-size:14px;line-height:1.45}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 20px}.stats div{padding:12px;border-radius:14px;background:#071b2f9e;border:1px solid #d9f6ff14}.stats b{display:block;font-size:24px}.stats span{font-size:10px;color:#acd8e5;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.play{width:100%;padding:14px 18px;border:0;border-radius:15px;background:linear-gradient(#99ebff,#52c4e1);color:#073049;font-weight:950;font-size:16px;box-shadow:0 8px 0 #187894,0 14px 25px #001b2c6b;cursor:pointer}.play:active{transform:translateY(4px);box-shadow:0 4px 0 #187894,0 8px 17px #001b2c6b}.rating{margin:2px 0 4px;font-size:24px;font-weight:1000;color:#ffe07d}.pause-card .logo{font-size:52px}@media(max-width:700px){#frame{border-radius:0;width:100%;height:100%;aspect-ratio:auto}.hud{top:11px;left:11px;right:11px}.scorebox,.bestbox{padding:8px 11px}.top-actions{right:11px;top:73px}.card{padding:22px}.tip{bottom:13px}}
-</style></head><body><div id="app"><div id="frame"><canvas id="game" width="900" height="900" aria-label="Penguin Pull game"></canvas><div class="hud"><div class="scorebox"><b id="score">0</b><span>rescued</span></div><div class="bestbox"><b id="best">0</b><span>best</span></div></div><div class="top-actions"><button id="pause" title="Pause">Ⅱ</button><button id="restart" title="Restart">↻</button><button id="sound" title="Sound">♪</button></div><div class="tip" id="tip">Drag one small penguin free, then drop it into the sea.</div><div class="overlay" id="start"><div class="card"><div class="royal"><i class="body"></i><i class="belly"></i><i class="beak"></i><i class="eye"></i><i class="crown"></i><i class="z">Zz</i></div><div class="logo">PENGUIN <span>PULL</span></div><p>Rescue the little penguins one at a time. Keep the ice balanced. If the sleeping royal hits the sea, your run is over.</p><div class="stats"><div><b id="startBest">0</b><span>best rescue</span></div><div><b>20</b><span>penguins</span></div></div><button class="play" id="play">Start pulling</button></div></div><div class="overlay hidden" id="over"><div class="card"><div class="rating" id="rating">Good rescue!</div><div class="logo" style="font-size:50px">RUN <span>OVER</span></div><p id="overText">The royal got wet.</p><div class="stats"><div><b id="finalScore">0</b><span>rescued</span></div><div><b id="finalBest">0</b><span>best</span></div></div><button class="play" id="again">Play again</button></div></div><div class="overlay hidden" id="paused"><div class="card pause-card"><div class="logo">PAUSED</div><p>The tower will wait. Your nerves can catch up.</p><button class="play" id="resume">Resume</button></div></div></div></div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="pocketvm-penguin-build" content="v2">
+<title>Penguin Pull</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061622;color:#fff;font-family:Inter,ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;touch-action:none}
+button{font:inherit;color:inherit}
+#app{position:relative;width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 12%,rgba(198,245,255,.16),transparent 36%),linear-gradient(#0c2b42,#061622)}
+#frame{position:relative;width:min(100%,960px);height:min(100%,920px);overflow:hidden;border-radius:24px;background:#9ee2f2;box-shadow:0 30px 95px #0008,inset 0 0 0 1px #ffffff18}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.hud{position:absolute;z-index:6;left:16px;right:16px;top:14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:10px;pointer-events:none;text-shadow:0 2px 8px #05314b88}
+.scorebox,.bestbox,.statusbox{background:#082c47c9;border:1px solid #d8f7ff30;border-radius:15px;padding:9px 13px;backdrop-filter:blur(10px);box-shadow:0 8px 26px #04243835}
+.scorebox{justify-self:start}.bestbox{justify-self:end;text-align:right}
+.scorebox b,.bestbox b{display:block;font-size:24px;line-height:1}.scorebox span,.bestbox span{display:block;margin-top:3px;color:#bde7f3;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.statusbox{min-width:180px;text-align:center;padding:8px 12px}.statusbox strong{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ddf8ff}.meter{height:7px;margin-top:6px;border-radius:99px;overflow:hidden;background:#031d2eaa;border:1px solid #ffffff14}.meter i{display:block;width:9%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ceab9,#ffe271,#ff7567);transition:width .12s linear}.statusbox small{display:block;margin-top:4px;font-size:9px;color:#add9e5}
+.top-actions{position:absolute;z-index:9;right:16px;top:84px;display:flex;gap:8px}.top-actions button{width:42px;height:42px;border-radius:12px;border:1px solid #d7f4ff34;background:#082e4bc9;box-shadow:0 7px 20px #05223842;cursor:pointer;font-weight:900}.top-actions button:hover{background:#174d70}
+.tip{position:absolute;z-index:7;left:50%;bottom:18px;translate:-50% 0;max-width:84%;padding:9px 15px;border-radius:999px;background:#061a2bcf;border:1px solid #cbefff28;font-size:12px;font-weight:780;color:#e1f8ff;text-align:center;pointer-events:none;transition:.25s opacity}.tip.fade{opacity:0}
+.crown-pill{position:absolute;z-index:7;left:16px;top:88px;padding:7px 10px;border-radius:999px;background:#082e4bc9;border:1px solid #d7f4ff25;font-size:10px;font-weight:900;color:#ffe884;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+.overlay{position:absolute;z-index:30;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(#06192b62,#020c15df);backdrop-filter:blur(5px)}.overlay.hidden{display:none}
+.card{width:min(500px,92%);padding:28px;border-radius:30px;background:linear-gradient(150deg,#123c5bf4,#071b2df7);border:1px solid #d7f5ff30;box-shadow:0 32px 90px #00101e8c;text-align:center}
+.logo{font-weight:1000;font-size:clamp(44px,9vw,76px);letter-spacing:-.06em;line-height:.84}.logo span{display:block;color:#90eaff;text-shadow:0 5px 0 #0a5c75,0 11px 27px #001d2b99}
+.royal{position:relative;width:122px;height:136px;margin:4px auto 14px}.royal .body{position:absolute;left:24px;top:30px;width:74px;height:96px;border-radius:49% 49% 44% 44%;background:#111b24}.royal .belly{position:absolute;left:38px;top:56px;width:48px;height:62px;border-radius:50%;background:#f4faf7}.royal .beak{position:absolute;left:86px;top:59px;border-left:25px solid #f1a128;border-top:10px solid transparent;border-bottom:10px solid transparent}.royal .eye{position:absolute;left:72px;top:49px;width:9px;height:9px;border-radius:50%;background:#f9ffff;box-shadow:inset -2px -1px #727f84}.royal .crown{position:absolute;left:36px;top:3px;width:52px;height:36px;background:#f2c745;clip-path:polygon(0 25%,18% 50%,32% 0,50% 47%,68% 0,82% 50%,100% 25%,90% 100%,10% 100%);filter:drop-shadow(0 3px #76580f)}.royal .z{position:absolute;right:-1px;top:7px;font-weight:1000;color:#dff8ff;transform:rotate(-9deg)}
+.card p{margin:13px auto 20px;max-width:380px;color:#c7e6ef;font-size:14px;line-height:1.48}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0 18px}.rules div{padding:10px 7px;border-radius:14px;background:#061a2c91;border:1px solid #d9f6ff14}.rules b{display:block;font-size:17px}.rules span{display:block;margin-top:4px;color:#a9d7e4;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 20px}.stats div{padding:12px;border-radius:14px;background:#071b2f9e;border:1px solid #d9f6ff14}.stats b{display:block;font-size:25px}.stats span{font-size:9px;color:#acd8e5;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.play{width:100%;padding:14px 18px;border:0;border-radius:15px;background:linear-gradient(#a7f0ff,#55c7e4);color:#073049;font-weight:1000;font-size:16px;box-shadow:0 8px 0 #187894,0 14px 25px #001b2c6b;cursor:pointer}.play:active{transform:translateY(4px);box-shadow:0 4px 0 #187894,0 8px 17px #001b2c6b}
+.rating{margin:3px 0 5px;font-size:24px;font-weight:1000;color:#ffe07d}.subrating{font-size:11px;font-weight:900;color:#9de8ff;text-transform:uppercase;letter-spacing:.09em}.pause-card .logo{font-size:52px}
+@media(max-width:700px){#frame{border-radius:0;width:100%;height:100%}.hud{top:9px;left:9px;right:9px;grid-template-columns:1fr 120px 1fr}.scorebox,.bestbox{padding:7px 10px}.scorebox b,.bestbox b{font-size:21px}.statusbox{min-width:0;padding:7px}.statusbox small{display:none}.top-actions{right:9px;top:72px}.crown-pill{left:9px;top:76px}.card{padding:21px}.rules{gap:5px}.rules div{padding:8px 4px}.tip{bottom:12px}}
+</style>
+</head>
+<body>
+<div id="app"><div id="frame">
+<canvas id="game" width="960" height="920" aria-label="Penguin Pull game"></canvas>
+<div class="hud">
+  <div class="scorebox"><b id="score">0</b><span>rescued / 20</span></div>
+  <div class="statusbox"><strong id="stabilityText">Tower steady</strong><div class="meter"><i id="stabilityBar"></i></div><small id="stabilityHint">Pull slowly. Lower rows carry more weight.</small></div>
+  <div class="bestbox"><b id="best">0</b><span>best rescue</span></div>
+</div>
+<div class="crown-pill" id="crownState">♛ Crown secure</div>
+<div class="top-actions"><button id="pause" title="Pause" aria-label="Pause">Ⅱ</button><button id="restart" title="Restart" aria-label="Restart">↻</button><button id="sound" title="Sound" aria-label="Toggle sound">♪</button></div>
+<div class="tip" id="tip">Pull a penguin free, then drop that penguin into the sea.</div>
+<div class="overlay" id="start"><div class="card">
+  <div class="royal"><i class="body"></i><i class="belly"></i><i class="beak"></i><i class="eye"></i><i class="crown"></i><i class="z">Zz</i></div>
+  <div class="logo">PENGUIN <span>PULL</span></div>
+  <p>Rescue all twenty little penguins without dunking the sleeping royal. Slow pulls are safer. Yanking a loaded penguin can turn a wobble into a disaster.</p>
+  <div class="rules"><div><b>☝</b><span>Drag one</span></div><div><b>≋</b><span>Drop in sea</span></div><div><b>♛</b><span>Keep royal dry</span></div></div>
+  <div class="stats"><div><b id="startBest">0</b><span>best rescue</span></div><div><b id="crownPerfects">0</b><span>crown-perfect runs</span></div></div>
+  <button class="play" id="play">Start pulling</button>
+</div></div>
+<div class="overlay hidden" id="over"><div class="card">
+  <div class="rating" id="rating">GOOD RESCUE</div><div class="subrating" id="subrating"></div>
+  <div class="logo" style="font-size:50px">RUN <span>OVER</span></div>
+  <p id="overText">The royal got wet.</p>
+  <div class="stats"><div><b id="finalScore">0</b><span>rescued</span></div><div><b id="finalBest">0</b><span>best</span></div></div>
+  <button class="play" id="again">Play again</button>
+</div></div>
+<div class="overlay hidden" id="paused"><div class="card pause-card"><div class="logo">PAUSED</div><p>The tower is frozen exactly where you left it.</p><button class="play" id="resume">Resume</button></div></div>
+</div></div>
 <script>
-(()=>{'use strict';
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id),W=900,H=900,CX=450,WATER=772,BASE_Y=710,ROW_GAP=122,PENG_W=66,PENG_H=76,SHELF_W=388,SHELF_H=16,COLORS=['#e95b67','#e4b84d','#54a6d6','#7cc273','#a776d1'];
-const save=Object.assign({best:0,perfects:0,sound:true},window.__POCKETVM_SAVE||{});
-let running=false,paused=false,score=0,last=performance.now(),penguins=[],shelves=[],king=null,drag=null,collapse=null,lastMoved=-1,splashes=[],snow=[],tipTimer=0,audioCtx=null,runToken=0;
+(()=>{
+'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
+const W=960,H=920,CX=480,WATER=790,BASE_Y=716,ROW_GAP=126,PW=67,PH=78,SHELF_W=410,SHELF_H=18,ROWS=4,COLS=5;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rand=(a,b)=>a+Math.random()*(b-a);
+const SCARVES=['#ef5d6b','#e9bb4d','#50a8dc','#7ac77a','#ae79d8'];
+const save=Object.assign({best:0,perfects:0,crownPerfects:0,sound:true},window.__POCKETVM_SAVE||{});
+let running=false,paused=false,score=0,last=performance.now(),runToken=0,penguins=[],shelves=[],king=null,crown=null,drag=null,hover=null,collapse=null;
+let stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100},lastDragSpeed=0,creakCooldown=0,endDelay=0,shake=0,tipTimer=0;
+let splashes=[],particles=[],snow=[],audioCtx=null;
+
+function rr(x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function persist(){save.best=Math.max(save.best,score);parent.postMessage({type:'pocketvm-penguin-save',data:save},'*');updateHud()}
-function updateHud(){$('score').textContent=score;$('best').textContent=save.best;$('startBest').textContent=save.best}
-function beep(freq=400,dur=.05,type='sine',gain=.035){if(!save.sound)return;try{audioCtx??=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=gain;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur+.01)}catch{}}
-function splash(x,y=WATER){splashes.push({x,y,t:0});beep(210,.08,'triangle',.025)}
+function updateHud(){
+  $('score').textContent=score;$('best').textContent=save.best;$('startBest').textContent=save.best;$('crownPerfects').textContent=save.crownPerfects||0;
+  const danger=Math.min(1,Math.max(Math.abs(stress.ratio),stress.danger*1.15)),pct=Math.round(8+danger*92);
+  $('stabilityBar').style.width=pct+'%';
+  $('stabilityText').textContent=collapse?'TOWER FALLING':danger>.93?'DANGER':danger>.68?'WOBBLING':danger>.42?'UNDER LOAD':'TOWER STEADY';
+  $('stabilityHint').textContent=drag?(drag.p.row===0?'Bottom row: maximum load. Pull gently.':drag.p.row===1?'Heavy load. Keep it smooth.':'Upper row: lighter, but still structural.'):'Pull slowly. Lower rows carry more weight.';
+  $('crownState').textContent=crown&&crown.attached?'♛ Crown secure':'♛ Crown lost';
+  $('crownState').style.color=crown&&crown.attached?'#ffe884':'#ff9f94'
+}
 function setTip(text,seconds=2.4){$('tip').textContent=text;$('tip').classList.remove('fade');tipTimer=seconds}
-function resetWorld(){runToken++;score=0;running=true;paused=false;drag=null;collapse=null;lastMoved=-1;splashes=[];penguins=[];shelves=[];snow=[];tipTimer=4;for(let i=0;i<70;i++)snow.push({x:Math.random()*W,y:Math.random()*WATER,r:1+Math.random()*2.5,s:.2+Math.random()*.65});for(let r=0;r<4;r++){const shelfY=BASE_Y-r*ROW_GAP;shelves.push({row:r,x:CX,y:shelfY,w:SHELF_W,h:SHELF_H});for(let i=0;i<5;i++){const x=CX+(i-2)*72+(r%2?6:-6);penguins.push({id:r*5+i,row:r,slot:i,x,y:shelfY-PENG_H/2-10,homeX:x,homeY:shelfY-PENG_H/2-10,state:'stacked',vx:0,vy:0,a:0,av:0,scarf:COLORS[(r*5+i)%COLORS.length],dir:(i+r)%2?1:-1})}}shelves.push({row:4,x:CX,y:BASE_Y-4*ROW_GAP,w:SHELF_W,h:SHELF_H});king={x:CX,y:shelves[4].y-66,a:0,wet:false};$('over').classList.add('hidden');$('paused').classList.add('hidden');$('start').classList.add('hidden');$('tip').classList.remove('fade');updateHud();setTip('Drag one small penguin free, then drop it into the sea.',4);last=performance.now();const token=runToken;requestAnimationFrame(now=>loop(now,token))}
-function shelfYFor(row){return BASE_Y-row*ROW_GAP}
-function transformForEntity(x,y,row){if(!collapse||row<=collapse.row)return{x,y,a:0};const pivotY=shelfYFor(collapse.row+1),pivotX=collapse.pivotX,ang=collapse.angle,dx=x-pivotX,dy=y-pivotY;return{x:pivotX+Math.cos(ang)*dx-Math.sin(ang)*dy+collapse.dx,y:pivotY+Math.sin(ang)*dx+Math.cos(ang)*dy+collapse.dy,a:ang}}
-function supportRange(row){const members=penguins.filter(p=>p.row===row&&p.state==='stacked'&&(!drag||drag.p.id!==p.id||Math.abs(p.x-p.homeX)<24));if(!members.length)return null;return{min:Math.min(...members.map(p=>p.x-PENG_W*.48)),max:Math.max(...members.map(p=>p.x+PENG_W*.48)),members}}
-function aboveCOM(row){const pts=[];for(const p of penguins)if(p.row>row&&p.state==='stacked')pts.push(p.x);pts.push(king?.x??CX);return pts.reduce((a,b)=>a+b,0)/Math.max(1,pts.length)}
-function checkStability(){if(collapse||!running)return;for(let row=3;row>=0;row--){const s=supportRange(row),com=aboveCOM(row);if(!s){startCollapse(row,com<CX?-1:1,CX);return}const margin=12;if(com<s.min+margin||com>s.max-margin){const dir=com<(s.min+s.max)/2?-1:1,pivotX=dir<0?s.min:s.max;startCollapse(row,dir,pivotX);return}}}
-function startCollapse(row,dir,pivotX){if(collapse)return;collapse={row,dir,pivotX,angle:0,av:dir*.18,dx:0,dy:0,vy:0};setTip('Uh-oh… the royal is waking up!',3);beep(105,.28,'sawtooth',.04)}
-function penguinAt(x,y){for(let i=penguins.length-1;i>=0;i--){const p=penguins[i];if(p.state!=='stacked')continue;const t=transformForEntity(p.x,p.y,p.row);if(Math.abs(x-t.x)<PENG_W*.55&&Math.abs(y-t.y)<PENG_H*.55)return p}return null}
+function haptic(pattern){try{window.navigator&&window.navigator.vibrate&&window.navigator.vibrate(pattern)}catch{}}
+function tone(freq=400,dur=.05,type='sine',gain=.025,slide=0){
+  if(!save.sound)return;
+  try{audioCtx??=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,freq+slide),t+dur);g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur+.02)}catch{}
+}
+function splash(x,power=1){splashes.push({x,y:WATER+3,t:0,power});for(let i=0;i<8;i++)particles.push({x:x+rand(-8,8),y:WATER,vx:rand(-70,70)*power,vy:rand(-180,-70)*power,t:0,life:rand(.45,.8),r:rand(2,5),kind:'water'});tone(180+power*25,.09,'triangle',.025,-45)}
+function iceDust(x,y,n=5){for(let i=0;i<n;i++)particles.push({x:x+rand(-12,12),y:y+rand(-7,7),vx:rand(-45,45),vy:rand(-45,5),t:0,life:rand(.25,.55),r:rand(1,3),kind:'ice'})}
+
+function buildTower(){
+  penguins=[];shelves=[];splashes=[];particles=[];collapse=null;drag=null;hover=null;score=0;endDelay=0;shake=0;lastDragSpeed=0;
+  stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100};
+  const rowShift=[0,7,-6,4];
+  for(let r=0;r<ROWS;r++){
+    const sy=BASE_Y-r*ROW_GAP;shelves.push({row:r,x:CX,y:sy});
+    for(let i=0;i<COLS;i++){
+      const x=CX+(i-2)*73+rowShift[r],y=sy-PH/2-11;
+      penguins.push({id:r*COLS+i,row:r,slot:i,x,y,homeX:x,homeY:y,state:'stacked',vx:0,vy:0,a:rand(-.012,.012),av:0,scarf:SCARVES[(i+r*2)%SCARVES.length],dir:(i+r)%2?1:-1,restShelf:-1});
+    }
+  }
+  shelves.push({row:ROWS,x:CX,y:BASE_Y-ROWS*ROW_GAP});
+  king={x:CX+2,y:shelves[ROWS].y-68,wet:false};
+  crown={attached:true,everLost:false,state:'attached',x:0,y:0,vx:0,vy:0,a:0,av:0};
+}
+function startGame(){runToken++;buildTower();running=true;paused=false;$('start').classList.add('hidden');$('over').classList.add('hidden');$('paused').classList.add('hidden');$('tip').classList.remove('fade');setTip('Pull a penguin free, then drop that penguin into the sea.',4);updateHud();last=performance.now();const token=runToken;requestAnimationFrame(n=>loop(n,token))}
+function shelfY(row){return BASE_Y-row*ROW_GAP}
+function contactFactor(p){
+  if(p.state==='stacked')return clamp(1-Math.abs(p.x-p.homeX)/125-Math.abs(p.y-p.homeY)/150,.55,1);
+  if(p.state!=='held')return 0;
+  const dx=Math.abs(p.x-p.homeX),dy=Math.abs(p.y-p.homeY);
+  return clamp(1-Math.max(dx/(PW*.94),dy/(PH*.9)),0,1)
+}
+function supportData(row){
+  const contacts=[];
+  for(const p of penguins)if(p.row===row&&(p.state==='stacked'||p.state==='held')){
+    const f=contactFactor(p);if(f>.035)contacts.push({p,f,l:p.x-PW*.48*f,r:p.x+PW*.48*f})
+  }
+  if(!contacts.length)return null;
+  return{min:Math.min(...contacts.map(c=>c.l)),max:Math.max(...contacts.map(c=>c.r)),contacts}
+}
+function upperCOM(row){
+  let sum=0,mass=0;
+  for(const p of penguins)if(p.row>row&&(p.state==='stacked'||p.state==='held')){sum+=p.x;mass+=1}
+  for(let s=row+1;s<shelves.length;s++){sum+=CX*1.35;mass+=1.35}
+  sum+=(king?king.x:CX)*1.9;mass+=1.9;
+  if(crown&&crown.attached){sum+=CX*.25;mass+=.25}
+  return mass?sum/mass:CX
+}
+function evaluateStability(dt=0){
+  let weak={row:0,ratio:0,abs:0,pivotX:CX,min:CX-100,max:CX+100};
+  for(let row=0;row<ROWS;row++){
+    const s=supportData(row),com=upperCOM(row);
+    let ratio,min,max,pivotX;
+    if(!s){ratio=com<CX?-2.2:2.2;min=max=pivotX=CX}
+    else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max}
+    if(Math.abs(ratio)>weak.abs)weak={row,ratio,abs:Math.abs(ratio),pivotX,min,max}
+  }
+  stress.row=weak.row;stress.ratio=weak.ratio;stress.pivotX=weak.pivotX;stress.min=weak.min;stress.max=weak.max;
+  const yank=clamp(lastDragSpeed/850,0,1),target=clamp(weak.ratio,-1.2,1.2)*(.052+yank*.018);
+  stress.target=target;
+  if(dt>0){
+    stress.angle+= (target-stress.angle)*Math.min(1,dt*(weak.abs>.75?7:5));
+    if(weak.abs>.96){
+      const rate=1+yank*1.8+(weak.abs>1.3?2.5:0);stress.danger+=dt*rate
+    }else stress.danger=Math.max(0,stress.danger-dt*2.8);
+    if(weak.abs>.72&&creakCooldown<=0){tone(95+weak.abs*35,.16,'sawtooth',.009,-18);creakCooldown=.55+Math.random()*.35}
+    const threshold=weak.abs>1.55?.10:Math.max(.20,.48-yank*.22);
+    if(!collapse&&stress.danger>threshold)startCollapse(weak)
+  }
+  updateHud();return weak
+}
+function worldTransform(x,y,level){
+  let angle=0,pivotX=CX,pivotY=shelfY(stress.row+1),dx=0,dy=0,row=stress.row;
+  if(collapse){row=collapse.row;if(level<=row)return{x,y,a:0};angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1);dx=collapse.dx;dy=collapse.dy}
+  else{if(level<=row)return{x,y,a:0};angle=stress.angle;pivotX=stress.pivotX;pivotY=shelfY(row+1)}
+  const rx=x-pivotX,ry=y-pivotY,c=Math.cos(angle),s=Math.sin(angle);
+  return{x:pivotX+c*rx-s*ry+dx,y:pivotY+s*rx+c*ry+dy,a:angle}
+}
+function startCollapse(weak){
+  if(collapse)return;
+  const dir=weak.ratio<0?-1:1;collapse={row:weak.row,dir,pivotX:weak.pivotX,angle:stress.angle,av:dir*(.22+Math.abs(stress.angle)*1.8),dx:0,dy:0,vy:0};
+  setTip('The tower is going! Save the royal!',3);shake=9;haptic([35,40,55]);tone(82,.34,'sawtooth',.045,-30);detachCrown(true)
+}
+function crownWorld(){
+  if(!crown)return{x:CX,y:100,a:0};
+  if(!crown.attached)return{x:crown.x,y:crown.y,a:crown.a};
+  return worldTransform(king.x-5,king.y-59,ROWS+1)
+}
+function detachCrown(force=false){
+  if(!crown||!crown.attached)return;
+  const t=crownWorld();crown.attached=false;crown.everLost=true;crown.state='loose';crown.x=t.x;crown.y=t.y;crown.a=t.a;crown.vx=(collapse?collapse.dir:Math.sign(stress.ratio||1))*rand(90,170)+(force?rand(-30,30):0);crown.vy=rand(-95,-35);crown.av=rand(-3.4,3.4);
+  setTip('The crown came off — the run can continue.',2.4);tone(620,.08,'square',.018,-180);haptic(25);updateHud()
+}
+function penguinAt(x,y){
+  for(let i=penguins.length-1;i>=0;i--){const p=penguins[i];if(p.state!=='stacked')continue;const t=worldTransform(p.x,p.y,p.row);if(Math.abs(x-t.x)<PW*.55&&Math.abs(y-t.y)<PH*.55)return p}
+  return null
+}
 function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
-function onDown(e){if(!running||paused||collapse)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();drag={p,offX:pt.x-p.x,offY:pt.y-p.y,startX:p.x,startY:p.y,moved:false,pointerId:e.pointerId};lastMoved=p.id;try{canvas.setPointerCapture(e.pointerId)}catch{}beep(330,.035,'triangle',.018)}
-function onMove(e){if(!drag||drag.pointerId!==e.pointerId||paused)return;e.preventDefault();const pt=pointer(e),p=drag.p;p.x=pt.x-drag.offX;p.y=pt.y-drag.offY;drag.moved=drag.moved||Math.hypot(p.x-drag.startX,p.y-drag.startY)>8;if(drag.moved)checkStability()}
-function rescue(p){if(p.state==='rescued')return;p.state='rescued';score=Math.min(20,score+1);save.best=Math.max(save.best,score);splash(p.x);const risk=3-p.row;beep(520+risk*55,.07,'sine',.035);setTip(score===20?'Every little penguin is safe!':score%5===0?score+' rescued — keep the royal dry!':'Safe! '+(20-score)+' left.',2.1);persist();if(score===20){save.perfects=(save.perfects||0)+1;persist();finish(true)}}
-function onUp(e){if(!drag||drag.pointerId!==e.pointerId)return;e.preventDefault();const p=drag.p;drag=null;const inSea=p.y>WATER-20||((p.x<90||p.x>810)&&p.y>520);if(inSea){rescue(p);checkStability();return}const dx=p.x-p.homeX,dy=p.y-p.homeY;if(Math.hypot(dx,dy)<24&&!collapse){p.x=p.homeX;p.y=p.homeY;setTip('Still in the tower. Pick a direction and commit.',1.7);return}p.state='loose';p.vx=Math.sign(dx||1)*(170+Math.min(240,Math.abs(dx)*1.3));p.vy=Math.min(80,dy*1.4);p.av=(Math.random()-.5)*4;checkStability()}
-function finish(perfect=false){if(!running)return;running=false;paused=false;runToken++;persist();$('finalScore').textContent=score;$('finalBest').textContent=save.best;const rating=perfect?'EMPEROR PENGUIN!':score>=15?'Royal Rescuer':score>=10?'Ice Expert':score>=5?'Brave Waddler':'Slippery Start';$('rating').textContent=rating;$('overText').textContent=perfect?'All 20 are safe, and the royal somehow stayed dry.':score+' penguin'+(score===1?'':'s')+' rescued before the royal took a swim.';$('over').classList.remove('hidden')}
-function update(dt){if(!running||paused)return;if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)$('tip').classList.add('fade')}for(const p of penguins){if(p.state!=='loose')continue;p.vy+=650*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.pow(.995,dt*60);if(p.y>WATER&&p.state==='loose'){if(p.id===lastMoved)rescue(p);else{p.state='lost';splash(p.x)}}}if(collapse){collapse.av+=collapse.dir*.72*dt;collapse.angle+=collapse.av*dt;collapse.vy+=210*dt;collapse.dy+=collapse.vy*dt;collapse.dx+=collapse.dir*30*dt;const kt=transformForEntity(king.x,king.y,5);king.a=kt.a;if(kt.y>WATER+25&&!king.wet){king.wet=true;splash(kt.x);beep(78,.45,'sawtooth',.055);setTimeout(()=>finish(false),420)}}for(const s of splashes)s.t+=dt;splashes=splashes.filter(s=>s.t<1)}
-function round(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
-function drawBackground(){const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#7ed7ef');sky.addColorStop(.63,'#d9f4f7');sky.addColorStop(.631,'#2389aa');sky.addColorStop(1,'#075b80');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);ctx.fillStyle='#f6fcff';ctx.beginPath();ctx.moveTo(0,560);for(let x=0;x<=W;x+=70)ctx.lineTo(x,530+Math.sin(x*.017)*28);ctx.lineTo(W,690);ctx.lineTo(0,690);ctx.closePath();ctx.fill();ctx.fillStyle='#c9edf3';ctx.beginPath();ctx.moveTo(0,610);for(let x=0;x<=W;x+=55)ctx.lineTo(x,582+Math.cos(x*.021)*18);ctx.lineTo(W,700);ctx.lineTo(0,700);ctx.closePath();ctx.fill();for(const f of snow){f.y+=f.s;if(f.y>WATER){f.y=-5;f.x=Math.random()*W}ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill()}ctx.globalAlpha=1;ctx.strokeStyle='rgba(226,251,255,.27)';ctx.lineWidth=2;for(let y=WATER+30;y<H;y+=38){ctx.beginPath();for(let x=0;x<=W;x+=30){const yy=y+Math.sin(x*.035+performance.now()*.0014)*4;x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}ctx.stroke()}}
-function drawShelf(s){const t=transformForEntity(s.x,s.y,s.row);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);ctx.fillStyle='#d9f7ff';round(-SHELF_W/2,-SHELF_H/2,SHELF_W,SHELF_H,8);ctx.fill();ctx.fillStyle='#8bd8e8';round(-SHELF_W/2+5,3,SHELF_W-10,8,5);ctx.fill();ctx.strokeStyle='#fff9';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-SHELF_W*.43,-3);ctx.lineTo(-SHELF_W*.18,-4);ctx.moveTo(18,-4);ctx.lineTo(92,-3);ctx.stroke();ctx.restore()}
-function drawPenguin(p){if(p.state==='rescued'||p.state==='lost')return;const t=p.state==='stacked'?transformForEntity(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);ctx.scale(p.dir,1);ctx.fillStyle='rgba(0,50,70,.17)';ctx.beginPath();ctx.ellipse(0,31,27,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#121b22';ctx.beginPath();ctx.ellipse(0,2,28,37,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f7fbf5';ctx.beginPath();ctx.ellipse(6,10,19,27,-.14,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111a20';ctx.beginPath();ctx.ellipse(-22,2,9,22,-.6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f4a52b';ctx.beginPath();ctx.moveTo(20,-8);ctx.lineTo(40,-2);ctx.lineTo(21,5);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(13,-13,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#162029';ctx.beginPath();ctx.arc(15,-12,2.4,0,Math.PI*2);ctx.fill();ctx.strokeStyle=p.scarf;ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,-2,25,.15,Math.PI-.15);ctx.stroke();ctx.fillStyle=p.scarf;round(-23,-1,12,26,5);ctx.fill();ctx.fillStyle='#ed9d28';ctx.beginPath();ctx.ellipse(-12,36,13,5,-.15,0,Math.PI*2);ctx.ellipse(12,36,13,5,.15,0,Math.PI*2);ctx.fill();ctx.restore()}
-function drawKing(){if(!king)return;const t=transformForEntity(king.x,king.y,5);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);ctx.fillStyle='rgba(0,50,70,.17)';ctx.beginPath();ctx.ellipse(0,45,36,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#0c141c';ctx.beginPath();ctx.ellipse(0,8,39,50,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f7fbf5';ctx.beginPath();ctx.ellipse(8,18,27,36,-.1,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f4a52b';ctx.beginPath();ctx.moveTo(28,-6);ctx.lineTo(57,2);ctx.lineTo(29,12);ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(18,-14,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#273540';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(13,-13);ctx.lineTo(23,-13);ctx.stroke();ctx.fillStyle='#f4cb42';ctx.beginPath();ctx.moveTo(-24,-38);ctx.lineTo(-13,-61);ctx.lineTo(0,-42);ctx.lineTo(13,-64);ctx.lineTo(25,-38);ctx.lineTo(20,-24);ctx.lineTo(-19,-24);ctx.closePath();ctx.fill();ctx.strokeStyle='#ad7e18';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#dff8ff';ctx.font='900 22px system-ui';ctx.fillText('Z',45,-35);ctx.font='900 14px system-ui';ctx.fillText('z',62,-51);ctx.restore()}
-function drawSplashes(){for(const s of splashes){const a=1-s.t;ctx.globalAlpha=a;ctx.strokeStyle='#d8f9ff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(s.x,WATER+8,s.t*62+8,s.t*16+3,0,0,Math.PI*2);ctx.stroke();for(let i=0;i<5;i++){const ang=-Math.PI*(.2+i*.15),r=22+s.t*40;ctx.fillStyle='#e7fcff';ctx.beginPath();ctx.arc(s.x+Math.cos(ang)*r,WATER-Math.sin(Math.abs(ang))*r*.5,3,0,Math.PI*2);ctx.fill()}}ctx.globalAlpha=1}
-function draw(){drawBackground();for(const s of shelves)drawShelf(s);for(const p of penguins)drawPenguin(p);drawKing();drawSplashes();if(drag&&!collapse){ctx.strokeStyle='#fff8';ctx.lineWidth=2;ctx.setLineDash([7,7]);ctx.beginPath();ctx.moveTo(drag.p.x,drag.p.y);ctx.lineTo(drag.p.x<450?70:830,Math.max(570,drag.p.y));ctx.stroke();ctx.setLineDash([])}}
+function onDown(e){
+  if(!running||paused||collapse||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
+  p.state='held';drag={p,pointerId:e.pointerId,targetX:p.x,targetY:p.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
+  canvas.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch{}tone(320,.035,'triangle',.013);iceDust(p.x,p.y+30,3)
+}
+function onMove(e){
+  const pt=pointer(e);if(!drag){hover=running&&!paused&&!collapse?penguinAt(pt.x,pt.y):null;return}
+  if(drag.pointerId!==e.pointerId||paused)return;e.preventDefault();const now=performance.now(),dt=Math.max(8,now-drag.lastT),dx=pt.x-drag.lastPX,dy=pt.y-drag.lastPY;
+  drag.speed=clamp(Math.hypot(dx,dy)/dt*1000,0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.targetX=pt.x;drag.targetY=pt.y;
+  if(!drag.committed&&Math.hypot(pt.x-drag.startX,pt.y-drag.startY)>9){drag.committed=true;drag.moved=true}
+}
+function releaseDrag(e,cancel=false){
+  if(!drag||(!cancel&&drag.pointerId!==e.pointerId))return;if(!cancel)e.preventDefault();
+  const d=drag,p=d.p;drag=null;canvas.classList.remove('dragging');
+  if(cancel||!d.committed){p.state='stacked';p.x=p.homeX;p.y=p.homeY;lastDragSpeed=0;evaluateStability(0);return}
+  const inSea=p.y>WATER-12;
+  if(inSea){lastMoved=p.id;rescue(p);lastDragSpeed=0;evaluateStability(.01);return}
+  p.state='loose';lastMoved=p.id;p.vx=clamp((p.x-d.startX)*2.4,-520,520)+Math.sign(d.targetX-d.lastPX||1)*d.speed*.12;p.vy=clamp((p.y-d.startY)*1.5,-300,260);p.av=rand(-3.2,3.2);p.restShelf=-1;
+  iceDust(p.x,p.y,5);evaluateStability(.02);lastDragSpeed*=.5
+}
+function onUp(e){releaseDrag(e,false)}
+function onCancel(e){releaseDrag(e,true)}
+function rescue(p){
+  if(p.state==='rescued'||p.state==='lost')return;
+  p.state='rescued';score=Math.min(20,score+1);save.best=Math.max(save.best,score);splash(p.x,1);shake=Math.max(shake,2.5);tone(520+score*8,.07,'sine',.024,80);haptic(18);
+  if(score===20){save.perfects=(save.perfects||0)+1;if(crown.attached&&!crown.everLost)save.crownPerfects=(save.crownPerfects||0)+1;persist();finish(true);return}
+  if(score%5===0)setTip(score+' rescued. '+(20-score)+' to go.',2.2);else setTip('Safe! '+(20-score)+' left.',1.4);
+  persist()
+}
+function bumpStack(loose,dt){
+  const speed=Math.hypot(loose.vx,loose.vy);if(speed<95)return;
+  for(const q of penguins){if(q.state!=='stacked')continue;const t=worldTransform(q.x,q.y,q.row),dx=q.x-loose.x,dy=q.y-loose.y;if(Math.abs(dx)>58||Math.abs(dy)>60)continue;
+    const push=Math.sign(loose.vx||dx||1)*Math.min(24,speed*.018);q.x=clamp(q.x+push*dt*14,q.homeX-34,q.homeX+34);iceDust(q.x,q.y,2);
+    if(speed>430&&Math.abs(q.x-q.homeX)>25){q.state='loose';q.vx=loose.vx*.34;q.vy=Math.min(-35,loose.vy*.16);q.av=rand(-2.6,2.6);q.restShelf=-1}
+    loose.vx*=.78;shake=Math.max(shake,1.5);evaluateStability(.01)
+  }
+}
+function collideShelves(p,prevY){
+  if(p.vy<=0)return;
+  for(let r=0;r<shelves.length;r++){const sy=shelfY(r)-PH*.42;if(prevY<=sy&&p.y>=sy&&Math.abs(p.x-CX)<SHELF_W*.53){p.y=sy;p.vy=Math.abs(p.vy)>95?-Math.abs(p.vy)*.16:0;p.vx*=.83;p.av*=.72;p.restShelf=r;return}}
+}
+function updateLoose(dt){
+  for(const p of penguins){if(p.state!=='loose')continue;const prevY=p.y;p.vy+=720*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.pow(.994,dt*60);p.av*=Math.pow(.992,dt*60);
+    if(p.x<25){p.x=25;p.vx=Math.abs(p.vx)*.45}else if(p.x>W-25){p.x=W-25;p.vx=-Math.abs(p.vx)*.45}
+    collideShelves(p,prevY);bumpStack(p,dt);
+    if(p.y>WATER+12){if(p.id===lastMoved)rescue(p);else{p.state='lost';splash(p.x,.85)}}
+  }
+}
+function updateHeld(dt){
+  if(!drag)return;const p=drag.p,load=1+(ROWS-1-p.row)*.48,response=clamp(12/load,4.2,12);
+  p.x+= (drag.targetX-p.x)*Math.min(1,dt*response);p.y+=(drag.targetY-p.y)*Math.min(1,dt*response);
+  const movement=Math.hypot(p.x-p.homeX,p.y-p.homeY);
+  if(movement>14&&!drag.moved){drag.moved=true;drag.committed=true}
+  for(const q of penguins){if(q===p||q.row!==p.row||q.state!=='stacked')continue;const dx=q.x-p.x,dy=q.y-p.y;if(Math.abs(dx)<PW*.82&&Math.abs(dy)<PH*.64){const overlap=PW*.82-Math.abs(dx),push=Math.sign(dx||1)*overlap*.035;q.x=clamp(q.x+push,q.homeX-20,q.homeX+20)}}
+  if(movement>20&&Math.random()<dt*9)iceDust(p.x,p.y+PH*.35,1);
+  evaluateStability(dt);
+  if(!collapse&&crown.attached&&Math.abs(stress.angle)>.058&&drag.speed>720)detachCrown(false)
+}
+function updateCrown(dt){
+  if(!crown||crown.attached)return;
+  if(crown.state==='loose'){crown.vy+=660*dt;crown.x+=crown.vx*dt;crown.y+=crown.vy*dt;crown.a+=crown.av*dt;crown.vx*=Math.pow(.997,dt*60);if(crown.y>WATER){crown.state='sunk';splash(crown.x,.65)}}
+}
+function update(dt){
+  if(!running||paused)return;
+  if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)$('tip').classList.add('fade')}
+  creakCooldown=Math.max(0,creakCooldown-dt);shake=Math.max(0,shake-dt*15);
+  for(const p of penguins)if(p.state==='stacked'&&(!drag||drag.p!==p)){p.x+= (p.homeX-p.x)*Math.min(1,dt*.65);p.y+=(p.homeY-p.y)*Math.min(1,dt*.8)}
+  updateHeld(dt);if(!drag&&!collapse)evaluateStability(dt);updateLoose(dt);updateCrown(dt);
+  if(collapse){
+    collapse.av+=collapse.dir*.82*dt;collapse.angle=clamp(collapse.angle+collapse.av*dt,-1.62,1.62);collapse.vy+=245*dt;collapse.dy+=collapse.vy*dt;collapse.dx+=collapse.dir*34*dt;
+    if(crown.attached&&Math.abs(collapse.angle)>.16)detachCrown(true);
+    const k=worldTransform(king.x,king.y,ROWS+1);if(k.y>WATER+24&&!king.wet){king.wet=true;splash(k.x,1.35);shake=12;haptic([65,50,90]);tone(72,.46,'sawtooth',.05,-28);endDelay=.55}
+  }
+  if(endDelay>0){endDelay-=dt;if(endDelay<=0)finish(false)}
+  for(const s of splashes)s.t+=dt;splashes=splashes.filter(s=>s.t<1);
+  for(const p of particles){p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=(p.kind==='water'?300:170)*dt}particles=particles.filter(p=>p.t<p.life);
+}
+function finish(perfect=false){
+  if(!running)return;running=false;paused=false;runToken++;persist();
+  $('finalScore').textContent=score;$('finalBest').textContent=save.best;
+  let rating=perfect?'EMPEROR PENGUIN!':score>=16?'ROYAL RESCUER':score>=11?'ICE EXPERT':score>=6?'BRAVE WADDLER':'SLIPPERY START';
+  $('rating').textContent=rating;
+  $('subrating').textContent=perfect?(crown.attached&&!crown.everLost?'CROWN INTACT · FLAWLESS RUN':'ALL TWENTY RESCUED'):(crown&&crown.attached?'THE CROWN SURVIVED':'THE CROWN WAS LOST');
+  $('overText').textContent=perfect?'Every little penguin made it safely to sea.':score+' penguin'+(score===1?'':'s')+' rescued before the royal took a swim.';
+  $('over').classList.remove('hidden')
+}
+function drawBackground(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#61c7e8');g.addColorStop(.43,'#b9edf5');g.addColorStop(.69,'#e8f9fa');g.addColorStop(.691,'#2489aa');g.addColorStop(1,'#075977');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=.34;ctx.fillStyle='#dffcff';ctx.beginPath();ctx.ellipse(175,115,250,70,-.18,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d9f1ff';ctx.beginPath();ctx.ellipse(720,145,290,76,.22,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  ctx.fillStyle='#eaf8fb';ctx.beginPath();ctx.moveTo(0,555);for(let x=0;x<=W;x+=64)ctx.lineTo(x,510+Math.sin(x*.016)*36+Math.cos(x*.007)*18);ctx.lineTo(W,688);ctx.lineTo(0,688);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c7e9ef';ctx.beginPath();ctx.moveTo(0,616);for(let x=0;x<=W;x+=56)ctx.lineTo(x,578+Math.cos(x*.019)*22);ctx.lineTo(W,706);ctx.lineTo(0,706);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#f7fdff';ctx.beginPath();ctx.ellipse(CX,720,310,54,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#bfeaf2';ctx.beginPath();ctx.ellipse(CX,737,275,30,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(225,250,255,.27)';ctx.lineWidth=2;for(let y=WATER+24;y<H;y+=34){ctx.beginPath();for(let x=0;x<=W;x+=26){const yy=y+Math.sin(x*.035+performance.now()*.0012+y*.01)*3;x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}ctx.stroke()}
+  for(const f of snow){f.y+=f.s;if(f.y>WATER){f.y=-5;f.x=Math.random()*W}ctx.globalAlpha=f.o;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1
+  if(drag){const pulse=.12+Math.sin(performance.now()*.007)*.025;ctx.fillStyle='rgba(142,239,255,'+pulse+')';ctx.fillRect(0,WATER-18,W,138);ctx.fillStyle='#eaffff';ctx.globalAlpha=.9;ctx.font='900 14px system-ui';ctx.textAlign='center';ctx.fillText('DROP INTO THE SEA TO RESCUE',CX,WATER+50);ctx.globalAlpha=1}
+}
+function drawShelf(s){
+  const t=worldTransform(s.x,s.y,s.row);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);
+  ctx.shadowColor='rgba(9,75,98,.22)';ctx.shadowBlur=14;ctx.shadowOffsetY=8;ctx.fillStyle='#dffaff';rr(-SHELF_W/2,-SHELF_H/2,SHELF_W,SHELF_H,8);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#85d9e9';rr(-SHELF_W/2+5,3,SHELF_W-10,9,5);ctx.fill();
+  ctx.strokeStyle='#ffffffa8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-170,-3);ctx.lineTo(-85,-4);ctx.moveTo(-38,-4);ctx.lineTo(23,-3);ctx.moveTo(78,-3);ctx.lineTo(155,-4);ctx.stroke();
+  ctx.strokeStyle='#78c8da';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(-105,1);ctx.lineTo(-82,8);ctx.lineTo(-62,2);ctx.moveTo(54,1);ctx.lineTo(75,8);ctx.lineTo(96,2);ctx.stroke();ctx.restore()
+}
+function drawPenguin(p){
+  if(p.state==='rescued'||p.state==='lost')return;
+  const t=(p.state==='stacked'||p.state==='held')?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
+  const held=drag&&drag.p===p;ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a+p.a);ctx.scale(p.dir,1);
+  if(held){ctx.shadowColor='#fff8a8';ctx.shadowBlur=20}else{ctx.shadowColor='rgba(3,37,52,.24)';ctx.shadowBlur=8}ctx.shadowOffsetY=5;
+  ctx.fillStyle='#111a21';ctx.beginPath();ctx.ellipse(0,2,29,38,0,0,Math.PI*2);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#f8fbf6';ctx.beginPath();ctx.ellipse(7,11,20,28,-.14,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#0f181f';ctx.beginPath();ctx.ellipse(-23,5,9,23,-.58,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#f0a128';ctx.beginPath();ctx.moveTo(21,-8);ctx.lineTo(42,-1);ctx.lineTo(21,6);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(13,-14,6.5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#14212a';ctx.beginPath();ctx.arc(15,-13,2.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=p.scarf;ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,-2,25,.16,Math.PI-.18);ctx.stroke();ctx.fillStyle=p.scarf;rr(-23,-1,12,28,5);ctx.fill();
+  ctx.fillStyle='#ed9d28';ctx.beginPath();ctx.ellipse(-12,37,13,5,-.14,0,Math.PI*2);ctx.ellipse(12,37,13,5,.14,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  if(hover===p&&!drag){ctx.save();ctx.strokeStyle='#fff8b0';ctx.lineWidth=3;ctx.globalAlpha=.72;ctx.beginPath();ctx.ellipse(t.x,t.y,39,48,0,0,Math.PI*2);ctx.stroke();ctx.restore()}
+}
+function drawKing(){
+  if(!king)return;const t=worldTransform(king.x,king.y,ROWS+1);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);
+  ctx.shadowColor='rgba(3,37,52,.28)';ctx.shadowBlur=11;ctx.shadowOffsetY=6;ctx.fillStyle='#0c151d';ctx.beginPath();ctx.ellipse(0,8,41,52,0,0,Math.PI*2);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#f8fbf6';ctx.beginPath();ctx.ellipse(9,18,28,37,-.1,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f2a12c';ctx.beginPath();ctx.moveTo(29,-6);ctx.lineTo(59,3);ctx.lineTo(30,13);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(19,-15,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#273540';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(14,-14);ctx.lineTo(24,-14);ctx.stroke();
+  ctx.fillStyle='#dff8ff';ctx.font='900 21px system-ui';ctx.textAlign='left';ctx.fillText('Z',46,-39);ctx.font='900 13px system-ui';ctx.fillText('z',64,-55);ctx.restore()
+}
+function drawCrownShape(x,y,a,alpha=1){
+  ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.globalAlpha=alpha;ctx.fillStyle='#f5cc45';ctx.strokeStyle='#9b7215';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-26,10);ctx.lineTo(-23,-16);ctx.lineTo(-10,-3);ctx.lineTo(0,-26);ctx.lineTo(12,-2);ctx.lineTo(25,-17);ctx.lineTo(24,11);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#fff0a1';for(const px of [-18,0,18]){ctx.beginPath();ctx.arc(px,7,3.2,0,Math.PI*2);ctx.fill()}ctx.restore()
+}
+function drawCrown(){if(!crown||crown.state==='sunk')return;const t=crownWorld();drawCrownShape(t.x,t.y,t.a)}
+function drawEffects(){
+  for(const s of splashes){const a=1-s.t;ctx.globalAlpha=a;ctx.strokeStyle='#dffbff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(s.x,WATER+7,s.t*70*s.power+8,s.t*17+3,0,0,Math.PI*2);ctx.stroke()}
+  for(const p of particles){ctx.globalAlpha=1-p.t/p.life;ctx.fillStyle=p.kind==='water'?'#ddfbff':'#effdff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1
+}
+function draw(){
+  ctx.save();if(shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();for(const s of shelves)drawShelf(s);for(const p of penguins)drawPenguin(p);drawKing();drawCrown();drawEffects();ctx.restore()
+}
 function loop(now,token){if(token!==runToken)return;const dt=Math.min(.033,(now-last)/1000||.016);last=now;update(dt);draw();if(running)requestAnimationFrame(n=>loop(n,token))}
-function togglePause(force){if(!running)return;paused=force??!paused;$('paused').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
-canvas.addEventListener('pointerdown',onDown);canvas.addEventListener('pointermove',onMove);canvas.addEventListener('pointerup',onUp);canvas.addEventListener('pointercancel',onUp);$('play').onclick=resetWorld;$('again').onclick=resetWorld;$('restart').onclick=()=>resetWorld();$('pause').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('sound').onclick=()=>{save.sound=!save.sound;$('sound').textContent=save.sound?'♪':'×';persist();if(save.sound)beep(500,.05)};window.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key.toLowerCase()==='p')togglePause();if(e.key.toLowerCase()==='r')resetWorld()});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});for(let i=0;i<70;i++)snow.push({x:Math.random()*W,y:Math.random()*WATER,r:1+Math.random()*2.5,s:.2+Math.random()*.65});$('sound').textContent=save.sound?'♪':'×';updateHud();drawBackground();parent.postMessage({type:'pocketvm-penguin-ready'},'*');
+function togglePause(force){if(!running)return;paused=force===undefined?!paused:force;$('paused').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+canvas.addEventListener('pointerdown',onDown);canvas.addEventListener('pointermove',onMove);canvas.addEventListener('pointerup',onUp);canvas.addEventListener('pointercancel',onCancel);canvas.addEventListener('pointerleave',()=>{if(!drag)hover=null});
+$('play').onclick=startGame;$('again').onclick=startGame;$('restart').onclick=()=>startGame();$('pause').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);
+$('sound').onclick=()=>{save.sound=!save.sound;$('sound').textContent=save.sound?'♪':'×';persist();if(save.sound)tone(510,.05,'sine',.02)};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key.toLowerCase()==='p')togglePause();if(e.key.toLowerCase()==='r')startGame()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+for(let i=0;i<78;i++)snow.push({x:Math.random()*W,y:Math.random()*WATER,r:rand(.8,2.6),s:rand(.15,.55),o:rand(.2,.65)});
+buildTower();$('sound').textContent=save.sound?'♪':'×';updateHud();draw();parent.postMessage({type:'pocketvm-penguin-ready'},'*');
 })();
-</script></body></html>
+</script>
+</body>
+</html>
