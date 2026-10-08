@@ -162,6 +162,13 @@ function worldTransform(x,y,level){
   const rx=x-pivotX,ry=y-pivotY,c=Math.cos(angle),s=Math.sin(angle);
   return{x:pivotX+c*rx-s*ry+dx,y:pivotY+s*rx+c*ry+dy,a:angle}
 }
+function localPoint(x,y,level){
+  let row=stress.row,angle=stress.angle,pivotX=stress.pivotX,pivotY=shelfY(row+1),dx=0,dy=0;
+  if(collapse){row=collapse.row;angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1);dx=collapse.dx;dy=collapse.dy}
+  if(level<=row)return{x,y};
+  const X=x-pivotX-dx,Y=y-pivotY-dy,c=Math.cos(angle),s=Math.sin(angle);
+  return{x:pivotX+c*X+s*Y,y:pivotY-s*X+c*Y}
+}
 function startCollapse(weak){
   if(collapse)return;
   const dir=weak.ratio<0?-1:1;collapse={row:weak.row,dir,pivotX:weak.pivotX,angle:stress.angle,av:dir*(.22+Math.abs(stress.angle)*1.8),dx:0,dy:0,vy:0};
@@ -184,20 +191,22 @@ function penguinAt(x,y){
 function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function onDown(e){
   if(!running||paused||collapse||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
-  p.state='held';drag={p,pointerId:e.pointerId,targetX:p.x,targetY:p.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
+  const lp=localPoint(pt.x,pt.y,p.row);p.state='held';drag={p,pointerId:e.pointerId,targetX:lp.x,targetY:lp.y,worldX:pt.x,worldY:pt.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
   canvas.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch{}tone(320,.035,'triangle',.013);iceDust(p.x,p.y+30,3)
 }
 function onMove(e){
   const pt=pointer(e);if(!drag){hover=running&&!paused&&!collapse?penguinAt(pt.x,pt.y):null;return}
   if(drag.pointerId!==e.pointerId||paused)return;e.preventDefault();const now=performance.now(),dt=Math.max(8,now-drag.lastT),dx=pt.x-drag.lastPX,dy=pt.y-drag.lastPY;
-  drag.speed=clamp(Math.hypot(dx,dy)/dt*1000,0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.targetX=pt.x;drag.targetY=pt.y;
+  drag.speed=clamp(Math.hypot(dx,dy)/dt*1000,0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.worldX=pt.x;drag.worldY=pt.y;const lp=localPoint(pt.x,pt.y,drag.p.row);drag.targetX=lp.x;drag.targetY=lp.y;
   if(!drag.committed&&Math.hypot(pt.x-drag.startX,pt.y-drag.startY)>9){drag.committed=true;drag.moved=true}
 }
 function releaseDrag(e,cancel=false){
   if(!drag||(!cancel&&drag.pointerId!==e.pointerId))return;if(!cancel)e.preventDefault();
   const d=drag,p=d.p;drag=null;canvas.classList.remove('dragging');
   if(cancel||!d.committed){p.state='stacked';p.x=p.homeX;p.y=p.homeY;lastDragSpeed=0;evaluateStability(0);return}
-  const inSea=p.y>WATER-12||d.targetY>WATER-12;
+  const inSea=p.y>WATER-12||d.worldY>WATER-12;
+  const returnedHome=Math.hypot(d.targetX-p.homeX,d.targetY-p.homeY)<30&&Math.hypot(p.x-p.homeX,p.y-p.homeY)<45;
+  if(returnedHome){p.state='stacked';p.x=p.homeX;p.y=p.homeY;p.vx=p.vy=p.av=0;setTip('Settled back into place.',1.1);lastDragSpeed=0;evaluateStability(.01);return}
   if(inSea){lastMoved=p.id;rescue(p);lastDragSpeed=0;evaluateStability(.01);return}
   p.state='loose';lastMoved=p.id;p.vx=clamp((p.x-d.startX)*2.4,-520,520)+Math.sign(d.targetX-d.lastPX||1)*d.speed*.12;p.vy=clamp((p.y-d.startY)*1.5,-300,260);p.av=rand(-3.2,3.2);p.restShelf=-1;
   iceDust(p.x,p.y,5);evaluateStability(.02);lastDragSpeed*=.5
@@ -213,7 +222,7 @@ function rescue(p){
 }
 function bumpStack(loose,dt){
   const speed=Math.hypot(loose.vx,loose.vy);if(speed<95)return;
-  for(const q of penguins){if(q.state!=='stacked')continue;const t=worldTransform(q.x,q.y,q.row),dx=q.x-loose.x,dy=q.y-loose.y;if(Math.abs(dx)>58||Math.abs(dy)>60)continue;
+  for(const q of penguins){if(q.state!=='stacked')continue;const t=worldTransform(q.x,q.y,q.row),dx=t.x-loose.x,dy=t.y-loose.y;if(Math.abs(dx)>58||Math.abs(dy)>60)continue;
     const push=Math.sign(loose.vx||dx||1)*Math.min(24,speed*.018);q.x=clamp(q.x+push*dt*14,q.homeX-34,q.homeX+34);iceDust(q.x,q.y,2);
     if(speed>430&&Math.abs(q.x-q.homeX)>25){q.state='loose';q.vx=loose.vx*.34;q.vy=Math.min(-35,loose.vy*.16);q.av=rand(-2.6,2.6);q.restShelf=-1}
     loose.vx*=.78;shake=Math.max(shake,1.5);evaluateStability(.01)
@@ -221,7 +230,7 @@ function bumpStack(loose,dt){
 }
 function collideShelves(p,prevY){
   if(p.vy<=0)return;
-  for(let r=0;r<shelves.length;r++){const sy=shelfY(r)-PH*.42;if(prevY<=sy&&p.y>=sy&&Math.abs(p.x-CX)<SHELF_W*.53){p.y=sy;p.vy=Math.abs(p.vy)>95?-Math.abs(p.vy)*.16:0;p.vx*=.83;p.av*=.72;p.restShelf=r;return}}
+  for(let r=0;r<shelves.length;r++){const wt=worldTransform(CX,shelfY(r),r),sy=wt.y-PH*.42;if(prevY<=sy&&p.y>=sy&&Math.abs(p.x-wt.x)<SHELF_W*.53){p.y=sy;p.vy=Math.abs(p.vy)>95?-Math.abs(p.vy)*.16:0;p.vx*=.83;p.av*=.72;p.restShelf=r;return}}
 }
 function updateLoose(dt){
   for(const p of penguins){if(p.state!=='loose')continue;const prevY=p.y;p.vy+=720*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.pow(.994,dt*60);p.av*=Math.pow(.992,dt*60);
