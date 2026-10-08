@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v63';
+const CACHE = 'pocketvm-shell-v64';
 const ASSETS = [
   './',
   './index.html',
@@ -19,6 +19,8 @@ const ASSETS = [
   './store/pvz/game.html',
   './store/flappy/icon.svg',
   './store/flappy/game.html',
+  './store/penguinpull/icon.svg',
+  './store/penguinpull/game.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
