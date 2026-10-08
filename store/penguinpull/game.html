@@ -149,7 +149,10 @@ function evaluateStability(dt=0){
       const structural=penguins.some(p=>p.row===row&&(p.state==='stacked'||(p.state==='held'&&contactFactor(p)>.035)));
       if(!structural&&!settle&&!collapse&&Math.abs(com-CX)<80){startSettle(row);continue}
       ratio=com<CX?-2.2:2.2;min=max=pivotX=CX
-    }else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max}
+    }else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max;
+      const clearing=s.contacts.length===1&&s.contacts[0].p.state==='held'&&Math.abs(com-CX)<80;
+      if(clearing){if(s.contacts[0].f<.38&&!settle&&!collapse){startSettle(row);continue}ratio=clamp(ratio,-.82,.82)}
+    }
     if(Math.abs(ratio)>weak.abs)weak={row,ratio,abs:Math.abs(ratio),pivotX,min,max}
   }
   stress.row=weak.row;stress.ratio=weak.ratio;stress.pivotX=weak.pivotX;stress.min=weak.min;stress.max=weak.max;
