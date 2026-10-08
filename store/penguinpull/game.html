@@ -66,11 +66,11 @@ canvas.dragging{cursor:grabbing}
 (()=>{
 'use strict';
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
-const W=960,H=920,CX=480,WATER=790,BASE_Y=716,ROW_GAP=126,PW=67,PH=78,SHELF_W=410,SHELF_H=18,ROWS=4,COLS=5;
+const W=960,H=920,CX=480,WATER=790,BASE_Y=716,ROW_GAP=126,PW=67,PH=78,SHELF_W=410,SHELF_H=18,ROWS=4,COLS=5,LAYER_DROP=ROW_GAP-SHELF_H-8;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rand=(a,b)=>a+Math.random()*(b-a);
 const SCARVES=['#ef5d6b','#e9bb4d','#50a8dc','#7ac77a','#ae79d8'];
 const save=Object.assign({best:0,perfects:0,crownPerfects:0,sound:true},window.__POCKETVM_SAVE||{});
-let running=false,paused=false,score=0,last=performance.now(),runToken=0,penguins=[],shelves=[],king=null,crown=null,drag=null,hover=null,collapse=null,lastMoved=-1;
+let running=false,paused=false,score=0,last=performance.now(),runToken=0,penguins=[],shelves=[],king=null,crown=null,drag=null,hover=null,collapse=null,lastMoved=-1,compression=Array(ROWS).fill(0),compressedRows=Array(ROWS).fill(false),settle=null;
 let stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100},lastDragSpeed=0,creakCooldown=0,endDelay=0,shake=0,tipTimer=0;
 let splashes=[],particles=[],snow=[],audioCtx=null;
 
@@ -80,8 +80,8 @@ function updateHud(){
   $('score').textContent=score;$('best').textContent=save.best;$('startBest').textContent=save.best;$('crownPerfects').textContent=save.crownPerfects||0;
   const danger=Math.min(1,Math.max(Math.abs(stress.ratio),stress.danger*1.15)),pct=Math.round(8+danger*92);
   $('stabilityBar').style.width=pct+'%';
-  $('stabilityText').textContent=collapse?'TOWER FALLING':danger>.93?'DANGER':danger>.68?'WOBBLING':danger>.42?'UNDER LOAD':'TOWER STEADY';
-  $('stabilityHint').textContent=drag?(drag.p.row===0?'Bottom row: maximum load. Pull gently.':drag.p.row===1?'Heavy load. Keep it smooth.':'Upper row: lighter, but still structural.'):'Pull slowly. Lower rows carry more weight.';
+  $('stabilityText').textContent=collapse?'TOWER FALLING':settle?'ICE SETTLING':danger>.93?'DANGER':danger>.68?'WOBBLING':danger>.42?'UNDER LOAD':'TOWER STEADY';
+  $('stabilityHint').textContent=settle?'A cleared layer can drop safely when the load stays centred.':drag?(drag.p.row===0?'Bottom row: maximum load. Pull gently.':drag.p.row===1?'Heavy load. Keep it smooth.':'Upper row: lighter, but still structural.'):'Pull slowly. Lower rows carry more weight.';
   $('crownState').textContent=crown&&crown.attached?'♛ Crown secure':'♛ Crown lost';
   $('crownState').style.color=crown&&crown.attached?'#ffe884':'#ff9f94'
 }
@@ -95,7 +95,7 @@ function splash(x,power=1){splashes.push({x,y:WATER+3,t:0,power});for(let i=0;i<
 function iceDust(x,y,n=5){for(let i=0;i<n;i++)particles.push({x:x+rand(-12,12),y:y+rand(-7,7),vx:rand(-45,45),vy:rand(-45,5),t:0,life:rand(.25,.55),r:rand(1,3),kind:'ice'})}
 
 function buildTower(){
-  penguins=[];shelves=[];splashes=[];particles=[];collapse=null;drag=null;hover=null;score=0;lastMoved=-1;endDelay=0;shake=0;lastDragSpeed=0;
+  penguins=[];shelves=[];splashes=[];particles=[];collapse=null;drag=null;hover=null;score=0;lastMoved=-1;compression=Array(ROWS).fill(0);compressedRows=Array(ROWS).fill(false);settle=null;endDelay=0;shake=0;lastDragSpeed=0;
   stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100};
   const rowShift=[0,7,-6,4];
   for(let r=0;r<ROWS;r++){
@@ -111,6 +111,12 @@ function buildTower(){
 }
 function startGame(){runToken++;buildTower();running=true;paused=false;$('start').classList.add('hidden');$('over').classList.add('hidden');$('paused').classList.add('hidden');$('tip').classList.remove('fade');setTip('Pull a penguin free, then drop that penguin into the sea.',4);updateHud();last=performance.now();const token=runToken;requestAnimationFrame(n=>loop(n,token))}
 function shelfY(row){return BASE_Y-row*ROW_GAP}
+function compressionOffset(level){let off=0;for(let r=0;r<ROWS;r++)if(level>r)off+=compression[r];return off}
+function startSettle(row){
+  if(settle||collapse||compressedRows[row])return;
+  settle={row,t:0,duration:.34,start:compression[row],target:LAYER_DROP};stress.danger=0;stress.angle*=.35;
+  setTip('Clean layer! The ice shelf is settling down.',1.9);tone(175,.09,'triangle',.018,-45);haptic(16)
+}
 function contactFactor(p){
   if(p.state==='stacked')return clamp(1-Math.abs(p.x-p.homeX)/125-Math.abs(p.y-p.homeY)/150,.55,1);
   if(p.state!=='held'||!drag||drag.p!==p||!drag.fromStack)return 0;
@@ -136,10 +142,14 @@ function upperCOM(row){
 function evaluateStability(dt=0){
   let weak={row:0,ratio:0,abs:0,pivotX:CX,min:CX-100,max:CX+100};
   for(let row=0;row<ROWS;row++){
+    if(compressedRows[row]||settle&&settle.row===row)continue;
     const s=supportData(row),com=upperCOM(row);
     let ratio,min,max,pivotX;
-    if(!s){ratio=com<CX?-2.2:2.2;min=max=pivotX=CX}
-    else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max}
+    if(!s){
+      const structural=penguins.some(p=>p.row===row&&(p.state==='stacked'||p.state==='held'));
+      if(!structural&&!settle&&!collapse&&Math.abs(com-CX)<78&&Math.abs(stress.angle)<.085){startSettle(row);continue}
+      ratio=com<CX?-2.2:2.2;min=max=pivotX=CX
+    }else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max}
     if(Math.abs(ratio)>weak.abs)weak={row,ratio,abs:Math.abs(ratio),pivotX,min,max}
   }
   stress.row=weak.row;stress.ratio=weak.ratio;stress.pivotX=weak.pivotX;stress.min=weak.min;stress.max=weak.max;
@@ -157,18 +167,18 @@ function evaluateStability(dt=0){
   updateHud();return weak
 }
 function worldTransform(x,y,level){
-  let angle=0,pivotX=CX,pivotY=shelfY(stress.row+1),dx=0,dy=0,row=stress.row;
-  if(collapse){row=collapse.row;if(level<=row)return{x,y,a:0};angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1);dx=collapse.dx;dy=collapse.dy}
+  y+=compressionOffset(level);let angle=0,pivotX=CX,pivotY=shelfY(stress.row+1)+compressionOffset(stress.row+1),dx=0,dy=0,row=stress.row;
+  if(collapse){row=collapse.row;if(level<=row)return{x,y,a:0};angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1);dx=collapse.dx;dy=collapse.dy}
   else{if(level<=row)return{x,y,a:0};angle=stress.angle;pivotX=stress.pivotX;pivotY=shelfY(row+1)}
   const rx=x-pivotX,ry=y-pivotY,c=Math.cos(angle),s=Math.sin(angle);
   return{x:pivotX+c*rx-s*ry+dx,y:pivotY+s*rx+c*ry+dy,a:angle}
 }
 function localPoint(x,y,level){
-  let row=stress.row,angle=stress.angle,pivotX=stress.pivotX,pivotY=shelfY(row+1),dx=0,dy=0;
-  if(collapse){row=collapse.row;angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1);dx=collapse.dx;dy=collapse.dy}
-  if(level<=row)return{x,y};
-  const X=x-pivotX-dx,Y=y-pivotY-dy,c=Math.cos(angle),s=Math.sin(angle);
-  return{x:pivotX+c*X+s*Y,y:pivotY-s*X+c*Y}
+  let row=stress.row,angle=stress.angle,pivotX=stress.pivotX,pivotY=shelfY(row+1)+compressionOffset(row+1),dx=0,dy=0;
+  if(collapse){row=collapse.row;angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1);dx=collapse.dx;dy=collapse.dy}
+  if(level<=row)return{x,y:y-compressionOffset(level)};
+  const X=x-pivotX-dx,Y=y-pivotY-dy,c=Math.cos(angle),s=Math.sin(angle),off=compressionOffset(level);
+  return{x:pivotX+c*X+s*Y,y:pivotY-s*X+c*Y-off}
 }
 function startCollapse(weak){
   if(collapse)return;
@@ -191,7 +201,7 @@ function penguinAt(x,y){
 }
 function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function onDown(e){
-  if(!running||paused||collapse||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
+  if(!running||paused||collapse||settle||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
   const fromStack=p.state==='stacked',lp=fromStack?localPoint(pt.x,pt.y,p.row):pt;p.state='held';p.vx=p.vy=0;drag={p,fromStack,pointerId:e.pointerId,targetX:lp.x,targetY:lp.y,worldX:pt.x,worldY:pt.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
   canvas.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch{}tone(320,.035,'triangle',.013);iceDust(p.x,p.y+30,3)
 }
@@ -259,7 +269,12 @@ function update(dt){
   if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)$('tip').classList.add('fade')}
   creakCooldown=Math.max(0,creakCooldown-dt);shake=Math.max(0,shake-dt*15);
   for(const p of penguins)if(p.state==='stacked'&&(!drag||drag.p!==p)){p.x+= (p.homeX-p.x)*Math.min(1,dt*.65);p.y+=(p.homeY-p.y)*Math.min(1,dt*.8)}
-  updateHeld(dt);if(!drag&&!collapse)evaluateStability(dt);updateLoose(dt);updateCrown(dt);
+  updateHeld(dt);
+  if(settle){
+    settle.t+=dt;const u=clamp(settle.t/settle.duration,0,1),e=1-Math.pow(1-u,3);compression[settle.row]=lerp(settle.start,settle.target,e);
+    if(u>=1){compression[settle.row]=settle.target;compressedRows[settle.row]=true;const row=settle.row;settle=null;shake=Math.max(shake,4);iceDust(CX,shelfY(row+1)+compressionOffset(row+1),12);tone(118,.13,'triangle',.026,-28);haptic([18,22,28]);evaluateStability(.01)}
+  }else if(!drag&&!collapse)evaluateStability(dt);
+  updateLoose(dt);updateCrown(dt);
   if(collapse){
     collapse.av+=collapse.dir*.82*dt;collapse.angle=clamp(collapse.angle+collapse.av*dt,-1.62,1.62);collapse.vy+=245*dt;collapse.dy+=collapse.vy*dt;collapse.dx+=collapse.dir*34*dt;
     if(crown.attached&&Math.abs(collapse.angle)>.16)detachCrown(true);
