@@ -306,7 +306,7 @@
     crumbclicker: { name: 'Crumb Clicker', icon: '◉', width: 1120, height: 760, singleton: true, build: (win, options) => PocketStoreApp.buildCrumbClicker(win, options, storeAppContext()) },
     pvz: { name: 'Plants vs Zombies', icon: '🌻', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildPvz(win, options, storeAppContext()) },
     flappy: { name: 'Flappy Bird', icon: '🐦', width: 760, height: 820, singleton: true, build: (win, options) => PocketStoreApp.buildFlappy(win, options, storeAppContext()) },
-    penguinpull: { name: 'Penguin Pull', icon: '🐧', width: 900, height: 900, singleton: true, build: (win, options) => PocketStoreApp.buildPenguin(win, options, storeAppContext()) },
+    penguinpull: { name: 'Penguin Pull', icon: '🐧', width: 960, height: 920, singleton: true, build: (win, options) => PocketStoreApp.buildPenguin(win, options, storeAppContext()) },
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
