@@ -146,8 +146,8 @@ function evaluateStability(dt=0){
     const s=supportData(row),com=upperCOM(row);
     let ratio,min,max,pivotX;
     if(!s){
-      const structural=penguins.some(p=>p.row===row&&(p.state==='stacked'||p.state==='held'));
-      if(!structural&&!settle&&!collapse&&Math.abs(com-CX)<78&&Math.abs(stress.angle)<.085){startSettle(row);continue}
+      const structural=penguins.some(p=>p.row===row&&(p.state==='stacked'||(p.state==='held'&&contactFactor(p)>.035)));
+      if(!structural&&!settle&&!collapse&&Math.abs(com-CX)<80&&Math.abs(stress.angle)<.13){startSettle(row);continue}
       ratio=com<CX?-2.2:2.2;min=max=pivotX=CX
     }else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max}
     if(Math.abs(ratio)>weak.abs)weak={row,ratio,abs:Math.abs(ratio),pivotX,min,max}
