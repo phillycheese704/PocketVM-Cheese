@@ -154,7 +154,7 @@
   const PVZ_ID='pvz';
   const PVZ_ROOT='/home/user/Downloads/Plants vs Zombies';
   const PVZ_SOURCE='./store/pvz/';
-  const PVZ_GAME_REVISION='adventure-v7';
+  const PVZ_GAME_REVISION='adventure-v8';
   const PVZ_PIN_KEY='pocketvm.store.pvz.desktop';
   const PVZ_SAVE_KEY='pocketvm.game.pvz';
   const PVZ_NAME='Plants vs Zombies';
