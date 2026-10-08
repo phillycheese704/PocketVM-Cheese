@@ -19,7 +19,13 @@ lobbed splash, homing shots, sleeping mushrooms, mines, two-cell Cob Cannons,
 simulation-time queues, pause/restart, bowling, wave completion, resource
 collection, terrain restrictions and Endless Day/Night transitions.
 
-This is a regression suite, not a browser interaction test or a complete
+The live GitHub Pages build was also checked in Chrome: the v12 marker, seed
+selection, starting Adventure 1-1, dragging a Peashooter onto the lawn, pause,
+and the PocketVM first-time setup screen all worked.
+
+![Live browser smoke check](pvz-browser-proof-1791497959004.jpg)
+
+The automated suite is not a browser interaction test or a complete
 playthrough of all 50 levels. Boss phase choreography, exact wave rosters,
 animation timing, every special zombie interaction and full original-game
 balance still need comparative playtesting.
