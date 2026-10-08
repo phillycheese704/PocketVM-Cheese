@@ -71,7 +71,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rand=(a,b
 const SCARVES=['#ef5d6b','#e9bb4d','#50a8dc','#7ac77a','#ae79d8'];
 const save=Object.assign({best:0,perfects:0,crownPerfects:0,sound:true},window.__POCKETVM_SAVE||{});
 let running=false,paused=false,score=0,last=performance.now(),runToken=0,penguins=[],shelves=[],king=null,crown=null,drag=null,hover=null,collapse=null,lastMoved=-1,compression=Array(ROWS).fill(0),compressedRows=Array(ROWS).fill(false),settle=null;
-let stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100},lastDragSpeed=0,creakCooldown=0,endDelay=0,victoryDelay=0,shake=0,tipTimer=0;
+let stress={row:0,ratio:0,angle:0,angularVelocity:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100},lastDragSpeed=0,creakCooldown=0,endDelay=0,victoryDelay=0,shake=0,tipTimer=0;
 let splashes=[],particles=[],snow=[],audioCtx=null;
 
 function rr(x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
@@ -96,7 +96,7 @@ function iceDust(x,y,n=5){for(let i=0;i<n;i++)particles.push({x:x+rand(-12,12),y
 
 function buildTower(){
   penguins=[];shelves=[];splashes=[];particles=[];collapse=null;drag=null;hover=null;score=0;lastMoved=-1;compression=Array(ROWS).fill(0);compressedRows=Array(ROWS).fill(false);settle=null;endDelay=0;victoryDelay=0;shake=0;lastDragSpeed=0;
-  stress={row:0,ratio:0,angle:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100};
+  stress={row:0,ratio:0,angle:0,angularVelocity:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100};
   const rowShift=[0,7,-6,4];
   for(let r=0;r<ROWS;r++){
     const sy=BASE_Y-r*ROW_GAP;shelves.push({row:r,x:CX,y:sy});
@@ -114,7 +114,7 @@ function shelfY(row){return BASE_Y-row*ROW_GAP}
 function compressionOffset(level){let off=0;for(let r=0;r<ROWS;r++)if(level>r)off+=compression[r];return off}
 function startSettle(row){
   if(settle||collapse||compressedRows[row])return;
-  settle={row,t:0,duration:.34,start:compression[row],target:LAYER_DROP};stress.danger=0;stress.angle*=.35;
+  settle={row,t:0,duration:.42,start:compression[row],target:LAYER_DROP};stress.danger=0;stress.angularVelocity*=.25;stress.angle*=.35;
   setTip('Clean layer! The ice shelf is settling down.',1.9);tone(175,.09,'triangle',.018,-45);haptic(16)
 }
 function contactFactor(p){
@@ -156,9 +156,12 @@ function evaluateStability(dt=0){
   const yank=clamp(lastDragSpeed/850,0,1),target=clamp(weak.ratio,-1.2,1.2)*(.052+yank*.018);
   stress.target=target;
   if(dt>0){
-    stress.angle+= (target-stress.angle)*Math.min(1,dt*(weak.abs>.75?7:5));
+    const stiffness=weak.abs>.8?23:28,damping=weak.abs>.9?5.2:8;
+    stress.angularVelocity+=((target-stress.angle)*stiffness-stress.angularVelocity*damping)*dt;
+    stress.angularVelocity=clamp(stress.angularVelocity,-1.8,1.8);
+    stress.angle=clamp(stress.angle+stress.angularVelocity*dt,-.22,.22);
     if(weak.abs>.96){
-      const rate=1+yank*1.8+(weak.abs>1.3?2.5:0);stress.danger+=dt*rate
+      const rate=1+yank*1.8+(weak.abs>1.3?2.5:0);stress.danger+=dt*(rate+Math.min(.6,Math.abs(stress.angularVelocity)*2))
     }else stress.danger=Math.max(0,stress.danger-dt*2.8);
     if(weak.abs>.72&&creakCooldown<=0){tone(95+weak.abs*35,.16,'sawtooth',.009,-18);creakCooldown=.55+Math.random()*.35}
     const threshold=weak.abs>1.55?.10:Math.max(.20,.48-yank*.22);
@@ -169,7 +172,7 @@ function evaluateStability(dt=0){
 function worldTransform(x,y,level){
   y+=compressionOffset(level);let angle=0,pivotX=CX,pivotY=shelfY(stress.row+1)+compressionOffset(stress.row+1),dx=0,dy=0,row=stress.row;
   if(collapse){row=collapse.row;if(level<=row)return{x,y,a:0};angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1);dx=collapse.dx;dy=collapse.dy}
-  else{if(level<=row)return{x,y,a:0};angle=stress.angle;pivotX=stress.pivotX;pivotY=shelfY(row+1)}
+  else{if(level<=row)return{x,y,a:0};angle=stress.angle;pivotX=stress.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1)}
   const rx=x-pivotX,ry=y-pivotY,c=Math.cos(angle),s=Math.sin(angle);
   return{x:pivotX+c*rx-s*ry+dx,y:pivotY+s*rx+c*ry+dy,a:angle}
 }
@@ -251,7 +254,7 @@ function updateLoose(dt){
   }
 }
 function updateHeld(dt){
-  if(!drag)return;const p=drag.p,load=1+(ROWS-1-p.row)*.48,response=clamp(12/load,4.2,12);
+  if(!drag)return;const p=drag.p,load=1+(ROWS-1-p.row)*.57,response=clamp(12/load,3.8,12);
   p.x+= (drag.targetX-p.x)*Math.min(1,dt*response);p.y+=(drag.targetY-p.y)*Math.min(1,dt*response);
   const movement=Math.hypot(p.x-p.homeX,p.y-p.homeY);
   if(movement>14&&!drag.moved){drag.moved=true;drag.committed=true}
@@ -267,7 +270,7 @@ function updateCrown(dt){
 function update(dt){
   if(!running||paused)return;
   if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)$('tip').classList.add('fade')}
-  creakCooldown=Math.max(0,creakCooldown-dt);shake=Math.max(0,shake-dt*15);
+  creakCooldown=Math.max(0,creakCooldown-dt);shake=Math.max(0,shake-dt*15);lastDragSpeed*=Math.exp(-dt*5);
   for(const p of penguins)if(p.state==='stacked'&&(!drag||drag.p!==p)){p.x+= (p.homeX-p.x)*Math.min(1,dt*.65);p.y+=(p.homeY-p.y)*Math.min(1,dt*.8)}
   updateHeld(dt);
   if(settle){
