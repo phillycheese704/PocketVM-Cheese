@@ -154,14 +154,14 @@
   const PVZ_ID='pvz';
   const PVZ_ROOT='/home/user/Downloads/Plants vs Zombies';
   const PVZ_SOURCE='./store/pvz/';
-  const PVZ_GAME_REVISION='adventure-v9';
+  const PVZ_GAME_REVISION='adventure-v10';
   const PVZ_PIN_KEY='pocketvm.store.pvz.desktop';
   const PVZ_SAVE_KEY='pocketvm.game.pvz';
   const PVZ_NAME='Plants vs Zombies';
   const PVZ_NAME_FILE='name.txt';
   const PVZ_ICON_URL=PVZ_SOURCE+'icon.svg';
   const PVZ_ICON_ESTIMATE=32000;
-  const PVZ_GAME_BYTES=140718;
+  const PVZ_GAME_BYTES=146475;
   const PVZ_TRACKS=Object.freeze([
     {id:'02',name:'02.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/02CrazyDave.mp3',mime:'audio/mpeg',size:1403422},
     {id:'03',name:'03.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/03chooseYourSeeds.mp3',mime:'audio/mpeg',size:554551},
@@ -209,18 +209,18 @@
   const PENGUIN_ID='penguinpull';
   const PENGUIN_ROOT='/home/user/Downloads/Penguin Pull';
   const PENGUIN_SOURCE='./store/penguinpull/';
-  const PENGUIN_GAME_REVISION='v2';
+  const PENGUIN_GAME_REVISION='v3';
   const PENGUIN_PIN_KEY='pocketvm.store.penguinpull.desktop';
   const PENGUIN_SAVE_KEY='pocketvm.game.penguinpull';
   const PENGUIN_NAME='Penguin Pull';
   const PENGUIN_NAME_FILE='name.txt';
   const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg';
   const PENGUIN_ICON_ESTIMATE=28000;
-  const PENGUIN_GAME_BYTES=35066;
+  const PENGUIN_GAME_BYTES=35679;
   const PENGUIN_TOTAL_BYTES=PENGUIN_GAME_BYTES+PENGUIN_ICON_ESTIMATE+PENGUIN_NAME.length;
   const penguinFeatureVariants=[
     {kicker:'NEW RELEASE',title:'Pull carefully. Save everybody.',copy:'Drag little penguins out of an icy tower and get them into the sea without dunking the sleeping royal.',tone:'ice'},
-    {kicker:'TENSION PHYSICS',title:'Feel the tower fight back.',copy:'Loaded lower penguins resist your pull, partial supports still count, and a bad tower wobbles before it finally commits to a fall.',tone:'ice'},
+    {kicker:'TENSION PHYSICS',title:'Feel the tower fight back.',copy:'Loaded penguins resist pulls, the tower now has real wobble momentum, and centred cleared layers settle onto the next sheet.',tone:'ice'},
     {kicker:'BUILT FOR TOUCH',title:'One finger. Questionable engineering.',copy:'Drag, reconsider, settle a penguin back into place, or commit to the sea. Touch and mouse use the same physical rules.',tone:'ice'},
     {kicker:'PERFECT RUN',title:'Can you save all twenty?',copy:'Only the last-moved penguin scores. Rescue all twenty for Emperor Penguin — and keep the crown attached for a flawless run.',tone:'ice'}
   ];
@@ -1082,7 +1082,7 @@
           :f.id==='crumbclicker'
             ?'<article><span>01</span><div><strong>Build the bakery</strong><p>Tap for your first biscuits, then buy eleven production tiers that bake automatically.</p></div></article><article><span>02</span><div><strong>Keep scaling</strong><p>Unlock upgrades, achievements, bulk buying and rare Lucky Crumbs as production climbs.</p></div></article><article><span>03</span><div><strong>Leave and return</strong><p>Offline earnings and permanent Bakery Stars make every return stronger than the last.</p></div></article>'
             :f.id==='pvz'
-              ?'<article><span>01</span><div><strong>Five worlds, fifty stages</strong><p>Day, Night, Pool, Fog and Roof keep their own planting rules and Adventure gimmicks.</p></div></article><article><span>02</span><div><strong>Forty-nine plants</strong><p>Campaign unlocks plus shop upgrades cover the full roster, without a Zen Garden detour.</p></div></article><article><span>03</span><div><strong>Endless after Adventure</strong><p>The same lawn survives as Day and Night swap every three minutes. Pool, Fog and Roof stay out of the rotation.</p></div></article>'
+              ?'<article><span>01</span><div><strong>Five worlds, fifty stages</strong><p>Day, Night, Pool, Fog and Roof keep their own planting rules and Adventure gimmicks.</p></div></article><article><span>02</span><div><strong>Forty-nine plants</strong><p>Campaign rewards and shop purchases determine which plants you own and can bring into battle.</p></div></article><article><span>03</span><div><strong>Endless after Wall-nut Bowling</strong><p>Beat 1-5 to unlock Endless. Day and Night swap every three minutes; music changes randomly with each shift.</p></div></article>'
               :f.id==='flappy'
                 ?'<article><span>01</span><div><strong>One-input arcade</strong><p>Tap, click, Space or Arrow Up to flap. Every other decision happens in the air.</p></div></article><article><span>02</span><div><strong>Fair difficulty curve</strong><p>Pipes tighten and speed up gently with score rather than jumping into impossible patterns.</p></div></article><article><span>03</span><div><strong>Your music loop</strong><p>The supplied Main Theme installs alongside the game and loops during play.</p></div></article>'
                 :f.id==='penguinpull'
