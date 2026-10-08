@@ -10,7 +10,7 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061622;color:#fff;font-family:Inter,ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;touch-action:none}
 button{font:inherit;color:inherit}
 #app{position:relative;width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 12%,rgba(198,245,255,.16),transparent 36%),linear-gradient(#0c2b42,#061622)}
-#frame{position:relative;width:min(100%,960px);height:min(100%,920px);overflow:hidden;border-radius:24px;background:#9ee2f2;box-shadow:0 30px 95px #0008,inset 0 0 0 1px #ffffff18}
+#frame{position:relative;width:min(100%,calc(100vh * 24 / 23),960px);height:auto;aspect-ratio:24/23;max-height:100vh;overflow:hidden;border-radius:24px;background:#9ee2f2;box-shadow:0 30px 95px #0008,inset 0 0 0 1px #ffffff18}
 canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
 canvas.dragging{cursor:grabbing}
 .hud{position:absolute;z-index:6;left:16px;right:16px;top:14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:10px;pointer-events:none;text-shadow:0 2px 8px #05314b88}
@@ -30,7 +30,8 @@ canvas.dragging{cursor:grabbing}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 20px}.stats div{padding:12px;border-radius:14px;background:#071b2f9e;border:1px solid #d9f6ff14}.stats b{display:block;font-size:25px}.stats span{font-size:9px;color:#acd8e5;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
 .play{width:100%;padding:14px 18px;border:0;border-radius:15px;background:linear-gradient(#a7f0ff,#55c7e4);color:#073049;font-weight:1000;font-size:16px;box-shadow:0 8px 0 #187894,0 14px 25px #001b2c6b;cursor:pointer}.play:active{transform:translateY(4px);box-shadow:0 4px 0 #187894,0 8px 17px #001b2c6b}
 .rating{margin:3px 0 5px;font-size:24px;font-weight:1000;color:#ffe07d}.subrating{font-size:11px;font-weight:900;color:#9de8ff;text-transform:uppercase;letter-spacing:.09em}.pause-card .logo{font-size:52px}
-@media(max-width:700px){#frame{border-radius:0;width:100%;height:100%}.hud{top:9px;left:9px;right:9px;grid-template-columns:1fr 120px 1fr}.scorebox,.bestbox{padding:7px 10px}.scorebox b,.bestbox b{font-size:21px}.statusbox{min-width:0;padding:7px}.statusbox small{display:none}.top-actions{right:9px;top:72px}.crown-pill{left:9px;top:76px}.card{padding:21px}.rules{gap:5px}.rules div{padding:8px 4px}.tip{bottom:12px}}
+@media(max-width:700px){#frame{border-radius:0}.hud{top:9px;left:9px;right:9px;grid-template-columns:1fr 120px 1fr}.scorebox,.bestbox{padding:7px 10px}.scorebox b,.bestbox b{font-size:21px}.statusbox{min-width:0;padding:7px}.statusbox small{display:none}.top-actions{right:9px;top:72px}.crown-pill{left:9px;top:76px}.card{padding:21px}.rules{gap:5px}.rules div{padding:8px 4px}.tip{bottom:12px}}
+@media(max-height:650px){.overlay{display:block;overflow:auto}.overlay.hidden{display:none}.card{margin:10px auto;padding:17px}.royal{display:none}.logo{font-size:42px}.card p{margin:8px auto 11px}.rules{margin:8px 0 11px}.stats{margin:8px 0 13px}.top-actions{top:68px}.crown-pill{top:72px}}
 </style>
 </head>
 <body>
@@ -112,7 +113,7 @@ function startGame(){runToken++;buildTower();running=true;paused=false;$('start'
 function shelfY(row){return BASE_Y-row*ROW_GAP}
 function contactFactor(p){
   if(p.state==='stacked')return clamp(1-Math.abs(p.x-p.homeX)/125-Math.abs(p.y-p.homeY)/150,.55,1);
-  if(p.state!=='held')return 0;
+  if(p.state!=='held'||!drag||drag.p!==p||!drag.fromStack)return 0;
   const dx=Math.abs(p.x-p.homeX),dy=Math.abs(p.y-p.homeY);
   return clamp(1-Math.max(dx/(PW*.94),dy/(PH*.9)),0,1)
 }
@@ -185,27 +186,27 @@ function detachCrown(force=false){
   setTip('The crown came off — the run can continue.',2.4);tone(620,.08,'square',.018,-180);haptic(25);updateHud()
 }
 function penguinAt(x,y){
-  for(let i=penguins.length-1;i>=0;i--){const p=penguins[i];if(p.state!=='stacked')continue;const t=worldTransform(p.x,p.y,p.row);if(Math.abs(x-t.x)<PW*.55&&Math.abs(y-t.y)<PH*.55)return p}
+  for(let i=penguins.length-1;i>=0;i--){const p=penguins[i];if(p.state!=='stacked'&&p.state!=='loose')continue;const t=p.state==='stacked'?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y};if(Math.abs(x-t.x)<PW*.57&&Math.abs(y-t.y)<PH*.57)return p}
   return null
 }
 function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function onDown(e){
   if(!running||paused||collapse||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
-  const lp=localPoint(pt.x,pt.y,p.row);p.state='held';drag={p,pointerId:e.pointerId,targetX:lp.x,targetY:lp.y,worldX:pt.x,worldY:pt.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
+  const fromStack=p.state==='stacked',lp=fromStack?localPoint(pt.x,pt.y,p.row):pt;p.state='held';p.vx=p.vy=0;drag={p,fromStack,pointerId:e.pointerId,targetX:lp.x,targetY:lp.y,worldX:pt.x,worldY:pt.y,startX:p.x,startY:p.y,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
   canvas.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch{}tone(320,.035,'triangle',.013);iceDust(p.x,p.y+30,3)
 }
 function onMove(e){
   const pt=pointer(e);if(!drag){hover=running&&!paused&&!collapse?penguinAt(pt.x,pt.y):null;return}
   if(drag.pointerId!==e.pointerId||paused)return;e.preventDefault();const now=performance.now(),dt=Math.max(8,now-drag.lastT),dx=pt.x-drag.lastPX,dy=pt.y-drag.lastPY;
-  drag.speed=clamp(Math.hypot(dx,dy)/dt*1000,0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.worldX=pt.x;drag.worldY=pt.y;const lp=localPoint(pt.x,pt.y,drag.p.row);drag.targetX=lp.x;drag.targetY=lp.y;
+  drag.speed=clamp(Math.hypot(dx,dy)/dt*1000,0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.worldX=pt.x;drag.worldY=pt.y;const lp=drag.fromStack?localPoint(pt.x,pt.y,drag.p.row):pt;drag.targetX=lp.x;drag.targetY=lp.y;
   if(!drag.committed&&Math.hypot(pt.x-drag.startX,pt.y-drag.startY)>9){drag.committed=true;drag.moved=true}
 }
 function releaseDrag(e,cancel=false){
   if(!drag||(!cancel&&drag.pointerId!==e.pointerId))return;if(!cancel)e.preventDefault();
   const d=drag,p=d.p;drag=null;canvas.classList.remove('dragging');
-  if(cancel||!d.committed){p.state='stacked';p.x=p.homeX;p.y=p.homeY;lastDragSpeed=0;evaluateStability(0);return}
+  if(cancel||!d.committed){if(d.fromStack){p.state='stacked';p.x=p.homeX;p.y=p.homeY}else p.state='loose';lastDragSpeed=0;evaluateStability(0);return}
   const inSea=p.y>WATER-12||d.worldY>WATER-12;
-  const returnedHome=Math.hypot(d.targetX-p.homeX,d.targetY-p.homeY)<30&&Math.hypot(p.x-p.homeX,p.y-p.homeY)<45;
+  const returnedHome=d.fromStack&&Math.hypot(d.targetX-p.homeX,d.targetY-p.homeY)<30&&Math.hypot(p.x-p.homeX,p.y-p.homeY)<45;
   if(returnedHome){p.state='stacked';p.x=p.homeX;p.y=p.homeY;p.vx=p.vy=p.av=0;setTip('Settled back into place.',1.1);lastDragSpeed=0;evaluateStability(.01);return}
   if(inSea){lastMoved=p.id;rescue(p);lastDragSpeed=0;evaluateStability(.01);return}
   p.state='loose';lastMoved=p.id;p.vx=clamp((p.x-d.startX)*2.4,-520,520)+Math.sign(d.targetX-d.lastPX||1)*d.speed*.12;p.vy=clamp((p.y-d.startY)*1.5,-300,260);p.av=rand(-3.2,3.2);p.restShelf=-1;
@@ -244,7 +245,7 @@ function updateHeld(dt){
   p.x+= (drag.targetX-p.x)*Math.min(1,dt*response);p.y+=(drag.targetY-p.y)*Math.min(1,dt*response);
   const movement=Math.hypot(p.x-p.homeX,p.y-p.homeY);
   if(movement>14&&!drag.moved){drag.moved=true;drag.committed=true}
-  for(const q of penguins){if(q===p||q.row!==p.row||q.state!=='stacked')continue;const dx=q.x-p.x,dy=q.y-p.y;if(Math.abs(dx)<PW*.82&&Math.abs(dy)<PH*.64){const overlap=PW*.82-Math.abs(dx),push=Math.sign(dx||1)*overlap*.035;q.x=clamp(q.x+push,q.homeX-20,q.homeX+20)}}
+  for(const q of penguins){if(q===p||q.state!=='stacked'||(drag.fromStack&&q.row!==p.row))continue;const qt=worldTransform(q.x,q.y,q.row),pt=drag.fromStack?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y},dx=qt.x-pt.x,dy=qt.y-pt.y;if(Math.abs(dx)<PW*.84&&Math.abs(dy)<PH*.68){const overlap=PW*.84-Math.abs(dx),push=Math.sign(dx||1)*overlap*(drag.fromStack?.035:.055);q.x=clamp(q.x+push,q.homeX-26,q.homeX+26);if(!drag.fromStack&&drag.speed>500&&Math.abs(q.x-q.homeX)>22){q.state='loose';q.vx=Math.sign(push)*drag.speed*.22;q.vy=-35;q.av=rand(-2,2);q.restShelf=-1;shake=Math.max(shake,2)}}}
   if(movement>20&&Math.random()<dt*9)iceDust(p.x,p.y+PH*.35,1);
   evaluateStability(dt);
   if(!collapse&&crown.attached&&Math.abs(stress.angle)>.058&&drag.speed>720)detachCrown(false)
@@ -296,7 +297,7 @@ function drawShelf(s){
 }
 function drawPenguin(p){
   if(p.state==='rescued'||p.state==='lost')return;
-  const t=(p.state==='stacked'||p.state==='held')?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
+  const towerHeld=p.state==='held'&&drag&&drag.p===p&&drag.fromStack,t=(p.state==='stacked'||towerHeld)?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
   const held=drag&&drag.p===p;ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a+p.a);ctx.scale(p.dir,1);
   if(held){ctx.shadowColor='#fff8a8';ctx.shadowBlur=20}else{ctx.shadowColor='rgba(3,37,52,.24)';ctx.shadowBlur=8}ctx.shadowOffsetY=5;
   ctx.fillStyle='#111a21';ctx.beginPath();ctx.ellipse(0,2,29,38,0,0,Math.PI*2);ctx.fill();ctx.shadowColor='transparent';
