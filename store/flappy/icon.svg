@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#69cad9"/><stop offset="1" stop-color="#b6e3cf"/></linearGradient><linearGradient id="pipe" x1="0" x2="1"><stop stop-color="#3b8a35"/><stop offset=".35" stop-color="#87c950"/><stop offset="1" stop-color="#3c8733"/></linearGradient></defs>
+<rect width="512" height="512" rx="110" fill="url(#sky)"/>
+<circle cx="408" cy="98" r="42" fill="#fff1a4" opacity=".85"/>
+<path d="M0 389q52-75 105 0t105 0 105 0 105 0 105 0v123H0Z" fill="#72ad63"/>
+<rect x="365" y="0" width="70" height="174" rx="8" fill="url(#pipe)" stroke="#285c29" stroke-width="8"/><rect x="348" y="151" width="104" height="32" rx="5" fill="url(#pipe)" stroke="#285c29" stroke-width="8"/>
+<rect x="365" y="337" width="70" height="175" rx="8" fill="url(#pipe)" stroke="#285c29" stroke-width="8"/><rect x="348" y="329" width="104" height="32" rx="5" fill="url(#pipe)" stroke="#285c29" stroke-width="8"/>
+<g transform="translate(205 245) rotate(-7)"><ellipse cx="0" cy="0" rx="78" ry="59" fill="#f5d84d" stroke="#6c5220" stroke-width="10"/><ellipse cx="-48" cy="18" rx="40" ry="26" fill="#eeb830" stroke="#6c5220" stroke-width="9"/><circle cx="37" cy="-26" r="29" fill="#fff" stroke="#6c5220" stroke-width="9"/><circle cx="47" cy="-25" r="10" fill="#172019"/><path d="m68-5 72 23-70 30Z" fill="#e77829" stroke="#6c5220" stroke-width="9"/><ellipse cx="-15" cy="-24" rx="30" ry="13" fill="#fff5ac" opacity=".8"/></g>
+</svg>
