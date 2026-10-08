@@ -216,7 +216,7 @@
   const PENGUIN_NAME_FILE='name.txt';
   const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg';
   const PENGUIN_ICON_ESTIMATE=28000;
-  const PENGUIN_GAME_BYTES=34870;
+  const PENGUIN_GAME_BYTES=35066;
   const PENGUIN_TOTAL_BYTES=PENGUIN_GAME_BYTES+PENGUIN_ICON_ESTIMATE+PENGUIN_NAME.length;
   const penguinFeatureVariants=[
     {kicker:'NEW RELEASE',title:'Pull carefully. Save everybody.',copy:'Drag little penguins out of an icy tower and get them into the sea without dunking the sleeping royal.',tone:'ice'},
