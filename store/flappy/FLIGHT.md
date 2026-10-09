@@ -36,3 +36,5 @@ Best score, best clean streak, flights, total Classic pipes, selected bird, mode
 Run `node tests/flappy-regression.cjs` from the repository root with `@napi-rs/canvas` available, or set `CODEX_PRIMARY_RUNTIME_NODE_MODULES` to a modules directory containing it. The harness executes the actual HTML engine, adding inspection hooks only in memory. No production test controls ship in the game.
 
 The 13 checks cover old saves, controls, fixed-step timing at 120/60/10 FPS, a 200 ms frame, pipe geometry and 5,000 bounded layouts per mode, scoring, Practice restore, pause/blur, crash/restart, audio preferences, sprite rendering, rewards and package migration. Four pilots using only normal flaps each clear 100 consecutive Classic pipes across the full difficulty curve. Results are recorded in `tests/flappy-results.json`.
+
+Live browser verification confirmed `flight-v3`, the Classic and Practice menu, keyboard pause and tapping the paused panel to resume. The final deployed menu is captured in [the browser preview](../../tests/flappy-flight-v3-final-1791574872509.jpg). GitHub Pages deployment succeeded; the existing Deadwave/Penguin suite also passed all 24 checks.
