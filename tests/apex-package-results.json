@@ -1,0 +1,8 @@
+{
+  "checks": 3,
+  "tests": [
+    "Installer writes verified package and exact music bytes",
+    "Sandbox boot and source-checked saves",
+    "Truncated music rollback"
+  ]
+}

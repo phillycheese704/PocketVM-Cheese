@@ -1,0 +1,197 @@
+{
+  "checks": 19,
+  "tests": [
+    "All five circuits are closed, finite and have twelve evenly spaced lap gates",
+    "Random settings resolve to legal, varied maps, difficulty, laps, grids and weather",
+    "Settings, custom colours and dry/wet records survive sanitisation",
+    "Countdown freezes controls, then the same car model accelerates, brakes and reverses",
+    "Barrier impacts rebound momentum, damage the body and produce sparks",
+    "Rotated car collisions separate bodies, transfer momentum and generate impact damage",
+    "Wet roads and handbrakes reduce lateral grip; nitro consumes energy and then recharges",
+    "Reverse crossings and skipped sectors cannot award a lap; all twelve gates are required",
+    "Recovery retains validated sectors, imposes a real two-second hold and clears stuck inputs",
+    "Pause, focus loss and tab hiding freeze the clock, cars and countdown",
+    "Multi-touch pedals release on cancellation without stuck steering or throttle",
+    "AI opponents finish every circuit in dry and rain using ordinary steering and car physics",
+    "All four difficulty levels finish multi-lap races and faster AI earns faster lap times",
+    "Race standings, finish time and lap records are based on actual completed gates",
+    "Every circuit, car paint, night lights and wet effects render with native Canvas",
+    "Legal keyboard controls can finish a real race without position, speed or lap overrides",
+    "An eight-car Elite grid completes all sectors on a wet circuit",
+    "Fixed-step physics agrees at 120, 60 and 10 FPS including a 200 ms frame",
+    "PocketVM registers the race, preserves preferences and includes the exact uploaded music"
+  ],
+  "races": [
+    {
+      "track": "harbour",
+      "weather": "clear",
+      "times": [
+        26.8,
+        26.24,
+        27.16
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3259
+    },
+    {
+      "track": "harbour",
+      "weather": "rain",
+      "times": [
+        29.77,
+        28.97,
+        30.14
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3617
+    },
+    {
+      "track": "canyon",
+      "weather": "clear",
+      "times": [
+        33.64,
+        32.83,
+        34.03
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 4084
+    },
+    {
+      "track": "canyon",
+      "weather": "rain",
+      "times": [
+        37.14,
+        36.28,
+        37.69
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 4522
+    },
+    {
+      "track": "alpine",
+      "weather": "clear",
+      "times": [
+        28.2,
+        27.37,
+        28.63
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3435
+    },
+    {
+      "track": "alpine",
+      "weather": "rain",
+      "times": [
+        31.41,
+        30.46,
+        32.08
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3849
+    },
+    {
+      "track": "metro",
+      "weather": "clear",
+      "times": [
+        28.2,
+        27.48,
+        28.58
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3429
+    },
+    {
+      "track": "metro",
+      "weather": "rain",
+      "times": [
+        31.24,
+        30.29,
+        31.71
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3804
+    },
+    {
+      "track": "grandprix",
+      "weather": "clear",
+      "times": [
+        31.47,
+        30.77,
+        31.99
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 3839
+    },
+    {
+      "track": "grandprix",
+      "weather": "rain",
+      "times": [
+        34.71,
+        34.02,
+        35.22
+      ],
+      "sectors": [
+        13,
+        13,
+        13
+      ],
+      "steps": 4226
+    },
+    {
+      "track": "harbour",
+      "driver": "keyboard pilot",
+      "time": 26.152413351229832,
+      "sectors": 13,
+      "position": 3
+    },
+    {
+      "track": "canyon",
+      "driver": "keyboard pilot",
+      "time": 33.149344110452844,
+      "sectors": 13,
+      "position": 3
+    },
+    {
+      "track": "metro",
+      "driver": "keyboard pilot",
+      "time": 27.494525400634117,
+      "sectors": 13,
+      "position": 3
+    }
+  ]
+}

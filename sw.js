@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v79';
+const CACHE = 'pocketvm-shell-v80';
 const ASSETS = [
   './',
   './index.html',
@@ -20,6 +20,9 @@ const ASSETS = [
   './store/pvz/game.html',
   './store/flappy/icon.svg',
   './store/flappy/game.html',
+  './store/apexrush/icon.svg',
+  './store/apexrush/game.html',
+  './store/apexrush/music.mp3',
   './store/penguinpull/icon.svg',
   './store/penguinpull/game.html',
   './manifest.webmanifest',
