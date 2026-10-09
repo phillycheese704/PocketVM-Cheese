@@ -6,6 +6,6 @@
     "The production Play button opens the playable HUD",
     "Perspective clipping and instanced geometry remain finite"
   ],
-  "firstFrameMs": 118,
+  "firstFrameMs": 121,
   "sampledColours": 3689
 }

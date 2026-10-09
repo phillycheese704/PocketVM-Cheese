@@ -204,8 +204,8 @@
   ];
 
 
-  const WOBBLE_ID='wobblebay',WOBBLE_NAME='Wobble Bay',WOBBLE_ROOT='/home/user/Downloads/Wobble Bay',WOBBLE_SOURCE='./store/wobblebay/',WOBBLE_ICON_URL=WOBBLE_SOURCE+'icon.svg?v=illustrated-v1',WOBBLE_GAME_REVISION='bay-v3',WOBBLE_SAVE_KEY='pocketvm.game.wobblebay',WOBBLE_PIN_KEY='pocketvm.store.wobblebay.desktop';
-  const WOBBLE_FILES=[{"name":"game.html","size":19793,"mime":"text/html"},{"name":"engine.js","size":30975,"mime":"text/javascript"},{"name":"game.js","size":48828,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"software-renderer.js","size":7682,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
+  const WOBBLE_ID='wobblebay',WOBBLE_NAME='Wobble Bay',WOBBLE_ROOT='/home/user/Downloads/Wobble Bay',WOBBLE_SOURCE='./store/wobblebay/',WOBBLE_ICON_URL=WOBBLE_SOURCE+'icon.svg?v=illustrated-v1',WOBBLE_GAME_REVISION='bay-v4',WOBBLE_SAVE_KEY='pocketvm.game.wobblebay',WOBBLE_PIN_KEY='pocketvm.store.wobblebay.desktop';
+  const WOBBLE_FILES=[{"name":"game.html","size":19793,"mime":"text/html"},{"name":"engine.js","size":31149,"mime":"text/javascript"},{"name":"game.js","size":48828,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"software-renderer.js","size":7682,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
   const WOBBLE_TOTAL_BYTES=WOBBLE_FILES.reduce((n,f)=>n+f.size,0)+61832+WOBBLE_NAME.length;
   const wobbleFeatureVariants=[
     {kicker:'NEW 3D SANDBOX',title:'A little work. A lot of wobble.',copy:'An original physics island: eight paid jobs, floppy characters, cars, boats, a helicopter and real cargo. Earn a new hat, call a ride and buy your first home.',tone:'sky'},

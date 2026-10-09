@@ -1,0 +1,18 @@
+{
+  "games": [
+    "snake",
+    "deadwave",
+    "blockblast",
+    "crumbclicker",
+    "pvz",
+    "flappy",
+    "penguinpull",
+    "apexrush",
+    "wobblebay"
+  ],
+  "checks": 29,
+  "tests": [
+    "Nine games each have 32, 180 and 512 pixel PNG exports and SVG favicon links",
+    "PocketVM ICO includes 32 and 48 pixel PNG frames"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "checks": 16,
+  "checks": 17,
   "tests": [
     "Fresh worlds, save validation and all eight job definitions are finite and bounded",
     "Walking, jumping and diagonal movement use the same production movement physics",
@@ -11,6 +11,7 @@
     "Helicopter lift, boat thrust, boost energy and recovery are physical and finite",
     "Purchases debit once, cannot overspend, and owned houses, hats, pets and ride calls persist",
     "Collectible stars award once, cancel removes job cargo, and an expired job does not deduct cash",
+    "High stars sit above their visible platforms and roofs, and throws can reach the hoop",
     "Normal walking and grab inputs complete Parcel Run and Pizza Express with real cargo",
     "Normal walking, grab and drop inputs complete cleanup and material deliveries",
     "Fishing requires reaching the pier, casting and reacting to three actual bite windows",

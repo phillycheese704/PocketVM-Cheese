@@ -1,0 +1,53 @@
+{
+  "checks": 12,
+  "results": [
+    {
+      "size": "xl",
+      "result": "PASS · 1024 × 768 · flop 86×86, grab 86×86, jump 86×86, throw 86×86, interact 184×86, joystick 162×162 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "xl",
+      "result": "PASS · 768 × 1024 · flop 86×86, grab 86×86, jump 86×86, throw 86×86, interact 182×86, joystick 162×162 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "xl",
+      "result": "PASS · 1366 × 1024 · flop 86×86, grab 86×86, jump 86×86, throw 86×86, interact 184×86, joystick 162×162 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "xl",
+      "result": "PASS · 507 × 768 · flop 63×63, grab 63×63, jump 63×63, throw 63×63, interact 134×63, joystick 126×126 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "xl",
+      "result": "PASS · 390 × 844 · flop 63×63, grab 63×63, jump 63×63, throw 63×63, interact 134×63, joystick 126×126 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "xl",
+      "result": "PASS · 740 × 390 · flop 62×62, grab 62×62, jump 62×62, throw 62×62, interact 132×62, joystick 112×112 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 1024 × 768 · flop 72×72, grab 72×72, jump 72×72, throw 72×72, interact 156×72, joystick 138×138 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 768 × 1024 · flop 72×72, grab 72×72, jump 72×72, throw 72×72, interact 154×72, joystick 138×138 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 1366 × 1024 · flop 72×72, grab 72×72, jump 72×72, throw 72×72, interact 156×72, joystick 138×138 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 507 × 768 · flop 57×57, grab 57×57, jump 57×57, throw 57×57, interact 122×57, joystick 112×112 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 390 × 844 · flop 57×57, grab 57×57, jump 57×57, throw 57×57, interact 122×57, joystick 112×112 · 0 outside, 0 undersized, no overlaps"
+    },
+    {
+      "size": "large",
+      "result": "PASS · 740 × 390 · flop 54×54, grab 54×54, jump 54×54, throw 54×54, interact 116×54, joystick 100×100 · 0 outside, 0 undersized, no overlaps"
+    }
+  ]
+}
