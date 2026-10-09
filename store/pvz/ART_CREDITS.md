@@ -5,7 +5,7 @@ PopCap Games / Electronic Arts. These assets are not original PocketVM artwork.
 
 The embedded sprite atlases were composed from the extracted images and
 animation tracks in [FregD156/PvZ_Assets](https://github.com/FregD156/PvZ_Assets).
-Repeater, Conehead, Buckethead, Screen Door and Flag Zombie atlas variants use
+Peashooter, Repeater, Conehead, Buckethead, Screen Door and Flag Zombie atlases use
 frames from [ZhuZhengyi/jspvz](https://github.com/ZhuZhengyi/jspvz).
 
 Atlases use a subset of original animation frames, resized and encoded as WebP.
