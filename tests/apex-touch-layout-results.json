@@ -1,0 +1,19 @@
+{
+  "build": "race-v2-ipad",
+  "browser": "Chrome",
+  "checks": 12,
+  "results": [
+    "XL: PASS · 1024 × 768 · left 123×113, right 123×113, handbrake 258×62, boost 258×62, brake 123×113, gas 123×113 · 0 outside, 0 undersized, no overlaps",
+    "XL: PASS · 768 × 1024 · left 100×96, right 100×96, handbrake 212×62, boost 212×62, brake 100×96, gas 100×96 · 0 outside, 0 undersized, no overlaps",
+    "XL: PASS · 1366 × 1024 · left 128×120, right 128×120, handbrake 268×62, boost 268×62, brake 128×120, gas 128×120 · 0 outside, 0 undersized, no overlaps",
+    "XL: PASS · 507 × 768 · left 91×92, right 91×92, handbrake 191×54, boost 191×54, brake 91×92, gas 91×92 · 0 outside, 0 undersized, no overlaps",
+    "XL: PASS · 390 × 844 · left 70×92, right 70×92, handbrake 148×54, boost 148×54, brake 70×92, gas 70×92 · 0 outside, 0 undersized, no overlaps",
+    "XL: PASS · 740 × 390 · left 92×76, right 92×76, handbrake 192×48, boost 192×48, brake 92×76, gas 92×76 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 1024 × 768 · left 102×92, right 102×92, handbrake 217×54, boost 217×54, brake 102×92, gas 102×92 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 768 × 1024 · left 88×84, right 88×84, handbrake 188×54, boost 188×54, brake 88×84, gas 88×84 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 1366 × 1024 · left 112×104, right 112×104, handbrake 236×54, boost 236×54, brake 112×104, gas 112×104 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 507 × 768 · left 81×80, right 81×80, handbrake 170×54, boost 170×54, brake 81×80, gas 81×80 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 390 × 844 · left 62×80, right 62×80, handbrake 133×54, boost 133×54, brake 62×80, gas 62×80 · 0 outside, 0 undersized, no overlaps",
+    "Large: PASS · 740 × 390 · left 80×66, right 80×66, handbrake 168×44, boost 168×44, brake 80×66, gas 80×66 · 0 outside, 0 undersized, no overlaps"
+  ]
+}
