@@ -58,7 +58,7 @@ test('All six stage themes and transition effects render with reactive sprites',
 test('Installers verify the new packages, migrate unlimited scores and cache both games',()=>{
  const store=fs.readFileSync(path.join(__dirname,'../store.js'),'utf8'),sw=fs.readFileSync(path.join(__dirname,'../sw.js'),'utf8');
  new vm.Script(store);new vm.Script(sw);
- for(const [game,build,constant]of [['deadwave','arsenal-v2','DEADWAVE_GAME_REVISION'],['penguinpull','endless-v4','PENGUIN_GAME_REVISION']]){const html=fs.readFileSync(path.join(__dirname,'../store',game,'game.html'),'utf8');assert.ok(html.includes('content="'+build+'"'));assert.ok(store.includes(constant+(game==='deadwave'?" = '":"='")+build));assert.ok(sw.includes('./store/'+game+'/game.html'))}
+ for(const [game,build,constant]of [['deadwave','arsenal-v3','DEADWAVE_GAME_REVISION'],['penguinpull','endless-v4','PENGUIN_GAME_REVISION']]){const html=fs.readFileSync(path.join(__dirname,'../store',game,'game.html'),'utf8');assert.ok(html.includes('content="'+build+'"'));assert.ok(store.includes(constant+(game==='deadwave'?" = '":"='")+build));assert.ok(sw.includes('./store/'+game+'/game.html'))}
  const sanitize=vm.runInNewContext('('+store.match(/function sanitizePenguinSave\(d\)\{[^\n]+/)[0]+')');assert.equal(sanitize({best:2100,bestTowers:105}).best,2100);assert.equal(sanitize({bestTowers:105}).bestTowers,105);assert.equal(sanitize({best:-12}).best,0);
  assert.equal(Number(store.match(/PENGUIN_GAME_BYTES=(\d+)/)[1]),fs.statSync(path.join(__dirname,'../store/penguinpull/game.html')).size);
  assert.equal(Number(store.match(/name:'game.html', url:DEADWAVE_SOURCE[^\n]+size:(\d+)/)[1]),fs.statSync(path.join(__dirname,'../store/deadwave/game.html')).size);
