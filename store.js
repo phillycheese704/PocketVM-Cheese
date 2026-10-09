@@ -7,10 +7,10 @@
   const PIN_KEY = 'pocketvm.store.snake.desktop';
   const SAVE_KEY = 'pocketvm.game.snake';
   const PACKAGE = [
-    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:26899 },
+    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:26916 },
     { name:'music.ogg', url:'https://raw.githubusercontent.com/Anubhav9/Yellow-Olive/main/media/resources/music_files/sakura_harbour_prologue_end.ogg', mime:'audio/ogg', size:1724097 }
   ];
-  const DEFAULT_ICON_URL = SOURCE + 'icon.svg';
+  const DEFAULT_ICON_URL = SOURCE + 'icon.svg?v=illustrated-v1';
   const DEFAULT_ICON_ESTIMATE = 48000;
   const NAME_FILE = 'name.txt';
   const DEFAULT_NAME = 'Snake';
@@ -45,10 +45,10 @@
   const DEADWAVE_SAVE_KEY = 'pocketvm.game.deadwave';
   const DEADWAVE_NAME = 'Deadwave';
   const DEADWAVE_NAME_FILE = 'name.txt';
-  const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg';
+  const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg?v=illustrated-v1';
   const DEADWAVE_ICON_ESTIMATE = 48000;
   const DEADWAVE_PACKAGE = [
-    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:111030 },
+    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:111047 },
     { name:'music.mp3', url:'https://raw.githubusercontent.com/VincentLinta/Joc-practica-Lava-Adventure/f965d167f6ed2d72d4c3f3e9e50737f3f690590a/alex-morgan-video-game-pixel-chiptune-music-583271.mp3', mime:'audio/mpeg', size:4700160 }
   ];
   const DEADWAVE_TOTAL_BYTES = DEADWAVE_PACKAGE.reduce((n,file)=>n+file.size,0) + DEADWAVE_ICON_ESTIMATE + DEADWAVE_NAME.length;
@@ -105,10 +105,10 @@
   const BLOCKBLAST_SAVE_KEY = 'pocketvm.game.blockblast';
   const BLOCKBLAST_NAME = 'Block Blast';
   const BLOCKBLAST_NAME_FILE = 'name.txt';
-  const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg';
+  const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg?v=illustrated-v1';
   const BLOCKBLAST_ICON_ESTIMATE = 26000;
   const BLOCKBLAST_PACKAGE = [
-    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20653 }
+    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20670 }
   ];
   const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
   const BLOCKBLAST_MODS = Object.freeze({
@@ -139,11 +139,11 @@
   ];
 
 
-  const CRUMBCLICKER_ID='crumbclicker',CRUMBCLICKER_ROOT='/home/user/Downloads/Crumb Clicker',CRUMBCLICKER_SOURCE='./store/crumbclicker/',CRUMBCLICKER_GAME_REVISION='v1',CRUMBCLICKER_PIN_KEY='pocketvm.store.crumbclicker.desktop',CRUMBCLICKER_SAVE_KEY='pocketvm.game.crumbclicker',CRUMBCLICKER_NAME='Crumb Clicker',CRUMBCLICKER_NAME_FILE='name.txt',CRUMBCLICKER_ICON_URL=CRUMBCLICKER_SOURCE+'icon.svg',CRUMBCLICKER_ICON_ESTIMATE=24000;
+  const CRUMBCLICKER_ID='crumbclicker',CRUMBCLICKER_ROOT='/home/user/Downloads/Crumb Clicker',CRUMBCLICKER_SOURCE='./store/crumbclicker/',CRUMBCLICKER_GAME_REVISION='v1',CRUMBCLICKER_PIN_KEY='pocketvm.store.crumbclicker.desktop',CRUMBCLICKER_SAVE_KEY='pocketvm.game.crumbclicker',CRUMBCLICKER_NAME='Crumb Clicker',CRUMBCLICKER_NAME_FILE='name.txt',CRUMBCLICKER_ICON_URL=CRUMBCLICKER_SOURCE+'icon.svg?v=illustrated-v1',CRUMBCLICKER_ICON_ESTIMATE=24000;
   const CRUMBCLICKER_BUILDING_IDS=['finger','baker','oven','farm','mill','line','market','royal','time','portal','moon'];
-  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778798}];
+  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778815}];
   const CRUMBCLICKER_TOTAL_BYTES=CRUMBCLICKER_PACKAGE.reduce((n,file)=>n+file.size,0)+CRUMBCLICKER_ICON_ESTIMATE+CRUMBCLICKER_NAME.length;
-  const CRUMBCLICKER_CANDY_ICON=CRUMBCLICKER_SOURCE+'candy-icon.svg';
+  const CRUMBCLICKER_CANDY_ICON=CRUMBCLICKER_SOURCE+'candy-icon.svg?v=illustrated-v1';
   const CRUMBCLICKER_MODS=Object.freeze({"hyperclicker":{"id":"hyperclicker","name":"Hyperclicker","file":"crumbclicker-hyperclicker.pvmod","kind":"gameplay","icon":"⚡","tagline":"Five thousand clicks a second.","description":"Adds a simple HYPER toggle. Turn it on and the game generates roughly 5,000 manual clicks every second using your current click power.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"gameplay","id":"hyperclicker","version":"1.0.0","name":"Hyperclicker","clicksPerSecond":5000}},"opbuildings":{"id":"opbuildings","name":"OP Buildings","file":"crumbclicker-op-buildings.pvmod","kind":"gameplay","icon":"1","tagline":"Every building costs one.","description":"Makes every individual building cost exactly 1. Buying 10 costs 10, buying 100 costs 100, and MAX buys as many as your current currency allows.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"gameplay","id":"opbuildings","version":"1.0.0","name":"OP Buildings","buildingUnitCost":1}},"candy":{"id":"candy","name":"Candy Clicker","file":"crumbclicker-candy-clicker.pvmod","kind":"cosmetic","icon":"🍬","tagline":"Same addiction. More sugar.","description":"Turns the biscuit into candy, changes the bakery into a candy shop, swaps the currency to candies, and reskins names, messages and colours.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"cosmetic","id":"candy","version":"1.0.0","name":"Candy Clicker"}}});
   const crumbClickerFeatureVariants=[
     {kicker:'NEW RELEASE',title:'One biscuit becomes an empire.',copy:'Tap the biscuit, hire production, buy upgrades and watch the numbers stop behaving normally.',tone:'crumb'},
@@ -159,9 +159,9 @@
   const PVZ_SAVE_KEY='pocketvm.game.pvz';
   const PVZ_NAME='Plants vs Zombies';
   const PVZ_NAME_FILE='name.txt';
-  const PVZ_ICON_URL=PVZ_SOURCE+'icon.svg';
+  const PVZ_ICON_URL=PVZ_SOURCE+'icon.svg?v=illustrated-v1';
   const PVZ_ICON_ESTIMATE=32000;
-  const PVZ_GAME_BYTES=9842961;
+  const PVZ_GAME_BYTES=9842978;
   const PVZ_TRACKS=Object.freeze([
     {id:'02',name:'02.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/02CrazyDave.mp3',mime:'audio/mpeg',size:1403422},
     {id:'03',name:'03.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/03chooseYourSeeds.mp3',mime:'audio/mpeg',size:554551},
@@ -191,9 +191,9 @@
   const APEX_SAVE_KEY='pocketvm.game.apexrush';
   const APEX_NAME='Apex Rush';
   const APEX_NAME_FILE='name.txt';
-  const APEX_ICON_URL=APEX_SOURCE+'icon.svg';
+  const APEX_ICON_URL=APEX_SOURCE+'icon.svg?v=illustrated-v1';
   const APEX_ICON_ESTIMATE=28000;
-  const APEX_GAME_BYTES=69337;
+  const APEX_GAME_BYTES=69354;
   const APEX_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:3387141,urls:[APEX_SOURCE+'music.mp3']};
   const APEX_TOTAL_BYTES=APEX_GAME_BYTES+APEX_MUSIC.size+APEX_ICON_ESTIMATE+APEX_NAME.length;
   const apexFeatureVariants=[
@@ -204,8 +204,8 @@
   ];
 
 
-  const WOBBLE_ID='wobblebay',WOBBLE_NAME='Wobble Bay',WOBBLE_ROOT='/home/user/Downloads/Wobble Bay',WOBBLE_SOURCE='./store/wobblebay/',WOBBLE_ICON_URL=WOBBLE_SOURCE+'icon.svg',WOBBLE_GAME_REVISION='bay-v2',WOBBLE_SAVE_KEY='pocketvm.game.wobblebay',WOBBLE_PIN_KEY='pocketvm.store.wobblebay.desktop';
-  const WOBBLE_FILES=[{"name":"game.html","size":19740,"mime":"text/html"},{"name":"engine.js","size":30975,"mime":"text/javascript"},{"name":"game.js","size":48828,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"software-renderer.js","size":7682,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
+  const WOBBLE_ID='wobblebay',WOBBLE_NAME='Wobble Bay',WOBBLE_ROOT='/home/user/Downloads/Wobble Bay',WOBBLE_SOURCE='./store/wobblebay/',WOBBLE_ICON_URL=WOBBLE_SOURCE+'icon.svg?v=illustrated-v1',WOBBLE_GAME_REVISION='bay-v3',WOBBLE_SAVE_KEY='pocketvm.game.wobblebay',WOBBLE_PIN_KEY='pocketvm.store.wobblebay.desktop';
+  const WOBBLE_FILES=[{"name":"game.html","size":19793,"mime":"text/html"},{"name":"engine.js","size":30975,"mime":"text/javascript"},{"name":"game.js","size":48828,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"software-renderer.js","size":7682,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
   const WOBBLE_TOTAL_BYTES=WOBBLE_FILES.reduce((n,f)=>n+f.size,0)+61832+WOBBLE_NAME.length;
   const wobbleFeatureVariants=[
     {kicker:'NEW 3D SANDBOX',title:'A little work. A lot of wobble.',copy:'An original physics island: eight paid jobs, floppy characters, cars, boats, a helicopter and real cargo. Earn a new hat, call a ride and buy your first home.',tone:'sky'},
@@ -222,9 +222,9 @@
   const FLAPPY_SAVE_KEY='pocketvm.game.flappy';
   const FLAPPY_NAME='Flappy Bird';
   const FLAPPY_NAME_FILE='name.txt';
-  const FLAPPY_ICON_URL=FLAPPY_SOURCE+'icon.svg';
+  const FLAPPY_ICON_URL=FLAPPY_SOURCE+'icon.svg?v=illustrated-v1';
   const FLAPPY_ICON_ESTIMATE=28000;
-  const FLAPPY_GAME_BYTES=35045;
+  const FLAPPY_GAME_BYTES=35062;
   const FLAPPY_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:1493465,urls:[
     'https://od.lk/s/ODdfMzQxNjQ0MTRf/03.%20Main%20Theme.mp3',
     'https://downloads.khinsider.com/game-soundtracks/album/flappy-bird-crypto-android-ios-online-gamerip-2024/03.%2520Main%2520Theme.mp3'
@@ -245,9 +245,9 @@
   const PENGUIN_SAVE_KEY='pocketvm.game.penguinpull';
   const PENGUIN_NAME='Penguin Pull';
   const PENGUIN_NAME_FILE='name.txt';
-  const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg';
+  const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg?v=illustrated-v1';
   const PENGUIN_ICON_ESTIMATE=28000;
-  const PENGUIN_GAME_BYTES=43019;
+  const PENGUIN_GAME_BYTES=43036;
   const PENGUIN_TOTAL_BYTES=PENGUIN_GAME_BYTES+PENGUIN_ICON_ESTIMATE+PENGUIN_NAME.length;
   const penguinFeatureVariants=[
     {kicker:'NEW RELEASE',title:'Pull carefully. Save everybody.',copy:'Drag little penguins out of an icy tower and get them into the sea without dunking the sleeping royal.',tone:'ice'},
@@ -774,7 +774,7 @@ return sanitize(d&&typeof d==='object'?d:{});
   function wobblePinned(){return localStorage.getItem(WOBBLE_PIN_KEY)==='1';}
   function setWobblePinned(v){if(v)localStorage.setItem(WOBBLE_PIN_KEY,'1');else localStorage.removeItem(WOBBLE_PIN_KEY);}
   function verifyWobbleFile(file,text){if(new Blob([text]).size!==file.size)throw new Error('Wobble Bay download is incomplete: '+file.name);if(file.name==='game.html'&&!text.includes('name="pocketvm-wobble-build" content="'+WOBBLE_GAME_REVISION+'"'))throw new Error('Wobble Bay package verification failed.');return text;}
-  async function fetchWobbleFiles(){return Promise.all(WOBBLE_FILES.map(async file=>{const r=await fetch(new URL(WOBBLE_SOURCE+file.name,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);return[file,verifyWobbleFile(file,await r.text())];}));}
+  async function fetchWobbleFiles(){return Promise.all(WOBBLE_FILES.map(async file=>{const r=await fetch(new URL(WOBBLE_SOURCE+file.name+'?v='+WOBBLE_GAME_REVISION,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);return[file,verifyWobbleFile(file,await r.text())];}));}
   async function fetchWobbleIcon(){const r=await fetch(WOBBLE_SOURCE+'icon-512.png',{cache:'no-cache'});if(!r.ok)throw new Error('Could not download the Wobble Bay icon.');const b=await r.blob();if(!await validGameIcon(b))throw new Error('Wobble Bay icon download is incomplete.');return b;}
   async function installWobble(progress){if(await wobbleInstalled())return;const [files,icon]=await Promise.all([fetchWobbleFiles(),fetchWobbleIcon()]);await PocketDisk.ensureDir(WOBBLE_ROOT);let bytes=0;try{for(const [file,text]of files){await PocketDisk.writeText(WOBBLE_ROOT+'/'+file.name,text,file.mime);bytes+=file.size;progress?.(bytes,WOBBLE_TOTAL_BYTES,file.name);}await PocketDisk.writeBlob(WOBBLE_ROOT+'/icon.png',icon,'image/png');await PocketDisk.writeText(WOBBLE_ROOT+'/icon-version.txt',ICON_REVISION,'text/plain');await PocketDisk.writeText(WOBBLE_ROOT+'/name.txt',WOBBLE_NAME,'text/plain');progress?.(WOBBLE_TOTAL_BYTES,WOBBLE_TOTAL_BYTES,'Ready');await shellCtx?.refreshFS?.();await syncWobbleShell();shellCtx?.notify?.('Wobble Bay installed','Eight jobs. One world. Lots of wobble.','☀');}catch(e){await PocketDisk.remove(WOBBLE_ROOT).catch(()=>{});throw e;}}
   async function uninstallWobble(){if(!await wobbleInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===WOBBLE_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(WOBBLE_ROOT);setWobblePinned(false);await shellCtx?.refreshFS?.();await syncWobbleShell();shellCtx?.notify?.('Wobble Bay uninstalled','Your cash and purchases are saved for your next visit.','×');}
@@ -788,7 +788,7 @@ return sanitize(d&&typeof d==='object'?d:{});
       let files;
       try{files=await Promise.all(WOBBLE_FILES.map(async f=>[f,await PocketDisk.readText(WOBBLE_ROOT+'/'+f.name)]));for(const [file,text]of files)verifyWobbleFile(file,text);}catch{files=await fetchWobbleFiles();for(const [file,text]of files)await PocketDisk.writeText(WOBBLE_ROOT+'/'+file.name,text,file.mime);}
       let html=files.find(([f])=>f.name==='game.html')[1];
-      for(const [file,text]of files.filter(([f])=>f.mime==='text/javascript')){const data=await blobToDataURL(new Blob([text],{type:'text/javascript'}));html=html.replace('src="./'+file.name+'"','src="'+data+'"');}
+      for(const [file,text]of files.filter(([f])=>f.mime==='text/javascript')){const data=await blobToDataURL(new Blob([text],{type:'text/javascript'}));html=html.replace('src="./'+file.name+'?v='+WOBBLE_GAME_REVISION+'"','src="'+data+'"').replace('src="./'+file.name+'"','src="'+data+'"');}
       const save=(()=>{try{return sanitizeWobbleSave(JSON.parse(localStorage.getItem(WOBBLE_SAVE_KEY)||'{}'));}catch{return sanitizeWobbleSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
       frame.srcdoc=gameFavicons(html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap),WOBBLE_ID);
     }catch(e){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(e?.message||'Reinstall Wobble Bay from the Store.')}</small>`;return;}
@@ -1174,8 +1174,8 @@ return sanitize(d&&typeof d==='object'?d:{});
     function crumbClickerPreview(){return '<div class="crumbclicker-preview"><div class="cc-number">12.48 M biscuits</div><div class="cc-cookie"><i></i><i></i><i></i><i></i><i></i></div><div class="cc-shop"><b></b><b></b><b></b><b></b></div></div>';}
     function pvzPreview(){return '<div class="pvz-preview"><div class="pvz-sun">☀ 325</div><div class="pvz-lawn">'+Array.from({length:45},(_,i)=>'<i class="'+([1,9,18,27,36].includes(i)?'sunflower':([3,12,21,30,39].includes(i)?'pea':''))+'"></i>').join('')+'</div><b class="pvz-z z1">🧟</b><b class="pvz-z z2">🧟‍♂️</b><span class="pvz-shot"></span></div>';}
     function flappyPreview(){return '<div class="flappy-preview"><span class="fp-sun"></span><i class="fp-cloud c1"></i><i class="fp-cloud c2"></i><b class="fp-pipe p1"></b><b class="fp-pipe p2"></b><div class="fp-bird"><i></i></div><strong>12</strong><em></em></div>';}
-    function wobblePreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#cdece5,#58aab4);border-radius:20px"><img src="./store/wobblebay/icon.svg" alt="Wobble Bay explorer" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
-    function apexPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#274b43,#10232d);border-radius:20px"><img src="./store/apexrush/icon.svg" alt="Apex Rush race car" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0005)"></div>';}
+    function wobblePreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#cdece5,#58aab4);border-radius:20px"><img src="./store/wobblebay/icon.svg?v=illustrated-v1" alt="Wobble Bay explorer" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
+    function apexPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#274b43,#10232d);border-radius:20px"><img src="./store/apexrush/icon.svg?v=illustrated-v1" alt="Apex Rush race car" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0005)"></div>';}
     function penguinPreview(){return '<div class="penguin-preview"><div class="pp-water"></div><div class="pp-stack">'+Array.from({length:20},(_,i)=>'<i style="--c:'+(i%5-2)+';--r:'+Math.floor(i/5)+'"></i>').join('')+'<b class="pp-king"><u></u></b></div><strong>7</strong><span>rescued</span></div>';}
 
     async function runAction(id,button,progress){
