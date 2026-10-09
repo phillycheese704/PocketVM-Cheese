@@ -24,11 +24,11 @@ than rendering Repeater-only layers from the shared reanimation file. The
 regression suite pins the corrected atlas and portrait hashes separately from
 Repeater. All 49 labeled plant portraits were visually checked for identity.
 
-The live GitHub Pages build was also checked in Chrome: the v12 marker, seed
-selection, starting Adventure 1-1, dragging a Peashooter onto the lawn, pause,
-and the PocketVM first-time setup screen all worked.
+The live GitHub Pages v13 build was checked in Chrome: seed selection, the
+correct normal Peashooter packet portrait and lawn animation, click planting,
+and pause all worked.
 
-![Live browser smoke check](pvz-browser-proof-1791497959004.jpg)
+![Live browser smoke check](pvz-peashooter-fixed-1791526699545.jpg)
 
 The automated suite is not a browser interaction test or a complete
 playthrough of all 50 levels. Boss phase choreography, exact wave rosters,
