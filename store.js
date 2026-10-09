@@ -40,7 +40,7 @@
     const DEADWAVE_ID = 'deadwave';
   const DEADWAVE_ROOT = '/home/user/Downloads/Deadwave';
   const DEADWAVE_SOURCE = './store/deadwave/';
-  const DEADWAVE_GAME_REVISION = 'weapons-v1';
+  const DEADWAVE_GAME_REVISION = 'arsenal-v2';
   const DEADWAVE_PIN_KEY = 'pocketvm.store.deadwave.desktop';
   const DEADWAVE_SAVE_KEY = 'pocketvm.game.deadwave';
   const DEADWAVE_NAME = 'Deadwave';
@@ -48,7 +48,7 @@
   const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg';
   const DEADWAVE_ICON_ESTIMATE = 48000;
   const DEADWAVE_PACKAGE = [
-    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:64264 },
+    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:107474 },
     { name:'music.mp3', url:'https://raw.githubusercontent.com/VincentLinta/Joc-practica-Lava-Adventure/f965d167f6ed2d72d4c3f3e9e50737f3f690590a/alex-morgan-video-game-pixel-chiptune-music-583271.mp3', mime:'audio/mpeg', size:4700160 }
   ];
   const DEADWAVE_TOTAL_BYTES = DEADWAVE_PACKAGE.reduce((n,file)=>n+file.size,0) + DEADWAVE_ICON_ESTIMATE + DEADWAVE_NAME.length;
@@ -93,8 +93,8 @@
   });
   const deadwaveFeatureVariants = [
     {kicker:'NEW RELEASE',title:'The dead do not stop.',copy:'Endless arena survival. Move, let the gun work, then rebuild your survivor one card at a time.',tone:'blood'},
-    {kicker:'FEATURED',title:'Twenty-five seconds. Then choose.',copy:'Survive each wave and pick one of three permanent upgrades before the next crowd arrives.',tone:'violet'},
-    {kicker:'ENDLESS',title:'How broken can your build get?',copy:'Stack multishot, crits, pierce, armour, regen and more while twelve zombie types pile into the arena.',tone:'toxic'},
+    {kicker:'FEATURED',title:'Build your own apocalypse.',copy:'Choose from 136 upgrade cards, discover 13 weapons, and defeat every boss before advancing.',tone:'violet'},
+    {kicker:'ENDLESS',title:'How broken can your build get?',copy:'Stack multishot, crits, pierce, armour, regen and more while 19 zombie breeds and eight bosses test your build.',tone:'toxic'},
     {kicker:'BUILT FOR TOUCH',title:'One thumb. A lot of zombies.',copy:'Virtual joystick movement with automatic targeting and firing, designed around iPad play.',tone:'night'}
   ];
 
@@ -209,20 +209,20 @@
   const PENGUIN_ID='penguinpull';
   const PENGUIN_ROOT='/home/user/Downloads/Penguin Pull';
   const PENGUIN_SOURCE='./store/penguinpull/';
-  const PENGUIN_GAME_REVISION='v3';
+  const PENGUIN_GAME_REVISION='endless-v4';
   const PENGUIN_PIN_KEY='pocketvm.store.penguinpull.desktop';
   const PENGUIN_SAVE_KEY='pocketvm.game.penguinpull';
   const PENGUIN_NAME='Penguin Pull';
   const PENGUIN_NAME_FILE='name.txt';
   const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg';
   const PENGUIN_ICON_ESTIMATE=28000;
-  const PENGUIN_GAME_BYTES=35679;
+  const PENGUIN_GAME_BYTES=42823;
   const PENGUIN_TOTAL_BYTES=PENGUIN_GAME_BYTES+PENGUIN_ICON_ESTIMATE+PENGUIN_NAME.length;
   const penguinFeatureVariants=[
     {kicker:'NEW RELEASE',title:'Pull carefully. Save everybody.',copy:'Drag little penguins out of an icy tower and get them into the sea without dunking the sleeping royal.',tone:'ice'},
     {kicker:'TENSION PHYSICS',title:'Feel the tower fight back.',copy:'Loaded penguins resist pulls, the tower now has real wobble momentum, and centred cleared layers settle onto the next sheet.',tone:'ice'},
     {kicker:'BUILT FOR TOUCH',title:'One finger. Questionable engineering.',copy:'Drag, reconsider, settle a penguin back into place, or commit to the sea. Touch and mouse use the same physical rules.',tone:'ice'},
-    {kicker:'PERFECT RUN',title:'Can you save all twenty?',copy:'Only the last-moved penguin scores. Rescue all twenty for Emperor Penguin — and keep the crown attached for a flawless run.',tone:'ice'}
+    {kicker:'ENDLESS RESCUE',title:'A new coast after every tower.',copy:'Every penguin that splashes scores once. Clear a tower to sail into a different random stage; keep going for an endless high score.',tone:'ice'}
   ];
 
   const FEATURE_ROTATE_MS = 15 * 60 * 1000;
@@ -541,7 +541,7 @@
           await PocketDisk.writeText(path,fresh,'text/html');
           await shellCtx?.refreshFS?.();
           html=fresh;
-          shellCtx?.notify?.('Deadwave updated','Weapon upgrade cards are ready.','☣');
+          shellCtx?.notify?.('Deadwave updated','13 weapons, 136 cards, 19 zombie breeds and 8 bosses are ready.','☣');
         }
       }
     } catch {}
@@ -720,12 +720,12 @@
   function setPenguinPinned(v){if(v)localStorage.setItem(PENGUIN_PIN_KEY,'1');else localStorage.removeItem(PENGUIN_PIN_KEY);}
   async function createPenguinIconBlob(){const response=await fetch(PENGUIN_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Penguin Pull icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Penguin Pull icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Penguin Pull icon.');return png;}finally{URL.revokeObjectURL(source);}}
   async function fetchPenguinGameHTML(){const response=await fetch(new URL(PENGUIN_SOURCE+'game.html',location.href).href,{cache:'no-cache'});if(!response.ok)throw new Error('Could not download the Penguin Pull game engine.');const html=await response.text();if(!html.includes('name="pocketvm-penguin-build" content="'+PENGUIN_GAME_REVISION+'"'))throw new Error('Penguin Pull package verification failed.');return html;}
-  async function loadPenguinGameHTML(){const path=PENGUIN_ROOT+'/game.html';let html=await PocketDisk.readText(path),marker='name="pocketvm-penguin-build" content="'+PENGUIN_GAME_REVISION+'"';if(html.includes(marker))return html;try{const fresh=await fetchPenguinGameHTML();await PocketDisk.writeText(path,fresh,'text/html');await shellCtx?.refreshFS?.();html=fresh;shellCtx?.notify?.('Penguin Pull updated','The latest tower physics are installed.','🐧');}catch{}return html;}
-  async function installPenguin(progress){if(await penguinInstalled())return;await PocketDisk.ensureDir(PENGUIN_ROOT);let completed=0;try{const html=await fetchPenguinGameHTML();await PocketDisk.writeText(PENGUIN_ROOT+'/game.html',html,'text/html');completed+=PENGUIN_GAME_BYTES;progress?.(completed,PENGUIN_TOTAL_BYTES,'game.html');const iconBlob=await createPenguinIconBlob();await PocketDisk.writeBlob(PENGUIN_ROOT+'/icon.png',iconBlob,'image/png');completed+=iconBlob.size;progress?.(Math.min(completed,PENGUIN_TOTAL_BYTES),PENGUIN_TOTAL_BYTES,'icon.png');await PocketDisk.writeText(PENGUIN_ROOT+'/'+PENGUIN_NAME_FILE,PENGUIN_NAME,'text/plain');progress?.(PENGUIN_TOTAL_BYTES,PENGUIN_TOTAL_BYTES,'Finishing');await shellCtx?.refreshFS?.();await syncPenguinShell();shellCtx?.notify?.('Penguin Pull installed','Twenty penguins need rescuing.','🐧');}catch(err){if(await PocketDisk.getNode(PENGUIN_ROOT).catch(()=>null))await PocketDisk.remove(PENGUIN_ROOT).catch(()=>{});throw err;}}
+  async function loadPenguinGameHTML(){const path=PENGUIN_ROOT+'/game.html';let html=await PocketDisk.readText(path),marker='name="pocketvm-penguin-build" content="'+PENGUIN_GAME_REVISION+'"';if(html.includes(marker))return html;try{const fresh=await fetchPenguinGameHTML();await PocketDisk.writeText(path,fresh,'text/html');await shellCtx?.refreshFS?.();html=fresh;shellCtx?.notify?.('Penguin Pull updated','Endless random stages and reliable splash scoring are ready.','🐧');}catch{}return html;}
+  async function installPenguin(progress){if(await penguinInstalled())return;await PocketDisk.ensureDir(PENGUIN_ROOT);let completed=0;try{const html=await fetchPenguinGameHTML();await PocketDisk.writeText(PENGUIN_ROOT+'/game.html',html,'text/html');completed+=PENGUIN_GAME_BYTES;progress?.(completed,PENGUIN_TOTAL_BYTES,'game.html');const iconBlob=await createPenguinIconBlob();await PocketDisk.writeBlob(PENGUIN_ROOT+'/icon.png',iconBlob,'image/png');completed+=iconBlob.size;progress?.(Math.min(completed,PENGUIN_TOTAL_BYTES),PENGUIN_TOTAL_BYTES,'icon.png');await PocketDisk.writeText(PENGUIN_ROOT+'/'+PENGUIN_NAME_FILE,PENGUIN_NAME,'text/plain');progress?.(PENGUIN_TOTAL_BYTES,PENGUIN_TOTAL_BYTES,'Finishing');await shellCtx?.refreshFS?.();await syncPenguinShell();shellCtx?.notify?.('Penguin Pull installed','An endless rescue adventure is ready.','🐧');}catch(err){if(await PocketDisk.getNode(PENGUIN_ROOT).catch(()=>null))await PocketDisk.remove(PENGUIN_ROOT).catch(()=>{});throw err;}}
   async function uninstallPenguin(){if(!await penguinInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===PENGUIN_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(PENGUIN_ROOT);setPenguinPinned(false);await shellCtx?.refreshFS?.();await syncPenguinShell();shellCtx?.notify?.('Penguin Pull uninstalled','Its files were removed from the virtual drive.','×');}
   async function togglePenguinPin(v){setPenguinPinned(v);await syncPenguinShell();shellCtx?.notify?.(v?'Added to desktop':'Removed from desktop',PENGUIN_NAME,v?'＋':'−');}
   async function syncPenguinShell(ctx=shellCtx){if(!ctx)return;const installed=await penguinInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');let start=document.querySelector('[data-store-launch="penguinpull-start"]'),desk=document.querySelector('[data-store-launch="penguinpull-desktop"]');if(!installed){start?.remove();desk?.remove();setPenguinPinned(false);ctx.initDesktopGrid?.();return;}const id=await penguinIdentity();if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=PENGUIN_ID;start.dataset.storeLaunch='penguinpull-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}if(desktop){if(penguinPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=PENGUIN_ID;desk.dataset.storeLaunch='penguinpull-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}for(const win of ctx.state.windows.values()){if(win.appId!==PENGUIN_ID)continue;ctx.setWindowTitle(win,id.name,'🐧');applyWindowIcon(win,id.icon,ctx);}ctx.initDesktopGrid?.();}
-  function sanitizePenguinSave(d){return{best:Math.max(0,Math.min(20,Math.floor(Number(d?.best)||0))),perfects:Math.max(0,Math.min(1e9,Math.floor(Number(d?.perfects)||0))),crownPerfects:Math.max(0,Math.min(1e9,Math.floor(Number(d?.crownPerfects)||0))),sound:d?.sound!==false};}
+  function sanitizePenguinSave(d){return{bestTowers:Math.max(0,Math.min(1e9,Math.floor(Number(d?.bestTowers)||0))),best:Math.max(0,Math.min(1e9,Math.floor(Number(d?.best)||0))),perfects:Math.max(0,Math.min(1e9,Math.floor(Number(d?.perfects)||0))),crownPerfects:Math.max(0,Math.min(1e9,Math.floor(Number(d?.crownPerfects)||0))),sound:d?.sound!==false};}
 
   async function installedCrumbClickerMods(){
     const result={},snap=await PocketDisk.snapshot().catch(()=>({})),prefix=CRUMBCLICKER_ROOT+'/';
@@ -1045,12 +1045,12 @@
 
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
-      if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'Auto-fire survival · weapon upgrade cards · 12 zombie types',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
+      if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'13 weapons · 136 cards · 19 zombie breeds · 8 bosses',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
       if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Ghost clear helper · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       if(id==='crumbclicker'){const installed=await crumbClickerInstalled(),ident=await crumbClickerIdentity();return{id,app:'crumbclicker',name:ident.name,icon:ident.icon,installed,pinned:crumbClickerPinned(),size:installed?await crumbClickerBytes():CRUMBCLICKER_TOTAL_BYTES,category:'Incremental',summary:'Idle bakery · upgrades · offline earnings · prestige',install:installCrumbClicker,pin:toggleCrumbClickerPin,uninstall:uninstallCrumbClicker};}
       if(id==='pvz'){const installed=await pvzInstalled(),ident=await pvzIdentity();return{id,app:'pvz',name:ident.name,icon:ident.icon,installed,pinned:pvzPinned(),size:installed?await pvzBytes():PVZ_TOTAL_BYTES,category:'Lane defense',summary:'50-stage Adventure · 49 plants · Endless mode',install:installPvz,pin:togglePvzPin,uninstall:uninstallPvz};}
       if(id==='flappy'){const installed=await flappyInstalled(),ident=await flappyIdentity();return{id,app:'flappy',name:ident.name,icon:ident.icon,installed,pinned:flappyPinned(),size:installed?await flappyBytes():FLAPPY_TOTAL_BYTES,category:'Arcade',summary:'One-tap flight · persistent best score · looping soundtrack',install:installFlappy,pin:toggleFlappyPin,uninstall:uninstallFlappy};}
-      if(id==='penguinpull'){const installed=await penguinInstalled(),ident=await penguinIdentity();return{id,app:'penguinpull',name:ident.name,icon:ident.icon,installed,pinned:penguinPinned(),size:installed?await penguinBytes():PENGUIN_TOTAL_BYTES,category:'Physics',summary:'20 penguins · tension physics · crown-perfect runs',install:installPenguin,pin:togglePenguinPin,uninstall:uninstallPenguin};}
+      if(id==='penguinpull'){const installed=await penguinInstalled(),ident=await penguinIdentity();return{id,app:'penguinpull',name:ident.name,icon:ident.icon,installed,pinned:penguinPinned(),size:installed?await penguinBytes():PENGUIN_TOTAL_BYTES,category:'Physics',summary:'Endless random stages · every splash scores · reactive physics',install:installPenguin,pin:togglePenguinPin,uninstall:uninstallPenguin};}
       const installed=await isInstalled(),ident=await identity();return{id:'snake',app:'snake',name:ident.name,icon:ident.icon,installed,pinned:pinned(),size:installed?await installedBytes():TOTAL_BYTES,category:'Arcade',summary:'Classic Snake · Smooth touch controls · Original soundtrack',install:installSnake,pin:toggleDesktopPin,uninstall:uninstallSnake};
     }
     function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:id==='crumbclicker'?crumbClickerFeatureVariants:id==='pvz'?pvzFeatureVariants:id==='flappy'?flappyFeatureVariants:id==='penguinpull'?penguinFeatureVariants:featureVariants;return arr[variant%arr.length];}
@@ -1076,7 +1076,7 @@
       const control=f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':f.id==='crumbclicker'?'Tap / click':f.id==='pvz'?'Tap + drag':f.id==='flappy'?'Tap / Space':f.id==='penguinpull'?'Drag + release':'Touch + keys';
       const visual=f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():f.id==='crumbclicker'?crumbClickerPreview():f.id==='pvz'?pvzPreview():f.id==='flappy'?flappyPreview():f.id==='penguinpull'?penguinPreview():snakePreview();
       const features=f.id==='deadwave'
-        ?'<article><span>01</span><div><strong>Endless waves</strong><p>Survive the pressure, then pick exactly one of three upgrade cards.</p></div></article><article><span>02</span><div><strong>Twelve zombie types</strong><p>Regular enemies and three rotating bosses keep later rounds changing.</p></div></article><article><span>03</span><div><strong>Built around touch</strong><p>A virtual joystick handles movement while your weapon automatically tracks targets.</p></div></article>'
+        ?'<article><span>01</span><div><strong>Endless waves</strong><p>Survive the pressure, then pick exactly one of three upgrade cards.</p></div></article><article><span>02</span><div><strong>19 zombie breeds, 8 bosses</strong><p>Shielded husks, grave divers and storm revenants join bosses with distinct attacks and escalating phases.</p></div></article><article><span>03</span><div><strong>13 weapons, 136 cards</strong><p>Build around flame, ice, lightning, homing plasma and piercing beams. Browse every weapon and card in the field guide.</p></div></article>'
         :f.id==='blockblast'
           ?'<article><span>01</span><div><strong>Three pieces</strong><p>Place the full tray before the next three pieces arrive.</p></div></article><article><span>02</span><div><strong>Clear the grid</strong><p>Complete any full row or column to open space and build your combo.</p></div></article><article><span>03</span><div><strong>Tiny by design</strong><p>No soundtrack or framework download. It starts almost immediately.</p></div></article>'
           :f.id==='crumbclicker'
@@ -1086,7 +1086,7 @@
               :f.id==='flappy'
                 ?'<article><span>01</span><div><strong>One-input arcade</strong><p>Tap, click, Space or Arrow Up to flap. Every other decision happens in the air.</p></div></article><article><span>02</span><div><strong>Fair difficulty curve</strong><p>Pipes tighten and speed up gently with score rather than jumping into impossible patterns.</p></div></article><article><span>03</span><div><strong>Your music loop</strong><p>The supplied Main Theme installs alongside the game and loops during play.</p></div></article>'
                 :f.id==='penguinpull'
-                  ?'<article><span>01</span><div><strong>Pulls have weight</strong><p>Lower penguins resist more, partial pulls keep partial support, and slow recovery can save a dangerous tower.</p></div></article><article><span>02</span><div><strong>Loose things collide</strong><p>Released penguins bounce off ice, bump the remaining stack and can turn a clean rescue into a cascade.</p></div></article><article><span>03</span><div><strong>Crown-perfect runs</strong><p>The crown can fall without ending the game. Save all twenty with it still attached for the cleanest possible run.</p></div></article>'
+                  ?'<article><span>01</span><div><strong>Pulls have weight</strong><p>Lower penguins resist more, partial pulls keep partial support, and slow recovery can save a dangerous tower.</p></div></article><article><span>02</span><div><strong>Loose things collide</strong><p>Released penguins bounce off ice, bump the remaining stack and can turn a clean rescue into a cascade.</p></div></article><article><span>03</span><div><strong>Endless random stages</strong><p>Every splash counts. Clear twenty penguins, keep your score, and sail into one of six different stage themes.</p></div></article>'
                   :'<article><span>01</span><div><strong>Classic rules</strong><p>Apple, walls, your own tail. Nothing extra unless you put it there.</p></div></article><article><span>02</span><div><strong>Built for iPad</strong><p>Swipe controls, touch D-pad, keyboard support and responsive rendering.</p></div></article><article><span>03</span><div><strong>Actually installed</strong><p>The game, icon and soundtrack consume real space on PocketVM’s 1 GB drive.</p></div></article>';
       page.innerHTML=`<section class="store-hero store-featured" data-feature-kind="${f.id}" data-tone="${ctx.escapeHTML(v.tone)}"><div class="store-hero-copy"><div class="store-feature-label"><span class="live-dot"></span><span>${ctx.escapeHTML(v.kicker)}</span><em>${f.id==='snake'?'Featured game':'New in Store'}</em></div><h1>${ctx.escapeHTML(v.title)}</h1><p>${ctx.escapeHTML(v.copy)}</p><div class="store-scoreline"><div><strong>${ctx.escapeHTML(f.name)}</strong><span>${ctx.escapeHTML(f.category)}</span></div><i></i><div><strong>${ctx.escapeHTML(control)}</strong><span>Controls</span></div><i></i><div><strong>Offline</strong><span>After install</span></div></div><div class="store-actions"><button class="store-primary store-main-cta" data-feature-main>${f.installed?'▶ Play '+ctx.escapeHTML(f.name):'↓ Install '+ctx.escapeHTML(f.name)}</button>${f.installed?`<button class="store-secondary" data-feature-pin>${f.pinned?'Remove from desktop':'Add to desktop'}</button>`:''}</div><div class="store-progress" data-store-progress hidden><i></i><span></span></div><div class="store-install-note"><span>${f.installed?'Installed locally':formatBytes(f.size)+' download'}</span><span>•</span><span>${stats?formatBytes(stats.free)+' free on drive':'Local install'}</span></div></div><div class="store-hero-visual"><div class="store-feature-chip">POCKETVM ORIGINAL</div>${visual}<img src="${ctx.escapeHTML(f.icon)}" alt=""><div class="store-icon-glow"></div></div></section>
       <section class="store-feature-grid">${features}</section>

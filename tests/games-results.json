@@ -1,0 +1,29 @@
+{
+  "checks": 24,
+  "tests": [
+    "Deadwave adds exactly 7 weapons, 93 cards, 10 zombie breeds and 5 bosses",
+    "Every upgrade has a finite, observable effect and an honest stack limit",
+    "Every weapon hits enemies and each new attack mode operates",
+    "Fast bullets use swept collisions rather than skipping enemies",
+    "Flame burns, cryo freezes, lightning chains, grenade fragments and saw returns",
+    "Defensive and autonomous upgrades alter real combat",
+    "New mutant behaviors have distinct shields, pools, slows, charges, buffs and split spawns",
+    "Bosses debut every five waves, enter phase two and gate completion",
+    "Pause freezes pending boss spawning, abilities and the wave clock",
+    "Large card pool offers unique, applicable choices with reliable weapon discovery",
+    "Deadwave fixed-step timing preserves low-frame-rate time without advancing pause",
+    "All 27 zombie and boss models and all 13 weapon models render",
+    "Seeded Deadwave runs survive the opening waves with normal resources and legal card choices",
+    "Any penguin reaching water counts exactly once, independent of last dragged",
+    "Water contact reacts at the visible feet and catches high-speed crossings",
+    "Real drag into water reacts before release and cancellation never scores",
+    "Recent pointer motion supplies throw momentum and held-still release has none",
+    "Tower clearing retains score, resets all physics, and randomly picks a different stage",
+    "Endless mode continues beyond 100 towers without repeating adjacent stages",
+    "Stage transitions freeze during pause and restart cannot inherit old callbacks",
+    "Loose penguins collide, rebound off walls and settle on shelves",
+    "Every stage can be cleared using normal drag controls, then continues",
+    "All six stage themes and transition effects render with reactive sprites",
+    "Installers verify the new packages, migrate unlimited scores and cache both games"
+  ]
+}
