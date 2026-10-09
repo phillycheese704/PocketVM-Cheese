@@ -39,11 +39,13 @@ than rendering Repeater-only layers from the shared reanimation file. The
 regression suite pins the corrected atlas and portrait hashes separately from
 Repeater. All 49 labeled plant portraits were visually checked for identity.
 
-The previous live GitHub Pages v13 build was checked in Chrome: seed selection, the
-correct normal Peashooter packet portrait and lawn animation, click planting,
-and pause all worked.
+The live GitHub Pages v15 build was checked in Chrome: the package marker is
+`adventure-v15`, seed selection and 100-sun Peashooter planting work, preparation
+advances into real attack waves, the corrected Peashooter fires at basic zombies,
+and the first level reaches its final wave. Pause holds the battle clock at 71s.
+The screenshot below records the active final wave immediately before pausing.
 
-![Live browser smoke check](pvz-peashooter-fixed-1791526699545.jpg)
+![Live v15 browser smoke check](pvz-v15-browser-1791530159478.jpg)
 
 The automated suite uses native Canvas for rendering with substituted DOM,
 audio and browser scheduling. It is not a browser interaction test or a complete
