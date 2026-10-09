@@ -1,4 +1,4 @@
-# Deadwave — Arsenal v3
+# Deadwave — Arsenal v4
 
 This expansion preserves the original six weapons, 43 cards, nine regular zombie breeds and three bosses. It adds **seven weapons, 93 cards (seven weapon cards and 86 passive upgrades), ten regular zombie breeds and five bosses**. Totals: 13 weapons, 136 cards, 19 regular breeds and eight bosses.
 

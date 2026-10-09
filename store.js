@@ -40,7 +40,7 @@
     const DEADWAVE_ID = 'deadwave';
   const DEADWAVE_ROOT = '/home/user/Downloads/Deadwave';
   const DEADWAVE_SOURCE = './store/deadwave/';
-  const DEADWAVE_GAME_REVISION = 'arsenal-v3';
+  const DEADWAVE_GAME_REVISION = 'arsenal-v4';
   const DEADWAVE_PIN_KEY = 'pocketvm.store.deadwave.desktop';
   const DEADWAVE_SAVE_KEY = 'pocketvm.game.deadwave';
   const DEADWAVE_NAME = 'Deadwave';
@@ -48,7 +48,7 @@
   const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg';
   const DEADWAVE_ICON_ESTIMATE = 48000;
   const DEADWAVE_PACKAGE = [
-    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:110697 },
+    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:110834 },
     { name:'music.mp3', url:'https://raw.githubusercontent.com/VincentLinta/Joc-practica-Lava-Adventure/f965d167f6ed2d72d4c3f3e9e50737f3f690590a/alex-morgan-video-game-pixel-chiptune-music-583271.mp3', mime:'audio/mpeg', size:4700160 }
   ];
   const DEADWAVE_TOTAL_BYTES = DEADWAVE_PACKAGE.reduce((n,file)=>n+file.size,0) + DEADWAVE_ICON_ESTIMATE + DEADWAVE_NAME.length;
