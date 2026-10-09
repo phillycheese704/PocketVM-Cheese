@@ -1,4 +1,4 @@
-# Adventure v14 gameplay balance
+# Adventure v15 gameplay balance
 
 The Adventure engine now uses waves with point budgets rather than choosing a
 random advanced zombie every few seconds. All 50 stage wave counts and enemy
@@ -39,6 +39,11 @@ and Spikerock durability. Tiny zombies have quarter health with normal movement
 and bite pacing. Bungee Blitz thefts occur on flag waves, use distinct targets,
 and preserve underlying roof pots.
 
+Frame updates advance in simulation steps of at most 50 ms, catching up to
+500 ms per rendered frame. This keeps combat and the preparation countdown
+consistent at lower frame rates without skipping collisions. Pause and stage
+changes still stop pending updates.
+
 The existing 30-second preparation period, basic opening enemies, early Endless
 unlock, Day/Night Endless rotation, custom ending, saves, and corrected Peashooter
 artwork remain part of PocketVM's design.
@@ -51,7 +56,7 @@ particularly `Lawn/Board.cpp`, `Lawn/Challenge.cpp`, `Lawn/Plant.cpp`,
 `Lawn/Zombie.cpp`, and `Lawn/Projectile.cpp`.
 
 Run `node tests/pvz-regression.cjs` from the repository root with
-`@napi-rs/canvas` installed. The 64 checks include all stage startup renders,
+`@napi-rs/canvas` installed. The 65 checks include all stage startup renders,
 plant/zombie artwork, wave behavior, combat interactions, and 13 complete matches
 using real starting resources and packet supplies. Each world finale clears in a
 deterministic full-match fixture; the match timings and resources are recorded in

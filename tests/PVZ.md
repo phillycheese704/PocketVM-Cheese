@@ -1,4 +1,4 @@
-# PVZ Adventure v14 verification
+# PVZ Adventure v15 verification
 
 Run the production simulation and Canvas renderer regression suite:
 
@@ -13,7 +13,7 @@ The suite executes the inline production JavaScript with a deterministic random
 seed. Native Canvas performs real image decoding and rendering; DOM, audio and
 browser scheduling are substituted for the test environment.
 
-The 64 checks cover all 50 level configurations and startup renders, all 49 plant
+The 65 checks cover all 50 level configurations and startup renders, all 49 plant
 and 25 zombie artwork mappings, a normal-resource 1-1 win, targeting, armor,
 lobbed splash, homing shots, sleeping mushrooms, mines, two-cell Cob Cannons,
 simulation-time queues, pause/restart, bowling, wave completion, resource
@@ -52,7 +52,7 @@ every special zombie state still need comparative playtesting.
 
 ## Update delivery
 
-The package marker and Store revision are `adventure-v14`. Store download size
-comes from the final UTF-8 game file size. Shell cache `pocketvm-shell-v73`
+The package marker and Store revision are `adventure-v15`. Store download size
+comes from the final UTF-8 game file size. Shell cache `pocketvm-shell-v74`
 refreshes the hosted engine; an installed game migrates when it next opens.
 Existing game saves, unlocks and imported music files are retained.
