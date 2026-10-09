@@ -64,3 +64,6 @@ PocketVM is a browser desktop, not a hardware VM or operating-system security bo
 
 MIT.
 
+
+
+Wobble Bay adds an original single-player 3D physics island with eight paid jobs, seven vehicles, grab-and-throw cargo, ragdolls, hats, three purchasable homes, a dog and sixteen hidden stars. It supports large iPad controls, keyboard and Xbox controllers. Install it from the Store or play `store/wobblebay/game.html`; see [the guide](store/wobblebay/GUIDE.md). All nine games and PocketVM now use a matching illustrated icon family, with SVG, small PNG favicons and iPad home-screen exports. Installed game artwork refreshes while retaining saves, names and music.

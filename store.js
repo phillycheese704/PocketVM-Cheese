@@ -7,7 +7,7 @@
   const PIN_KEY = 'pocketvm.store.snake.desktop';
   const SAVE_KEY = 'pocketvm.game.snake';
   const PACKAGE = [
-    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:26702 },
+    { name:'game.html', url:SOURCE + 'game.html', mime:'text/html', size:26899 },
     { name:'music.ogg', url:'https://raw.githubusercontent.com/Anubhav9/Yellow-Olive/main/media/resources/music_files/sakura_harbour_prologue_end.ogg', mime:'audio/ogg', size:1724097 }
   ];
   const DEFAULT_ICON_URL = SOURCE + 'icon.svg';
@@ -48,7 +48,7 @@
   const DEADWAVE_ICON_URL = DEADWAVE_SOURCE + 'icon.svg';
   const DEADWAVE_ICON_ESTIMATE = 48000;
   const DEADWAVE_PACKAGE = [
-    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:110834 },
+    { name:'game.html', url:DEADWAVE_SOURCE + 'game.html', mime:'text/html', size:111030 },
     { name:'music.mp3', url:'https://raw.githubusercontent.com/VincentLinta/Joc-practica-Lava-Adventure/f965d167f6ed2d72d4c3f3e9e50737f3f690590a/alex-morgan-video-game-pixel-chiptune-music-583271.mp3', mime:'audio/mpeg', size:4700160 }
   ];
   const DEADWAVE_TOTAL_BYTES = DEADWAVE_PACKAGE.reduce((n,file)=>n+file.size,0) + DEADWAVE_ICON_ESTIMATE + DEADWAVE_NAME.length;
@@ -108,7 +108,7 @@
   const BLOCKBLAST_ICON_URL = BLOCKBLAST_SOURCE + 'icon.svg';
   const BLOCKBLAST_ICON_ESTIMATE = 26000;
   const BLOCKBLAST_PACKAGE = [
-    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20456 }
+    { name:'game.html', url:BLOCKBLAST_SOURCE + 'game.html', mime:'text/html', size:20653 }
   ];
   const BLOCKBLAST_TOTAL_BYTES = BLOCKBLAST_PACKAGE.reduce((n,file)=>n+file.size,0) + BLOCKBLAST_ICON_ESTIMATE + BLOCKBLAST_NAME.length;
   const BLOCKBLAST_MODS = Object.freeze({
@@ -141,9 +141,9 @@
 
   const CRUMBCLICKER_ID='crumbclicker',CRUMBCLICKER_ROOT='/home/user/Downloads/Crumb Clicker',CRUMBCLICKER_SOURCE='./store/crumbclicker/',CRUMBCLICKER_GAME_REVISION='v1',CRUMBCLICKER_PIN_KEY='pocketvm.store.crumbclicker.desktop',CRUMBCLICKER_SAVE_KEY='pocketvm.game.crumbclicker',CRUMBCLICKER_NAME='Crumb Clicker',CRUMBCLICKER_NAME_FILE='name.txt',CRUMBCLICKER_ICON_URL=CRUMBCLICKER_SOURCE+'icon.svg',CRUMBCLICKER_ICON_ESTIMATE=24000;
   const CRUMBCLICKER_BUILDING_IDS=['finger','baker','oven','farm','mill','line','market','royal','time','portal','moon'];
-  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778601}];
+  const CRUMBCLICKER_PACKAGE=[{name:'game.html',url:CRUMBCLICKER_SOURCE+'game.html',mime:'text/html',size:1778798}];
   const CRUMBCLICKER_TOTAL_BYTES=CRUMBCLICKER_PACKAGE.reduce((n,file)=>n+file.size,0)+CRUMBCLICKER_ICON_ESTIMATE+CRUMBCLICKER_NAME.length;
-  const CRUMBCLICKER_CANDY_ICON='data:image/svg+xml;charset=utf-8,'+encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><defs><linearGradient id=\"g\" x1=\"0\" x2=\"1\"><stop stop-color=\"#ff78c8\"/><stop offset=\".5\" stop-color=\"#ffd86f\"/><stop offset=\"1\" stop-color=\"#74d9ff\"/></linearGradient></defs><rect width=\"512\" height=\"512\" rx=\"110\" fill=\"#180c20\"/><path d=\"M89 256 26 181l93-12 30 38v98l-30 38-93-12 63-75Zm334 0 63-75-93-12-30 38v98l30 38 93-12-63-75Z\" fill=\"#a95dff\"/><circle cx=\"256\" cy=\"256\" r=\"142\" fill=\"url(#g)\" stroke=\"#fff\" stroke-opacity=\".22\" stroke-width=\"10\"/><path d=\"M180 178c42-35 119-34 153 8-52-2-93 24-112 68-18 40-5 76 25 103-57-5-101-50-101-105 0-29 12-55 35-74Z\" fill=\"#fff\" opacity=\".26\"/></svg>");
+  const CRUMBCLICKER_CANDY_ICON=CRUMBCLICKER_SOURCE+'candy-icon.svg';
   const CRUMBCLICKER_MODS=Object.freeze({"hyperclicker":{"id":"hyperclicker","name":"Hyperclicker","file":"crumbclicker-hyperclicker.pvmod","kind":"gameplay","icon":"⚡","tagline":"Five thousand clicks a second.","description":"Adds a simple HYPER toggle. Turn it on and the game generates roughly 5,000 manual clicks every second using your current click power.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"gameplay","id":"hyperclicker","version":"1.0.0","name":"Hyperclicker","clicksPerSecond":5000}},"opbuildings":{"id":"opbuildings","name":"OP Buildings","file":"crumbclicker-op-buildings.pvmod","kind":"gameplay","icon":"1","tagline":"Every building costs one.","description":"Makes every individual building cost exactly 1. Buying 10 costs 10, buying 100 costs 100, and MAX buys as many as your current currency allows.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"gameplay","id":"opbuildings","version":"1.0.0","name":"OP Buildings","buildingUnitCost":1}},"candy":{"id":"candy","name":"Candy Clicker","file":"crumbclicker-candy-clicker.pvmod","kind":"cosmetic","icon":"🍬","tagline":"Same addiction. More sugar.","description":"Turns the biscuit into candy, changes the bakery into a candy shop, swaps the currency to candies, and reskins names, messages and colours.","payload":{"pocketvmMod":1,"game":"crumbclicker","kind":"cosmetic","id":"candy","version":"1.0.0","name":"Candy Clicker"}}});
   const crumbClickerFeatureVariants=[
     {kicker:'NEW RELEASE',title:'One biscuit becomes an empire.',copy:'Tap the biscuit, hire production, buy upgrades and watch the numbers stop behaving normally.',tone:'crumb'},
@@ -161,7 +161,7 @@
   const PVZ_NAME_FILE='name.txt';
   const PVZ_ICON_URL=PVZ_SOURCE+'icon.svg';
   const PVZ_ICON_ESTIMATE=32000;
-  const PVZ_GAME_BYTES=9842765;
+  const PVZ_GAME_BYTES=9842961;
   const PVZ_TRACKS=Object.freeze([
     {id:'02',name:'02.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/02CrazyDave.mp3',mime:'audio/mpeg',size:1403422},
     {id:'03',name:'03.mp3',url:'https://raw.githubusercontent.com/terriblepepper/PVZ/ac128d3b927810c44ffe1fc95eea5f114d7987ba/sound/03chooseYourSeeds.mp3',mime:'audio/mpeg',size:554551},
@@ -193,7 +193,7 @@
   const APEX_NAME_FILE='name.txt';
   const APEX_ICON_URL=APEX_SOURCE+'icon.svg';
   const APEX_ICON_ESTIMATE=28000;
-  const APEX_GAME_BYTES=69141;
+  const APEX_GAME_BYTES=69337;
   const APEX_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:3387141,urls:[APEX_SOURCE+'music.mp3']};
   const APEX_TOTAL_BYTES=APEX_GAME_BYTES+APEX_MUSIC.size+APEX_ICON_ESTIMATE+APEX_NAME.length;
   const apexFeatureVariants=[
@@ -201,6 +201,17 @@
     {kicker:'MOTORSPORT',title:'Every corner is a conversation.',copy:'Steer, brake, drift and boost through coastal, desert, alpine, city and garden circuits. Wet roads change the grip.',tone:'sky'},
     {kicker:'YOUR GRID',title:'Paint it. Race it. Randomise it.',copy:'Choose car colours, rivals, weather and laps, or let Random build the next race. A live map keeps every rival in view.',tone:'sky'},
     {kicker:'REAL CONTACT',title:'The barrier always wins the argument.',copy:'Collisions transfer momentum, spin cars and leave damage and skid marks. Recover with a two-second hold, then find your rhythm.',tone:'sky'}
+  ];
+
+
+  const WOBBLE_ID='wobblebay',WOBBLE_NAME='Wobble Bay',WOBBLE_ROOT='/home/user/Downloads/Wobble Bay',WOBBLE_SOURCE='./store/wobblebay/',WOBBLE_ICON_URL=WOBBLE_SOURCE+'icon.svg',WOBBLE_GAME_REVISION='bay-v1',WOBBLE_SAVE_KEY='pocketvm.game.wobblebay',WOBBLE_PIN_KEY='pocketvm.store.wobblebay.desktop';
+  const WOBBLE_FILES=[{"name":"game.html","size":19694,"mime":"text/html"},{"name":"engine.js","size":30975,"mime":"text/javascript"},{"name":"game.js","size":48509,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
+  const WOBBLE_TOTAL_BYTES=WOBBLE_FILES.reduce((n,f)=>n+f.size,0)+61832+WOBBLE_NAME.length;
+  const wobbleFeatureVariants=[
+    {kicker:'NEW 3D SANDBOX',title:'A little work. A lot of wobble.',copy:'An original physics island: eight paid jobs, floppy characters, cars, boats, a helicopter and real cargo. Earn a new hat, call a ride and buy your first home.',tone:'sky'},
+    {kicker:'YOUR LITTLE WORLD',title:'Borrow the keys. Explore the bay.',copy:'Drive, sail or fly between a pastel town, hilltop homes, a park, a pier and an offshore island. Discover sixteen golden stars and meet your neighbours.',tone:'sky'},
+    {kicker:'GRAB. FLOP. PLAY.',title:'Physics with a sense of humour.',copy:'Grab and throw objects, load a pickup, tumble through crashes and shoot a basket. Eight jobs pay for your next outfit, home or cheerful dog.',tone:'sky'},
+    {kicker:'MADE FOR IPAD',title:'Room for both thumbs.',copy:'Large touch controls, a camera you can swipe, portrait and landscape layouts, keyboard and Xbox controller support. Your cash and purchases stay saved.',tone:'sky'}
   ];
 
   const FLAPPY_ID='flappy';
@@ -213,7 +224,7 @@
   const FLAPPY_NAME_FILE='name.txt';
   const FLAPPY_ICON_URL=FLAPPY_SOURCE+'icon.svg';
   const FLAPPY_ICON_ESTIMATE=28000;
-  const FLAPPY_GAME_BYTES=34849;
+  const FLAPPY_GAME_BYTES=35045;
   const FLAPPY_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:1493465,urls:[
     'https://od.lk/s/ODdfMzQxNjQ0MTRf/03.%20Main%20Theme.mp3',
     'https://downloads.khinsider.com/game-soundtracks/album/flappy-bird-crypto-android-ios-online-gamerip-2024/03.%2520Main%2520Theme.mp3'
@@ -236,7 +247,7 @@
   const PENGUIN_NAME_FILE='name.txt';
   const PENGUIN_ICON_URL=PENGUIN_SOURCE+'icon.svg';
   const PENGUIN_ICON_ESTIMATE=28000;
-  const PENGUIN_GAME_BYTES=42823;
+  const PENGUIN_GAME_BYTES=43019;
   const PENGUIN_TOTAL_BYTES=PENGUIN_GAME_BYTES+PENGUIN_ICON_ESTIMATE+PENGUIN_NAME.length;
   const penguinFeatureVariants=[
     {kicker:'NEW RELEASE',title:'Pull carefully. Save everybody.',copy:'Drag little penguins out of an icy tower and get them into the sea without dunking the sleeping royal.',tone:'ice'},
@@ -290,12 +301,18 @@
       .reduce((sum, [, node]) => sum + Number(node.size || 0), 0);
   }
 
+
+  const ICON_REVISION='illustrated-v1',iconRefreshes=new Map();
+  async function validGameIcon(blob){if(blob.size<100)return false;const a=new Uint8Array(await blob.slice(0,24).arrayBuffer()),v=new DataView(a.buffer);return a.length===24&&[137,80,78,71,13,10,26,10].every((n,i)=>a[i]===n)&&v.getUint32(16)===512&&v.getUint32(20)===512;}
+  async function refreshGameIcon(root,source){if(iconRefreshes.has(root))return iconRefreshes.get(root);const task=(async()=>{try{if(await PocketDisk.readText(root+'/icon-version.txt').catch(()=>null)===ICON_REVISION)return;const response=await fetch(source+'icon-512.png',{cache:'no-cache'});if(!response.ok)throw new Error('Icon offline');const blob=await response.blob();if(!await validGameIcon(blob))throw new Error('Icon incomplete');await PocketDisk.writeBlob(root+'/icon.png',blob,'image/png');await PocketDisk.writeText(root+'/icon-version.txt',ICON_REVISION,'text/plain');}catch{iconRefreshes.delete(root);}})();iconRefreshes.set(root,task);return task;}
+  function gameFavicons(html,id){const candy=id==='candyclicker',source=new URL('./store/'+(candy?'crumbclicker':id)+'/',location.href).href,prefix=candy?'candy-':'',links='<link rel="icon" type="image/png" sizes="32x32" href="'+source+'favicon-32.png"><link rel="icon" type="image/svg+xml" href="'+source+'icon.svg"><link rel="apple-touch-icon" sizes="180x180" href="'+source+'icon-180.png">';html=html.replace(/<link\b[^>]*rel=["'][^"']*(?:icon)[^"']*["'][^>]*>/gi,'');return html.replace(/<head([^>]*)>/i,'<head$1>'+links);}
+
   async function identity() {
     let name = DEFAULT_NAME;
     let icon = DEFAULT_ICON_URL;
     if (await isInstalled()) {
       try { name = cleanDisplayName(await PocketDisk.readText(ROOT + '/' + NAME_FILE)); } catch {}
-      try { icon = await blobToDataURL(await PocketDisk.readBlob(ROOT + '/icon.png')); } catch {}
+      await refreshGameIcon(ROOT,SOURCE);try { icon = await blobToDataURL(await PocketDisk.readBlob(ROOT + '/icon.png')); } catch {}
     }
     return { name, icon };
   }
@@ -512,7 +529,7 @@
     let name = DEADWAVE_NAME, icon = DEADWAVE_ICON_URL;
     if (await deadwaveInstalled()) {
       try { name = cleanDisplayName(await PocketDisk.readText(DEADWAVE_ROOT + '/' + DEADWAVE_NAME_FILE)); } catch {}
-      try { icon = await blobToDataURL(await PocketDisk.readBlob(DEADWAVE_ROOT + '/icon.png')); } catch {}
+      await refreshGameIcon(DEADWAVE_ROOT,DEADWAVE_SOURCE);try { icon = await blobToDataURL(await PocketDisk.readBlob(DEADWAVE_ROOT + '/icon.png')); } catch {}
     }
     return {name,icon};
   }
@@ -634,7 +651,7 @@
     let name=BLOCKBLAST_NAME,icon=BLOCKBLAST_ICON_URL;
     if(await blockBlastInstalled()){
       try{name=cleanDisplayName(await PocketDisk.readText(BLOCKBLAST_ROOT+'/'+BLOCKBLAST_NAME_FILE));}catch{}
-      try{icon=await blobToDataURL(await PocketDisk.readBlob(BLOCKBLAST_ROOT+'/icon.png'));}catch{}
+      await refreshGameIcon(BLOCKBLAST_ROOT,BLOCKBLAST_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(BLOCKBLAST_ROOT+'/icon.png'));}catch{}
     }
     return{name,icon};
   }
@@ -693,7 +710,7 @@
 
   async function crumbClickerInstalled(){for(const name of ['game.html','icon.png']){const node=await PocketDisk.getNode(CRUMBCLICKER_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function crumbClickerBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(CRUMBCLICKER_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}
-  async function crumbClickerIdentity(){let name=CRUMBCLICKER_NAME,icon=CRUMBCLICKER_ICON_URL;if(await crumbClickerInstalled()){try{name=cleanDisplayName(await PocketDisk.readText(CRUMBCLICKER_ROOT+'/'+CRUMBCLICKER_NAME_FILE));}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(CRUMBCLICKER_ROOT+'/icon.png'));}catch{}const mods=await installedCrumbClickerMods().catch(()=>({}));if(mods.candy){name='Candy Clicker';icon=CRUMBCLICKER_CANDY_ICON;}}return{name,icon};}
+  async function crumbClickerIdentity(){let name=CRUMBCLICKER_NAME,icon=CRUMBCLICKER_ICON_URL;if(await crumbClickerInstalled()){try{name=cleanDisplayName(await PocketDisk.readText(CRUMBCLICKER_ROOT+'/'+CRUMBCLICKER_NAME_FILE));}catch{}await refreshGameIcon(CRUMBCLICKER_ROOT,CRUMBCLICKER_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(CRUMBCLICKER_ROOT+'/icon.png'));}catch{}const mods=await installedCrumbClickerMods().catch(()=>({}));if(mods.candy){name='Candy Clicker';icon=CRUMBCLICKER_CANDY_ICON;}}return{name,icon};}
   function crumbClickerPinned(){return localStorage.getItem(CRUMBCLICKER_PIN_KEY)==='1';}
   function setCrumbClickerPinned(v){if(v)localStorage.setItem(CRUMBCLICKER_PIN_KEY,'1');else localStorage.removeItem(CRUMBCLICKER_PIN_KEY);}
   async function createCrumbClickerIconBlob(){const response=await fetch(CRUMBCLICKER_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Crumb Clicker icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Crumb Clicker icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Crumb Clicker icon.');return png;}finally{URL.revokeObjectURL(source);}}
@@ -705,7 +722,7 @@
 
   async function pvzInstalled(){for(const name of ['game.html','icon.png',...PVZ_TRACKS.map(x=>x.name)]){const node=await PocketDisk.getNode(PVZ_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function pvzBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(PVZ_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}
-  async function pvzIdentity(){let name=PVZ_NAME,icon=PVZ_ICON_URL;if(await pvzInstalled()){try{name=cleanDisplayName(await PocketDisk.readText(PVZ_ROOT+'/'+PVZ_NAME_FILE));}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(PVZ_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  async function pvzIdentity(){let name=PVZ_NAME,icon=PVZ_ICON_URL;if(await pvzInstalled()){try{name=cleanDisplayName(await PocketDisk.readText(PVZ_ROOT+'/'+PVZ_NAME_FILE));}catch{}await refreshGameIcon(PVZ_ROOT,PVZ_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(PVZ_ROOT+'/icon.png'));}catch{}}return{name,icon};}
   function pvzPinned(){return localStorage.getItem(PVZ_PIN_KEY)==='1';}
   function setPvzPinned(v){if(v)localStorage.setItem(PVZ_PIN_KEY,'1');else localStorage.removeItem(PVZ_PIN_KEY);}
   async function createPvzIconBlob(){const response=await fetch(PVZ_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Plants vs Zombies icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Plants vs Zombies icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Plants vs Zombies icon.');return png;}finally{URL.revokeObjectURL(source);}}
@@ -718,9 +735,69 @@
   function sanitizePvzSave(d){const completed=Array.isArray(d?.completed)?[...new Set(d.completed.filter(x=>/^[1-5]-(?:10|[1-9])$/.test(String(x))))].slice(0,50):[],shop=Array.isArray(d?.shop)?[...new Set(d.shop.filter(x=>PVZ_UPGRADE_IDS.has(String(x))))]:[];return{levelUnlocked:Math.max(1,Math.min(50,Math.floor(Number(d?.levelUnlocked)||1))),completed,coins:Math.max(0,Math.min(1e12,Math.floor(Number(d?.coins)||0))),shop,music:d?.music!==false,sfx:d?.sfx!==false,endlessBest:Math.max(0,Math.min(1e9,Math.floor(Number(d?.endlessBest)||0))),adventureWon:d?.adventureWon===true};}
 
 
+  function sanitizeWobbleSave(d){
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),angle=a=>Math.atan2(Math.sin(a),Math.cos(a)),TAU=Math.PI*2;
+const JOBS=[
+ {id:'parcel',name:'Parcel Run',tag:'PICK UP & DELIVER',pay:75,time:240,site:{x:36,z:43},description:'Grab the parcel at the depot. Carry it or load it into a vehicle, then deliver three packages.'},
+ {id:'pizza',name:'Pizza Express',tag:'HOT FOOD, QUICK FEET',pay:70,time:210,site:{x:-30,z:20},description:'Deliver three hot pizzas from Sunny Slice. A fast finish earns a warm-pizza bonus.'},
+ {id:'taxi',name:'Taxi, Please!',tag:'THREE HAPPY PASSENGERS',pay:85,time:260,site:{x:-58,z:9},description:'Use a taxi, pick up each passenger and drive them to their destination. Press ACT to board and drop off.'},
+ {id:'cleanup',name:'Park Patrol',tag:'GRAB, TOSS, RECYCLE',pay:65,time:210,site:{x:-24,z:-53},description:'Pick up four rubbish bags in the park and drop them into the recycling zone.'},
+ {id:'fishing',name:'Gone Fishing',tag:'WAIT FOR THE BITE',pay:60,time:240,site:{x:174,z:66},description:'Reach the pier. Press ACT to cast, then GRAB when a fish bites. Catch three fish.'},
+ {id:'builder',name:'Builder Buddy',tag:'DELIVER THE MATERIALS',pay:90,time:240,site:{x:-93,z:-18},description:'Move three heavy material crates from the yard to the orange foundation. Grabbing and throwing both work.'},
+ {id:'rally',name:'Island Rally',tag:'EIGHT CHECKPOINTS',pay:95,time:150,site:{x:0,z:-80},description:'Use a road vehicle and pass all eight rings in order. Corners, crashes and shortcuts are part of the fun.'},
+ {id:'rescue',name:'Coastal Rescue',tag:'FLY, LAND, HELP',pay:120,time:300,site:{x:84,z:120},description:'Take a helicopter to the little offshore island. Land, press ACT to board the castaway, then return to the hospital.'}
+];
+const RIDES={runabout:{name:'Sunny Runabout',price:0,max:16,acc:10,colour:'#ed8068',size:1.45},pickup:{name:'Cargo Pickup',price:150,max:15,acc:8,colour:'#79a6ca',size:1.7},taxi:{name:'Bay Taxi',price:180,max:17,acc:9,colour:'#f6c963',size:1.55},van:{name:'Parcel Van',price:210,max:14,acc:7.8,colour:'#96c2b0',size:1.75},buggy:{name:'Beach Buggy',price:270,max:21,acc:13,colour:'#ecad72',size:1.35},boat:{name:'Seabreeze Boat',price:340,max:20,acc:9,colour:'#eae8d3',size:1.9},heli:{name:'Bumble Helicopter',price:550,max:22,acc:8,colour:'#f3c75f',size:1.7}};
+const HATS={none:{name:'No hat',price:0},cap:{name:'Bay baseball cap',price:0},hardhat:{name:'Builder hard hat',price:70},beanie:{name:'Cosy beanie',price:80},cowboy:{name:'Explorer hat',price:100},crown:{name:'Very important crown',price:180},propeller:{name:'Propeller cap',price:130}};
+const HOMES=[{id:'cottage',name:'Seabreeze Cottage',price:220,x:-86,z:44},{id:'townhouse',name:'Peach Townhouse',price:450,x:99,z:-42},{id:'hillhouse',name:'Hilltop Hideaway',price:850,x:-117,z:-117}];
+const LANDMARKS=[{id:'board',name:'Town Square',x:0,z:14,type:'jobs'},{id:'shop',name:'Threads & Things',x:-18,z:-18,type:'shop'},{id:'garage',name:'Bay Motors',x:24,z:-17,type:'garage'},{id:'parcel',name:'Parcel Depot',x:36,z:43,type:'jobs'},{id:'pizza',name:'Sunny Slice',x:-30,z:20,type:'jobs'},{id:'taxi',name:'Taxi Rank',x:-58,z:9,type:'jobs'},{id:'cleanup',name:'Seaglass Park',x:-24,z:-53,type:'jobs'},{id:'builder',name:'Build Yard',x:-93,z:-18,type:'jobs'},{id:'fishing',name:'Bluewater Pier',x:174,z:66,type:'jobs'},{id:'airport',name:'Bumble Airfield',x:84,z:120,type:'jobs'},{id:'hospital',name:'Bay Clinic',x:42,z:-67,type:'npc'},...HOMES.map(h=>({...h,type:'home'}))];
+const BUILDINGS=[
+ {x:-18,z:-29,w:15,d:15,h:7,colour:'#ecacb7',roof:'#767ea8',name:'THREADS'}, {x:24,z:-29,w:19,d:15,h:7,colour:'#8caebe',roof:'#557580',name:'BAY MOTORS'},
+ {x:36,z:54,w:20,d:15,h:8,colour:'#a6c5b3',roof:'#e4b776',name:'PARCEL POST'}, {x:-30,z:31,w:18,d:15,h:7,colour:'#efc79f',roof:'#d77e68',name:'SUNNY SLICE'},
+ {x:42,z:-80,w:24,d:19,h:9,colour:'#e8e7d5',roof:'#91b9c0',name:'CLINIC'}, {x:105,z:125,w:34,d:26,h:10,colour:'#a9bdc4',roof:'#7797a1',name:'BUMBLE AIR'},
+ {x:-86,z:54,w:16,d:14,h:6,colour:'#eac59e',roof:'#87a9a8',name:'COTTAGE'}, {x:99,z:-53,w:17,d:15,h:9,colour:'#e8a893',roof:'#9ba39f',name:'TOWNHOUSE'}, {x:-117,z:-129,w:22,d:16,h:8,colour:'#efd8b4',roof:'#bb8474',name:'HILLTOP'},
+ ...[-47,47].flatMap((x,k)=>[-103,-32,99].map((z,i)=>({x,z,w:14+(i%2)*3,d:15,h:7+(i%2)*2,colour:['#d3b6c9','#aec9b7','#efcf91','#a8c2d6'][(i+k)%4],roof:['#928499','#96a7a2','#cb947b'][i%3],name:''}))),
+ {x:89,z:36,w:16,d:16,h:7,colour:'#b5c5b0',roof:'#8b9f9b',name:''},{x:-106,z:99,w:18,d:15,h:8,colour:'#efc993',roof:'#aa8f85',name:''}
+];
+const STARS=[[-15,12,0],[47,89,0],[-77,68,0],[114,-78,0],[136,24,0],[187,66,0],[-146,-84,0],[-111,-148,0],[76,144,0],[-118,117,0],[121,99,0],[25,-120,0],[-258,88,0],[-111,-24,3],[38,53,10],[-37,-69,0]].map((p,i)=>({id:'star'+i,x:p[0],z:p[1],y:p[2]}));
+const ROUTE=[{x:0,z:-65},{x:65,z:-65},{x:65,z:0},{x:65,z:65},{x:0,z:65},{x:-65,z:65},{x:-65,z:0},{x:-65,z:-65}];
+const DOORS=[{x:46,z:88},{x:100,z:-42},{x:-47,z:-90},{x:-86,z:44},{x:89,z:25}];
+function terrain(x,z){const islet=Math.hypot(x+258,z-88);if(islet<25)return clamp((25-islet)*.35-1.5,-2,1.5);if(x>154&&x<202&&z>60&&z<73)return 1;const coast=(Math.abs(x)/203)**4+(Math.abs(z)/176)**4;if(coast>1.22)return-5;if(coast>.92)return lerp(1,-5,(coast-.92)/.3);return 1+20*Math.exp(-(((x+119)/43)**2+((z+120)/43)**2))}
+function safePosition(p){return p&&Number.isFinite(p.x)&&Number.isFinite(p.z)&&Math.abs(p.x)<300&&Math.abs(p.z)<190&&terrain(p.x,p.z)>0?p:{x:0,z:14}}
+function sanitize(d={}){const p=d.prefs||{},n=(v,a,b,f)=>Number.isFinite(Number(v))?clamp(Number(v),a,b):f,hex=(v,f)=>/^#[0-9a-f]{6}$/i.test(String(v))?v:f,allowed=(v,keys,f)=>keys.includes(v)?v:f,list=(a,keys)=>Array.isArray(a)?[...new Set(a.filter(v=>keys.includes(v)))]:[],jobs={};for(const j of JOBS)jobs[j.id]=Math.floor(n(d.jobs?.[j.id],0,1e6,0));return{cash:Math.floor(n(d.cash,0,1e9,80)),earned:Math.floor(n(d.earned,0,1e9,0)),jobs,stars:list(d.stars,STARS.map(s=>s.id)),hats:[...new Set(['none','cap',...list(d.hats,Object.keys(HATS))])],rides:[...new Set(['runabout',...list(d.rides,Object.keys(RIDES))])],homes:list(d.homes,HOMES.map(h=>h.id)),pet:d.pet===true,skin:hex(d.skin,'#f4d16b'),shirt:hex(d.shirt,'#ed896e'),hat:allowed(d.hat,Object.keys(HATS),'cap'),carColour:hex(d.carColour,'#ed8068'),prefs:{sound:p.sound!==false,volume:n(p.volume,0,1,.45),graphics:allowed(p.graphics,['auto','low','high'],'auto'),touchSize:allowed(p.touchSize,['large','xl'],'large'),touchControls:p.touchControls===true,time:allowed(p.time,['day','golden','night','cycle','random'],'day'),camera:allowed(p.camera,['near','standard','wide'],'standard')},position:safePosition(d.position)}}
+
+return sanitize(d&&typeof d==='object'?d:{});
+  }
+  async function wobbleInstalled(){for(const file of [...WOBBLE_FILES.map(f=>f.name),'icon.png']){const node=await PocketDisk.getNode(WOBBLE_ROOT+'/'+file).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
+  async function wobbleBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([p,n])=>n?.type==='file'&&p.startsWith(WOBBLE_ROOT+'/')).reduce((a,[,n])=>a+Number(n.size||0),0);}
+  async function wobbleIdentity(){let name=WOBBLE_NAME,icon=WOBBLE_ICON_URL;if(await wobbleInstalled()){await refreshGameIcon(WOBBLE_ROOT,WOBBLE_SOURCE);try{name=String(await PocketDisk.readText(WOBBLE_ROOT+'/name.txt')||WOBBLE_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||WOBBLE_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(WOBBLE_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  function wobblePinned(){return localStorage.getItem(WOBBLE_PIN_KEY)==='1';}
+  function setWobblePinned(v){if(v)localStorage.setItem(WOBBLE_PIN_KEY,'1');else localStorage.removeItem(WOBBLE_PIN_KEY);}
+  function verifyWobbleFile(file,text){if(new Blob([text]).size!==file.size)throw new Error('Wobble Bay download is incomplete: '+file.name);if(file.name==='game.html'&&!text.includes('name="pocketvm-wobble-build" content="'+WOBBLE_GAME_REVISION+'"'))throw new Error('Wobble Bay package verification failed.');return text;}
+  async function fetchWobbleFiles(){return Promise.all(WOBBLE_FILES.map(async file=>{const r=await fetch(new URL(WOBBLE_SOURCE+file.name,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);return[file,verifyWobbleFile(file,await r.text())];}));}
+  async function fetchWobbleIcon(){const r=await fetch(WOBBLE_SOURCE+'icon-512.png',{cache:'no-cache'});if(!r.ok)throw new Error('Could not download the Wobble Bay icon.');const b=await r.blob();if(!await validGameIcon(b))throw new Error('Wobble Bay icon download is incomplete.');return b;}
+  async function installWobble(progress){if(await wobbleInstalled())return;const [files,icon]=await Promise.all([fetchWobbleFiles(),fetchWobbleIcon()]);await PocketDisk.ensureDir(WOBBLE_ROOT);let bytes=0;try{for(const [file,text]of files){await PocketDisk.writeText(WOBBLE_ROOT+'/'+file.name,text,file.mime);bytes+=file.size;progress?.(bytes,WOBBLE_TOTAL_BYTES,file.name);}await PocketDisk.writeBlob(WOBBLE_ROOT+'/icon.png',icon,'image/png');await PocketDisk.writeText(WOBBLE_ROOT+'/icon-version.txt',ICON_REVISION,'text/plain');await PocketDisk.writeText(WOBBLE_ROOT+'/name.txt',WOBBLE_NAME,'text/plain');progress?.(WOBBLE_TOTAL_BYTES,WOBBLE_TOTAL_BYTES,'Ready');await shellCtx?.refreshFS?.();await syncWobbleShell();shellCtx?.notify?.('Wobble Bay installed','Eight jobs. One world. Lots of wobble.','☀');}catch(e){await PocketDisk.remove(WOBBLE_ROOT).catch(()=>{});throw e;}}
+  async function uninstallWobble(){if(!await wobbleInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===WOBBLE_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(WOBBLE_ROOT);setWobblePinned(false);await shellCtx?.refreshFS?.();await syncWobbleShell();shellCtx?.notify?.('Wobble Bay uninstalled','Your cash and purchases are saved for your next visit.','×');}
+  async function toggleWobblePin(v){setWobblePinned(v);await syncWobbleShell();}
+  async function syncWobbleShell(ctx=shellCtx){if(!ctx)return;const installed=await wobbleInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');let start=document.querySelector('[data-store-launch="wobble-start"]'),desk=document.querySelector('[data-store-launch="wobble-desktop"]');if(!installed){start?.remove();desk?.remove();setWobblePinned(false);ctx.initDesktopGrid?.();return;}const id=await wobbleIdentity();if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=WOBBLE_ID;start.dataset.storeLaunch='wobble-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}if(desktop){if(wobblePinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=WOBBLE_ID;desk.dataset.storeLaunch='wobble-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}for(const win of ctx.state.windows.values()){if(win.appId!==WOBBLE_ID)continue;ctx.setWindowTitle(win,id.name,'☀');applyWindowIcon(win,id.icon,ctx);}ctx.initDesktopGrid?.();}
+  async function buildWobble(win,options={},ctx){
+    shellCtx=ctx;if(!await wobbleInstalled()){ctx.setWindowTitle(win,WOBBLE_NAME,'☀');win.content.innerHTML='<div class="store-not-installed"><div>☀</div><h2>Wobble Bay isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
+    const id=await wobbleIdentity();ctx.setWindowTitle(win,id.name,'☀');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe></div>`;
+    const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
+    try{
+      let files=await Promise.all(WOBBLE_FILES.map(async f=>[f,await PocketDisk.readText(WOBBLE_ROOT+'/'+f.name)]));
+      try{for(const [file,text]of files)verifyWobbleFile(file,text);}catch{files=await fetchWobbleFiles();for(const [file,text]of files)await PocketDisk.writeText(WOBBLE_ROOT+'/'+file.name,text,file.mime);}
+      let html=files.find(([f])=>f.name==='game.html')[1];
+      for(const [file,text]of files.filter(([f])=>f.mime==='text/javascript')){const data=await blobToDataURL(new Blob([text],{type:'text/javascript'}));html=html.replace('src="./'+file.name+'"','src="'+data+'"');}
+      const save=(()=>{try{return sanitizeWobbleSave(JSON.parse(localStorage.getItem(WOBBLE_SAVE_KEY)||'{}'));}catch{return sanitizeWobbleSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
+      frame.srcdoc=gameFavicons(html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap),WOBBLE_ID);
+    }catch(e){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(e?.message||'Reinstall Wobble Bay from the Store.')}</small>`;return;}
+    const onMessage=e=>{if(e.source!==frame.contentWindow||!e.data||typeof e.data!=='object')return;if(e.data.type==='pocketvm-wobble-ready')loading.classList.add('done');if(e.data.type==='pocketvm-wobble-save')localStorage.setItem(WOBBLE_SAVE_KEY,JSON.stringify(sanitizeWobbleSave(e.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
+  }
+
   async function apexInstalled(){for(const name of ['game.html','icon.png','music.mp3']){const node=await PocketDisk.getNode(APEX_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function apexBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(APEX_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}
-  async function apexIdentity(){let name=APEX_NAME,icon=APEX_ICON_URL;if(await apexInstalled()){try{name=String(await PocketDisk.readText(APEX_ROOT+'/'+APEX_NAME_FILE)||APEX_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||APEX_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(APEX_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  async function apexIdentity(){let name=APEX_NAME,icon=APEX_ICON_URL;if(await apexInstalled()){try{name=String(await PocketDisk.readText(APEX_ROOT+'/'+APEX_NAME_FILE)||APEX_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||APEX_NAME;}catch{}await refreshGameIcon(APEX_ROOT,APEX_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(APEX_ROOT+'/icon.png'));}catch{}}return{name,icon};}
   function apexPinned(){return localStorage.getItem(APEX_PIN_KEY)==='1';}
   function setApexPinned(v){if(v)localStorage.setItem(APEX_PIN_KEY,'1');else localStorage.removeItem(APEX_PIN_KEY);}
   async function createApexIconBlob(){const response=await fetch(APEX_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Apex Rush icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Apex Rush icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Apex Rush icon.');return png;}finally{URL.revokeObjectURL(source);}}
@@ -735,7 +812,7 @@
 
   async function flappyInstalled(){for(const name of ['game.html','icon.png']){const node=await PocketDisk.getNode(FLAPPY_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function flappyBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(FLAPPY_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}
-  async function flappyIdentity(){let name=FLAPPY_NAME,icon=FLAPPY_ICON_URL;if(await flappyInstalled()){try{name=String(await PocketDisk.readText(FLAPPY_ROOT+'/'+FLAPPY_NAME_FILE)||FLAPPY_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||FLAPPY_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(FLAPPY_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  async function flappyIdentity(){let name=FLAPPY_NAME,icon=FLAPPY_ICON_URL;if(await flappyInstalled()){try{name=String(await PocketDisk.readText(FLAPPY_ROOT+'/'+FLAPPY_NAME_FILE)||FLAPPY_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||FLAPPY_NAME;}catch{}await refreshGameIcon(FLAPPY_ROOT,FLAPPY_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(FLAPPY_ROOT+'/icon.png'));}catch{}}return{name,icon};}
   function flappyPinned(){return localStorage.getItem(FLAPPY_PIN_KEY)==='1';}
   function setFlappyPinned(v){if(v)localStorage.setItem(FLAPPY_PIN_KEY,'1');else localStorage.removeItem(FLAPPY_PIN_KEY);}
   async function createFlappyIconBlob(){const response=await fetch(FLAPPY_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Flappy Bird icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Flappy Bird icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Flappy Bird icon.');return png;}finally{URL.revokeObjectURL(source);}}
@@ -750,7 +827,7 @@
 
   async function penguinInstalled(){for(const name of ['game.html','icon.png']){const node=await PocketDisk.getNode(PENGUIN_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function penguinBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(PENGUIN_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}
-  async function penguinIdentity(){let name=PENGUIN_NAME,icon=PENGUIN_ICON_URL;if(await penguinInstalled()){try{name=String(await PocketDisk.readText(PENGUIN_ROOT+'/'+PENGUIN_NAME_FILE)||PENGUIN_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||PENGUIN_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(PENGUIN_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  async function penguinIdentity(){let name=PENGUIN_NAME,icon=PENGUIN_ICON_URL;if(await penguinInstalled()){try{name=String(await PocketDisk.readText(PENGUIN_ROOT+'/'+PENGUIN_NAME_FILE)||PENGUIN_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||PENGUIN_NAME;}catch{}await refreshGameIcon(PENGUIN_ROOT,PENGUIN_SOURCE);try{icon=await blobToDataURL(await PocketDisk.readBlob(PENGUIN_ROOT+'/icon.png'));}catch{}}return{name,icon};}
   function penguinPinned(){return localStorage.getItem(PENGUIN_PIN_KEY)==='1';}
   function setPenguinPinned(v){if(v)localStorage.setItem(PENGUIN_PIN_KEY,'1');else localStorage.removeItem(PENGUIN_PIN_KEY);}
   async function createPenguinIconBlob(){const response=await fetch(PENGUIN_ICON_URL,{cache:'no-cache'});if(!response.ok)throw new Error('Could not prepare the Penguin Pull icon.');const svg=await response.text(),source=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));try{const img=new Image();img.decoding='async';await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Could not render the Penguin Pull icon.'));img.src=source;});const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;canvas.getContext('2d').drawImage(img,0,0,512,512);const png=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!png)throw new Error('Could not encode the Penguin Pull icon.');return png;}finally{URL.revokeObjectURL(source);}}
@@ -1073,7 +1150,7 @@
   async function buildStore(win, options = {}, ctx) {
     shellCtx=ctx; ctx.setWindowTitle(win,'Store','▣');
     let active=options.tab==='library'?'library':'home';
-    const featureIds=['snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush'];let featured=featureIds[Math.floor(Math.random()*featureIds.length)];
+    const featureIds=['snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay'];let featured=featureIds[Math.floor(Math.random()*featureIds.length)];
     let variant=Math.floor(Math.random()*4),busy=false,progressState=null;
     win.content.innerHTML=`<div class="store-app"><header class="store-topbar"><div class="store-wordmark"><span>▣</span><div><strong>Store</strong><small>PocketVM games</small></div></div><nav class="store-tabs"><button data-store-tab="home">Home</button><button data-store-tab="library">Library</button></nav><div class="store-space"></div><div class="store-drive" data-store-drive>Checking storage…</div></header><main class="store-page" data-store-page></main></div>`;
     const page=ctx.queryOne('[data-store-page]',win.el),drive=ctx.queryOne('[data-store-drive]',win.el);
@@ -1085,17 +1162,19 @@
       if(id==='crumbclicker'){const installed=await crumbClickerInstalled(),ident=await crumbClickerIdentity();return{id,app:'crumbclicker',name:ident.name,icon:ident.icon,installed,pinned:crumbClickerPinned(),size:installed?await crumbClickerBytes():CRUMBCLICKER_TOTAL_BYTES,category:'Incremental',summary:'Idle bakery · upgrades · offline earnings · prestige',install:installCrumbClicker,pin:toggleCrumbClickerPin,uninstall:uninstallCrumbClicker};}
       if(id==='pvz'){const installed=await pvzInstalled(),ident=await pvzIdentity();return{id,app:'pvz',name:ident.name,icon:ident.icon,installed,pinned:pvzPinned(),size:installed?await pvzBytes():PVZ_TOTAL_BYTES,category:'Lane defense',summary:'50-stage Adventure · 49 plants · Endless mode',install:installPvz,pin:togglePvzPin,uninstall:uninstallPvz};}
       if(id==='flappy'){const installed=await flappyInstalled(),ident=await flappyIdentity();return{id,app:'flappy',name:ident.name,icon:ident.icon,installed,pinned:flappyPinned(),size:installed?await flappyBytes():FLAPPY_TOTAL_BYTES,category:'Arcade',summary:'Smooth flight · checkpoint practice · unlockable flock',install:installFlappy,pin:toggleFlappyPin,uninstall:uninstallFlappy};}
+      if(id==='wobblebay'){const installed=await wobbleInstalled(),ident=await wobbleIdentity();return{id,app:WOBBLE_ID,name:ident.name,icon:ident.icon,installed,pinned:wobblePinned(),size:installed?await wobbleBytes():WOBBLE_TOTAL_BYTES,category:'3D physics sandbox',summary:'8 jobs · 7 vehicles · ragdolls · homes · 16 secrets',install:installWobble,pin:toggleWobblePin,uninstall:uninstallWobble};}
       if(id==='apexrush'){const installed=await apexInstalled(),ident=await apexIdentity();return{id,app:'apexrush',name:ident.name,icon:ident.icon,installed,pinned:apexPinned(),size:installed?await apexBytes():APEX_TOTAL_BYTES,category:'Racing',summary:'5 circuits · crash physics · custom colours · random grids',install:installApex,pin:toggleApexPin,uninstall:uninstallApex};}
       if(id==='penguinpull'){const installed=await penguinInstalled(),ident=await penguinIdentity();return{id,app:'penguinpull',name:ident.name,icon:ident.icon,installed,pinned:penguinPinned(),size:installed?await penguinBytes():PENGUIN_TOTAL_BYTES,category:'Physics',summary:'Endless random stages · every splash scores · reactive physics',install:installPenguin,pin:togglePenguinPin,uninstall:uninstallPenguin};}
       const installed=await isInstalled(),ident=await identity();return{id:'snake',app:'snake',name:ident.name,icon:ident.icon,installed,pinned:pinned(),size:installed?await installedBytes():TOTAL_BYTES,category:'Arcade',summary:'Classic Snake · Smooth touch controls · Original soundtrack',install:installSnake,pin:toggleDesktopPin,uninstall:uninstallSnake};
     }
-    function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:id==='crumbclicker'?crumbClickerFeatureVariants:id==='pvz'?pvzFeatureVariants:id==='flappy'?flappyFeatureVariants:id==='penguinpull'?penguinFeatureVariants:id==='apexrush'?apexFeatureVariants:featureVariants;return arr[variant%arr.length];}
+    function featureCopy(id){const arr=id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:id==='crumbclicker'?crumbClickerFeatureVariants:id==='pvz'?pvzFeatureVariants:id==='flappy'?flappyFeatureVariants:id==='penguinpull'?penguinFeatureVariants:id==='apexrush'?apexFeatureVariants:id==='wobblebay'?wobbleFeatureVariants:featureVariants;return arr[variant%arr.length];}
     function deadwavePreview(){return '<div class="deadwave-preview"><div class="dw-grid"></div><i class="survivor"></i><b class="z z1"></b><b class="z z2"></b><b class="z z3"></b><b class="z z4"></b><b class="z z5"></b><span class="shot s1"></span><span class="shot s2"></span></div>';}
     function snakePreview(){return '<div class="store-game-preview"><div class="preview-grid"></div><b class="preview-apple"></b><i style="--px:36%;--py:64%"></i><i style="--px:44%;--py:64%"></i><i style="--px:52%;--py:64%"></i><i style="--px:60%;--py:64%"></i><i style="--px:60%;--py:50%" class="head"></i></div>';}
     function blockBlastPreview(){return '<div class="blockblast-preview"><div class="bb-mini-grid">'+Array.from({length:64},(_,i)=>'<i class="'+([10,11,12,18,26,34,42,50,51,52,53,54].includes(i)?'on b'+(i%4):'')+'"></i>').join('')+'</div><div class="bb-mini-pieces"><b></b><b></b><b></b></div></div>';}
     function crumbClickerPreview(){return '<div class="crumbclicker-preview"><div class="cc-number">12.48 M biscuits</div><div class="cc-cookie"><i></i><i></i><i></i><i></i><i></i></div><div class="cc-shop"><b></b><b></b><b></b><b></b></div></div>';}
     function pvzPreview(){return '<div class="pvz-preview"><div class="pvz-sun">☀ 325</div><div class="pvz-lawn">'+Array.from({length:45},(_,i)=>'<i class="'+([1,9,18,27,36].includes(i)?'sunflower':([3,12,21,30,39].includes(i)?'pea':''))+'"></i>').join('')+'</div><b class="pvz-z z1">🧟</b><b class="pvz-z z2">🧟‍♂️</b><span class="pvz-shot"></span></div>';}
     function flappyPreview(){return '<div class="flappy-preview"><span class="fp-sun"></span><i class="fp-cloud c1"></i><i class="fp-cloud c2"></i><b class="fp-pipe p1"></b><b class="fp-pipe p2"></b><div class="fp-bird"><i></i></div><strong>12</strong><em></em></div>';}
+    function wobblePreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#cdece5,#58aab4);border-radius:20px"><img src="./store/wobblebay/icon.svg" alt="Wobble Bay explorer" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
     function apexPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#274b43,#10232d);border-radius:20px"><img src="./store/apexrush/icon.svg" alt="Apex Rush race car" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0005)"></div>';}
     function penguinPreview(){return '<div class="penguin-preview"><div class="pp-water"></div><div class="pp-stack">'+Array.from({length:20},(_,i)=>'<i style="--c:'+(i%5-2)+';--r:'+Math.floor(i/5)+'"></i>').join('')+'<b class="pp-king"><u></u></b></div><strong>7</strong><span>rescued</span></div>';}
 
@@ -1110,9 +1189,11 @@
     async function renderHome(){
       const games=await Promise.all(featureIds.map(gameState)),f=games.find(g=>g.id===featured)||games[0],others=games.filter(g=>g.id!==f.id),v=featureCopy(featured);
       const stats=await PocketDisk.stats().catch(()=>null);
-      const control=f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':f.id==='crumbclicker'?'Tap / click':f.id==='pvz'?'Tap + drag':f.id==='flappy'?'Tap / Space':f.id==='penguinpull'?'Drag + release':f.id==='apexrush'?'WASD / arrows + touch':'Touch + keys';
-      const visual=f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():f.id==='crumbclicker'?crumbClickerPreview():f.id==='pvz'?pvzPreview():f.id==='flappy'?flappyPreview():f.id==='penguinpull'?penguinPreview():f.id==='apexrush'?apexPreview():snakePreview();
-      const features=f.id==='deadwave'
+      const control=f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':f.id==='crumbclicker'?'Tap / click':f.id==='pvz'?'Tap + drag':f.id==='flappy'?'Tap / Space':f.id==='penguinpull'?'Drag + release':f.id==='apexrush'?'WASD / arrows + touch':f.id==='wobblebay'?'Touch · keys · Xbox pad':'Touch + keys';
+      const visual=f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():f.id==='crumbclicker'?crumbClickerPreview():f.id==='pvz'?pvzPreview():f.id==='flappy'?flappyPreview():f.id==='penguinpull'?penguinPreview():f.id==='apexrush'?apexPreview():f.id==='wobblebay'?wobblePreview():snakePreview();
+      const features=f.id==='wobblebay'
+        ?'<article><span>01</span><div><strong>Your physics playground</strong><p>Explore a real 3D island. Grab cargo, throw a ball, tumble in a ragdoll and drive, sail or fly.</p></div></article><article><span>02</span><div><strong>Eight ways to earn</strong><p>Deliver parcels and pizzas, drive fares, recycle, build, fish, rally and rescue a castaway.</p></div></article><article><span>03</span><div><strong>A life of your own</strong><p>Buy hats, vehicles, homes and a dog. Saved progress, sixteen golden stars and large iPad controls.</p></div></article>'
+        :f.id==='deadwave'
         ?'<article><span>01</span><div><strong>Endless waves</strong><p>Survive the pressure, then pick exactly one of three upgrade cards.</p></div></article><article><span>02</span><div><strong>19 zombie breeds, 8 bosses</strong><p>Shielded husks, grave divers and storm revenants join bosses with distinct attacks and escalating phases.</p></div></article><article><span>03</span><div><strong>13 weapons, 136 cards</strong><p>Build around flame, ice, lightning, homing plasma and piercing beams. Browse every weapon and card in the field guide.</p></div></article>'
         :f.id==='blockblast'
           ?'<article><span>01</span><div><strong>Three pieces</strong><p>Place the full tray before the next three pieces arrive.</p></div></article><article><span>02</span><div><strong>Clear the grid</strong><p>Complete any full row or column to open space and build your combo.</p></div></article><article><span>03</span><div><strong>Tiny by design</strong><p>No soundtrack or framework download. It starts almost immediately.</p></div></article>'
@@ -1129,7 +1210,7 @@
                   :'<article><span>01</span><div><strong>Classic rules</strong><p>Apple, walls, your own tail. Nothing extra unless you put it there.</p></div></article><article><span>02</span><div><strong>Built for iPad</strong><p>Swipe controls, touch D-pad, keyboard support and responsive rendering.</p></div></article><article><span>03</span><div><strong>Actually installed</strong><p>The game, icon and soundtrack consume real space on PocketVM’s 1 GB drive.</p></div></article>';
       page.innerHTML=`<section class="store-hero store-featured" data-feature-kind="${f.id}" data-tone="${ctx.escapeHTML(v.tone)}"><div class="store-hero-copy"><div class="store-feature-label"><span class="live-dot"></span><span>${ctx.escapeHTML(v.kicker)}</span><em>${f.id==='snake'?'Featured game':'New in Store'}</em></div><h1>${ctx.escapeHTML(v.title)}</h1><p>${ctx.escapeHTML(v.copy)}</p><div class="store-scoreline"><div><strong>${ctx.escapeHTML(f.name)}</strong><span>${ctx.escapeHTML(f.category)}</span></div><i></i><div><strong>${ctx.escapeHTML(control)}</strong><span>Controls</span></div><i></i><div><strong>Offline</strong><span>After install</span></div></div><div class="store-actions"><button class="store-primary store-main-cta" data-feature-main>${f.installed?'▶ Play '+ctx.escapeHTML(f.name):'↓ Install '+ctx.escapeHTML(f.name)}</button>${f.installed?`<button class="store-secondary" data-feature-pin>${f.pinned?'Remove from desktop':'Add to desktop'}</button>`:''}</div><div class="store-progress" data-store-progress hidden><i></i><span></span></div><div class="store-install-note"><span>${f.installed?'Installed locally':formatBytes(f.size)+' download'}</span><span>•</span><span>${stats?formatBytes(stats.free)+' free on drive':'Local install'}</span></div></div><div class="store-hero-visual"><div class="store-feature-chip">POCKETVM ORIGINAL</div>${visual}<img src="${ctx.escapeHTML(f.icon)}" alt=""><div class="store-icon-glow"></div></div></section>
       <section class="store-feature-grid">${features}</section>
-      <section class="store-section"><div class="store-section-head"><div><span>GAME LIBRARY</span><h2>Available now</h2></div><small>8 titles</small></div>
+      <section class="store-section"><div class="store-section-head"><div><span>GAME LIBRARY</span><h2>Available now</h2></div><small>9 titles</small></div>
       ${[f,...others].map(g=>`<article class="store-game-row store-game-row-rich"><img src="${ctx.escapeHTML(g.icon)}" alt=""><div><strong>${ctx.escapeHTML(g.name)}</strong><span>${ctx.escapeHTML(g.summary)}</span><small>${g.installed?'Installed and ready':'Local virtual-drive install'}</small></div><em>${g.installed?'Installed':formatBytes(g.size)}</em><button data-store-game="${g.id}">${g.installed?'Play':'Get'}</button></article>`).join('')}</section>`;
       const main=ctx.queryOne('[data-feature-main]',page),progress=ctx.queryOne('[data-store-progress]',page),pinBtn=ctx.queryOne('[data-feature-pin]',page);
       main.addEventListener('click',()=>runAction(f.id,main,progress));
@@ -1149,7 +1230,7 @@
     async function render(){ctx.queryAll('[data-store-tab]',win.el).forEach(b=>b.classList.toggle('active',b.dataset.storeTab===active));if(active==='library')await renderLibrary();else await renderHome();await refreshDrive();}
     ctx.queryAll('[data-store-tab]',win.el).forEach(button=>button.addEventListener('click',()=>{active=button.dataset.storeTab;render();}));
     const featureTimer=setInterval(()=>{if(active!=='home')return;featured=featureIds[(featureIds.indexOf(featured)+1)%featureIds.length];variant=Math.floor(Math.random()*4);renderHome();},FEATURE_ROTATE_MS);
-    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();syncBlockBlastShell();syncCrumbClickerShell();syncPvzShell();syncFlappyShell();syncPenguinShell();syncApexShell();render();},80);};
+    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();syncBlockBlastShell();syncCrumbClickerShell();syncPvzShell();syncFlappyShell();syncPenguinShell();syncApexShell();syncWobbleShell();render();},80);};
     window.addEventListener('pocketdiskchange',diskListener);
     win.cleanup=()=>{clearInterval(featureTimer);window.removeEventListener('pocketdiskchange',diskListener);};
     await render();
@@ -1181,7 +1262,7 @@
       const save = (() => { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}') || {}; } catch { return {}; } })();
       const bootstrap = '<script>window.__POCKETVM_MUSIC=' + JSON.stringify(musicData) + ';window.__POCKETVM_SAVE=' + JSON.stringify(save) + ';window.__POCKETVM_MODS=' + JSON.stringify(mods) + ';</' + 'script>';
       const srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head([^>]*)>/i, '<head$1>' + bootstrap) : bootstrap + html;
-      frame.srcdoc = srcdoc;
+      frame.srcdoc = gameFavicons(srcdoc,'snake');
     } catch (err) {
       loading.innerHTML = `<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message || 'The installed files could not be read.')}</small>`;
       return;
@@ -1215,7 +1296,7 @@
       const musicData=await blobToDataURL(musicBlob);
       const save=(()=>{try{return JSON.parse(localStorage.getItem(DEADWAVE_SAVE_KEY)||'{}')||{};}catch{return{};}})();
       const bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(musicData)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';window.__POCKETVM_SKINS='+JSON.stringify(skins)+';window.__POCKETVM_MODS='+JSON.stringify(mods)+';</'+'script>';
-      frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;
+      frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'deadwave');
     }catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-deadwave-ready')loading.classList.add('done');if(event.data.type==='pocketvm-deadwave-save'){const d=event.data.data||{},safe={bestWave:Math.max(0,Math.floor(Number(d.bestWave)||0)),bestKills:Math.max(0,Math.floor(Number(d.bestKills)||0)),music:d.music!==false,sfx:d.sfx!==false,skin:String(d.skin||'default').slice(0,40),autoBot:d.autoBot===true};localStorage.setItem(DEADWAVE_SAVE_KEY,JSON.stringify(safe));}};
     window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
@@ -1235,7 +1316,7 @@
       const [html,mods]=await Promise.all([PocketDisk.readText(BLOCKBLAST_ROOT+'/game.html'),installedBlockBlastMods()]);
       const save=(()=>{try{return JSON.parse(localStorage.getItem(BLOCKBLAST_SAVE_KEY)||'{}')||{};}catch{return{};}})();
       const bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';window.__POCKETVM_MODS='+JSON.stringify(mods)+';</'+'script>';
-      frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;
+      frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'blockblast');
     }catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-blockblast-ready')loading.classList.add('done');if(event.data.type==='pocketvm-blockblast-save'){const d=event.data.data||{},safe={best:Math.max(0,Math.floor(Number(d.best)||0)),theme:String(d.theme||'default').slice(0,20)};localStorage.setItem(BLOCKBLAST_SAVE_KEY,JSON.stringify(safe));}};
     window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
@@ -1256,7 +1337,7 @@
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
     try{
       const raw=await loadCrumbClickerGameHTML(),html=applyCrumbClickerModsToHTML(raw,mods),save=(()=>{try{return sanitizeCrumbClickerSave(JSON.parse(localStorage.getItem(CRUMBCLICKER_SAVE_KEY)||'{}')||{});}catch{return sanitizeCrumbClickerSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';window.__POCKETVM_MODS='+JSON.stringify(mods)+';</'+'script>';
-      frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;
+      frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,mods.candy?'candyclicker':'crumbclicker');
     }catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-crumbclicker-ready')loading.classList.add('done');if(event.data.type==='pocketvm-crumbclicker-save')localStorage.setItem(CRUMBCLICKER_SAVE_KEY,JSON.stringify(sanitizeCrumbClickerSave(event.data.data||{})));};
     window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
@@ -1265,7 +1346,7 @@
     shellCtx=ctx;if(!await pvzInstalled()){ctx.setWindowTitle(win,'Plants vs Zombies','🌻');win.content.innerHTML='<div class="store-not-installed"><div>🌻</div><h2>Plants vs Zombies isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
     const id=await pvzIdentity();ctx.setWindowTitle(win,id.name,'🌻');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
-    try{const [html,...musicBlobs]=await Promise.all([loadPvzGameHTML(),...PVZ_TRACKS.map(file=>PocketDisk.readBlob(PVZ_ROOT+'/'+file.name))]),trackPairs=await Promise.all(musicBlobs.map(async(blob,i)=>[PVZ_TRACKS[i].id,await blobToDataURL(blob)])),tracks=Object.fromEntries(trackPairs),save=(()=>{try{return sanitizePvzSave(JSON.parse(localStorage.getItem(PVZ_SAVE_KEY)||'{}')||{});}catch{return sanitizePvzSave({});}})(),bootstrap='<script>window.__POCKETVM_TRACKS='+JSON.stringify(tracks)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
+    try{const [html,...musicBlobs]=await Promise.all([loadPvzGameHTML(),...PVZ_TRACKS.map(file=>PocketDisk.readBlob(PVZ_ROOT+'/'+file.name))]),trackPairs=await Promise.all(musicBlobs.map(async(blob,i)=>[PVZ_TRACKS[i].id,await blobToDataURL(blob)])),tracks=Object.fromEntries(trackPairs),save=(()=>{try{return sanitizePvzSave(JSON.parse(localStorage.getItem(PVZ_SAVE_KEY)||'{}')||{});}catch{return sanitizePvzSave({});}})(),bootstrap='<script>window.__POCKETVM_TRACKS='+JSON.stringify(tracks)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'pvz');}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-pvz-ready')loading.classList.add('done');if(event.data.type==='pocketvm-pvz-save')localStorage.setItem(PVZ_SAVE_KEY,JSON.stringify(sanitizePvzSave(event.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
@@ -1274,7 +1355,7 @@
     shellCtx=ctx;if(!await apexInstalled()){ctx.setWindowTitle(win,'Apex Rush','🏎');win.content.innerHTML='<div class="store-not-installed"><div>🏎</div><h2>Apex Rush isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
     const id=await apexIdentity();ctx.setWindowTitle(win,id.name,'🏎');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
-    try{const html=await loadApexGameHTML();let music=APEX_MUSIC.urls[0];try{const musicBlob=await PocketDisk.readBlob(APEX_ROOT+'/music.mp3');music=await blobToDataURL(musicBlob);}catch{}const save=(()=>{try{return sanitizeApexSave(JSON.parse(localStorage.getItem(APEX_SAVE_KEY)||'{}')||{});}catch{return sanitizeApexSave({});}})(),bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(music)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
+    try{const html=await loadApexGameHTML();let music=APEX_MUSIC.urls[0];try{const musicBlob=await PocketDisk.readBlob(APEX_ROOT+'/music.mp3');music=await blobToDataURL(musicBlob);}catch{}const save=(()=>{try{return sanitizeApexSave(JSON.parse(localStorage.getItem(APEX_SAVE_KEY)||'{}')||{});}catch{return sanitizeApexSave({});}})(),bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(music)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'apexrush');}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-apex-ready')loading.classList.add('done');if(event.data.type==='pocketvm-apex-save')localStorage.setItem(APEX_SAVE_KEY,JSON.stringify(sanitizeApexSave(event.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
@@ -1282,7 +1363,7 @@
     shellCtx=ctx;if(!await flappyInstalled()){ctx.setWindowTitle(win,'Flappy Bird','🐦');win.content.innerHTML='<div class="store-not-installed"><div>🐦</div><h2>Flappy Bird isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
     const id=await flappyIdentity();ctx.setWindowTitle(win,id.name,'🐦');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
-    try{const html=await loadFlappyGameHTML();let music=FLAPPY_MUSIC.urls[0];try{const musicBlob=await PocketDisk.readBlob(FLAPPY_ROOT+'/music.mp3');music=await blobToDataURL(musicBlob);}catch{}const save=(()=>{try{return sanitizeFlappySave(JSON.parse(localStorage.getItem(FLAPPY_SAVE_KEY)||'{}')||{});}catch{return sanitizeFlappySave({});}})(),bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(music)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
+    try{const html=await loadFlappyGameHTML();let music=FLAPPY_MUSIC.urls[0];try{const musicBlob=await PocketDisk.readBlob(FLAPPY_ROOT+'/music.mp3');music=await blobToDataURL(musicBlob);}catch{}const save=(()=>{try{return sanitizeFlappySave(JSON.parse(localStorage.getItem(FLAPPY_SAVE_KEY)||'{}')||{});}catch{return sanitizeFlappySave({});}})(),bootstrap='<script>window.__POCKETVM_MUSIC='+JSON.stringify(music)+';window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'flappy');}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-flappy-ready')loading.classList.add('done');if(event.data.type==='pocketvm-flappy-save')localStorage.setItem(FLAPPY_SAVE_KEY,JSON.stringify(sanitizeFlappySave(event.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
@@ -1290,20 +1371,20 @@
     shellCtx=ctx;if(!await penguinInstalled()){ctx.setWindowTitle(win,'Penguin Pull','🐧');win.content.innerHTML='<div class="store-not-installed"><div>🐧</div><h2>Penguin Pull isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
     const id=await penguinIdentity();ctx.setWindowTitle(win,id.name,'🐧');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts"></iframe></div>`;
     const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
-    try{const html=await loadPenguinGameHTML(),save=(()=>{try{return sanitizePenguinSave(JSON.parse(localStorage.getItem(PENGUIN_SAVE_KEY)||'{}')||{});}catch{return sanitizePenguinSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';<'+'/script>';frame.srcdoc=/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html;}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
+    try{const html=await loadPenguinGameHTML(),save=(()=>{try{return sanitizePenguinSave(JSON.parse(localStorage.getItem(PENGUIN_SAVE_KEY)||'{}')||{});}catch{return sanitizePenguinSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';<'+'/script>';frame.srcdoc=gameFavicons(/<head[^>]*>/i.test(html)?html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap):bootstrap+html,'penguinpull');}catch(err){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(err?.message||'The installed files could not be read.')}</small>`;return;}
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-penguin-ready')loading.classList.add('done');if(event.data.type==='pocketvm-penguin-save')localStorage.setItem(PENGUIN_SAVE_KEY,JSON.stringify(sanitizePenguinSave(event.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
   function init(ctx) {
     shellCtx=ctx;
-    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{}); syncBlockBlastShell(ctx).catch(()=>{}); syncCrumbClickerShell(ctx).catch(()=>{}); syncPvzShell(ctx).catch(()=>{}); syncFlappyShell(ctx).catch(()=>{}); syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});
+    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{}); syncBlockBlastShell(ctx).catch(()=>{}); syncCrumbClickerShell(ctx).catch(()=>{}); syncPvzShell(ctx).catch(()=>{}); syncFlappyShell(ctx).catch(()=>{}); syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});
     window.addEventListener('pocketdiskchange',event=>{
       const path=String(event.detail?.path||'');
-      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT))return;
+      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT))return;
       clearTimeout(syncTimer);
-      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});syncBlockBlastShell(ctx).catch(()=>{});syncCrumbClickerShell(ctx).catch(()=>{});syncPvzShell(ctx).catch(()=>{});syncFlappyShell(ctx).catch(()=>{});syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});},90);
+      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});syncBlockBlastShell(ctx).catch(()=>{});syncCrumbClickerShell(ctx).catch(()=>{});syncPvzShell(ctx).catch(()=>{});syncFlappyShell(ctx).catch(()=>{});syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});},90);
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, syncBlockBlastShell, syncCrumbClickerShell, syncPvzShell, syncFlappyShell, syncPenguinShell, syncApexShell, buildStore, buildSnake, buildDeadwave, buildBlockBlast, buildCrumbClicker, buildPvz, buildFlappy, buildPenguin, buildApex, isInstalled, deadwaveInstalled, blockBlastInstalled, crumbClickerInstalled, pvzInstalled, flappyInstalled, penguinInstalled, apexInstalled, installSnake, installDeadwave, installBlockBlast, installCrumbClicker, installPvz, installFlappy, installPenguin, installApex, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, uninstallCrumbClicker, uninstallPvz, uninstallFlappy, uninstallPenguin, uninstallApex, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, toggleCrumbClickerPin, togglePvzPin, toggleFlappyPin, togglePenguinPin, toggleApexPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins, installedBlockBlastMods, installedCrumbClickerMods });
+  window.PocketStoreApp = Object.freeze({ init, syncShell, syncDeadwaveShell, syncBlockBlastShell, syncCrumbClickerShell, syncPvzShell, syncFlappyShell, syncPenguinShell, syncApexShell, syncWobbleShell, buildWobble, wobbleInstalled, installWobble, uninstallWobble, toggleWobblePin, buildStore, buildSnake, buildDeadwave, buildBlockBlast, buildCrumbClicker, buildPvz, buildFlappy, buildPenguin, buildApex, isInstalled, deadwaveInstalled, blockBlastInstalled, crumbClickerInstalled, pvzInstalled, flappyInstalled, penguinInstalled, apexInstalled, installSnake, installDeadwave, installBlockBlast, installCrumbClicker, installPvz, installFlappy, installPenguin, installApex, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, uninstallCrumbClicker, uninstallPvz, uninstallFlappy, uninstallPenguin, uninstallApex, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, toggleCrumbClickerPin, togglePvzPin, toggleFlappyPin, togglePenguinPin, toggleApexPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins, installedBlockBlastMods, installedCrumbClickerMods });
 })();

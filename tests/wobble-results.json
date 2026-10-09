@@ -1,0 +1,69 @@
+{
+  "checks": 16,
+  "tests": [
+    "Fresh worlds, save validation and all eight job definitions are finite and bounded",
+    "Walking, jumping and diagonal movement use the same production movement physics",
+    "A deliberate flop creates constrained ragdoll joints and safely gets back up",
+    "Grabbing uses spring motion, throws preserve momentum, and lost job cargo returns to its pickup",
+    "Cars exchange crash momentum, separate, spin and take damage without creating energy",
+    "Loose objects exchange mass-weighted impulses and vehicles can knock them away",
+    "Car entry loads a held object and safe exit retains the cargo",
+    "Helicopter lift, boat thrust, boost energy and recovery are physical and finite",
+    "Purchases debit once, cannot overspend, and owned houses, hats, pets and ride calls persist",
+    "Collectible stars award once, cancel removes job cargo, and an expired job does not deduct cash",
+    "Normal walking and grab inputs complete Parcel Run and Pizza Express with real cargo",
+    "Normal walking, grab and drop inputs complete cleanup and material deliveries",
+    "Fishing requires reaching the pier, casting and reacting to three actual bite windows",
+    "Taxi pilot drives three physical fares using steering, throttle and ACT inputs",
+    "Island Rally passes all eight real checkpoint rings with normal steering and throttle",
+    "Coastal Rescue flies to the offshore island, lands, boards and returns a real passenger"
+  ],
+  "pilots": [
+    {
+      "job": "parcel",
+      "seconds": 108.43,
+      "completed": 1,
+      "cash": 155
+    },
+    {
+      "job": "pizza",
+      "seconds": 102.47,
+      "completed": 1,
+      "cash": 157
+    },
+    {
+      "job": "cleanup",
+      "objects": 4,
+      "seconds": 34.27,
+      "completed": 1
+    },
+    {
+      "job": "builder",
+      "objects": 3,
+      "seconds": 49.03,
+      "completed": 1
+    },
+    {
+      "job": "fishing",
+      "completed": 1,
+      "fish": 3
+    },
+    {
+      "job": "taxi",
+      "completed": 1,
+      "seconds": 161.35
+    },
+    {
+      "job": "rally",
+      "completed": 1,
+      "rings": 8,
+      "seconds": 80.13
+    },
+    {
+      "job": "rescue",
+      "completed": 1,
+      "seconds": 71.15,
+      "offshoreLanding": true
+    }
+  ]
+}
