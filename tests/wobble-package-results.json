@@ -2,7 +2,7 @@
   "checks": 10,
   "tests": [
     "Installer stores every verified engine, vendor, licence, icon and identity file",
-    "Sandbox embeds all three scripts and saved purchases without relative asset requests",
+    "Sandbox embeds all four scripts and saved purchases without relative asset requests",
     "Only this game frame can save and its data is bounded and whitelisted",
     "Five separate truncated downloads cannot create a partial installation",
     "An interrupted virtual-drive write rolls back the whole incomplete package",

@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v82';
+const CACHE = 'pocketvm-shell-v83';
 const ASSETS = [
   './',
   './index.html',
@@ -64,6 +64,7 @@ const ASSETS = [
   "./store/wobblebay/icon.svg",
   "./store/wobblebay/game.html",
   "./store/wobblebay/game.js",
+  "./store/wobblebay/software-renderer.js",
   "./store/wobblebay/engine.js",
   "./store/wobblebay/three.min.js",
   "./store/wobblebay/THREE-LICENSE.txt",

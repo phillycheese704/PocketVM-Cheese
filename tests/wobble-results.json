@@ -21,26 +21,26 @@
   "pilots": [
     {
       "job": "parcel",
-      "seconds": 108.43,
+      "seconds": 107.15,
       "completed": 1,
       "cash": 155
     },
     {
       "job": "pizza",
-      "seconds": 102.47,
+      "seconds": 102.55,
       "completed": 1,
       "cash": 157
     },
     {
       "job": "cleanup",
       "objects": 4,
-      "seconds": 34.27,
+      "seconds": 36.57,
       "completed": 1
     },
     {
       "job": "builder",
       "objects": 3,
-      "seconds": 49.03,
+      "seconds": 50.23,
       "completed": 1
     },
     {
@@ -57,7 +57,7 @@
       "job": "rally",
       "completed": 1,
       "rings": 8,
-      "seconds": 80.13
+      "seconds": 80
     },
     {
       "job": "rescue",

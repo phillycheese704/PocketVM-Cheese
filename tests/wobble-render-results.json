@@ -1,0 +1,11 @@
+{
+  "checks": 4,
+  "tests": [
+    "Production island boots using software graphics when WebGL is missing",
+    "Actual island renders perspective geometry and multiple colours",
+    "The production Play button opens the playable HUD",
+    "Perspective clipping and instanced geometry remain finite"
+  ],
+  "firstFrameMs": 118,
+  "sampledColours": 3689
+}
