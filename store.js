@@ -186,14 +186,14 @@
   const APEX_ID='apexrush';
   const APEX_ROOT='/home/user/Downloads/Apex Rush';
   const APEX_SOURCE='./store/apexrush/';
-  const APEX_GAME_REVISION='race-v1';
+  const APEX_GAME_REVISION='race-v2-ipad';
   const APEX_PIN_KEY='pocketvm.store.apexrush.desktop';
   const APEX_SAVE_KEY='pocketvm.game.apexrush';
   const APEX_NAME='Apex Rush';
   const APEX_NAME_FILE='name.txt';
   const APEX_ICON_URL=APEX_SOURCE+'icon.svg';
   const APEX_ICON_ESTIMATE=28000;
-  const APEX_GAME_BYTES=60042;
+  const APEX_GAME_BYTES=69141;
   const APEX_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:3387141,urls:[APEX_SOURCE+'music.mp3']};
   const APEX_TOTAL_BYTES=APEX_GAME_BYTES+APEX_MUSIC.size+APEX_ICON_ESTIMATE+APEX_NAME.length;
   const apexFeatureVariants=[
@@ -731,7 +731,7 @@
   async function uninstallApex(){if(!await apexInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===APEX_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(APEX_ROOT);setApexPinned(false);await shellCtx?.refreshFS?.();await syncApexShell();shellCtx?.notify?.('Apex Rush uninstalled','Race files were removed from the virtual drive.','×');}
   async function toggleApexPin(v){setApexPinned(v);await syncApexShell();shellCtx?.notify?.(v?'Added to desktop':'Removed from desktop',APEX_NAME,v?'＋':'−');}
   async function syncApexShell(ctx=shellCtx){if(!ctx)return;const installed=await apexInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');let start=document.querySelector('[data-store-launch="apex-start"]'),desk=document.querySelector('[data-store-launch="apex-desktop"]');if(!installed){start?.remove();desk?.remove();setApexPinned(false);ctx.initDesktopGrid?.();return;}const id=await apexIdentity();if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=APEX_ID;start.dataset.storeLaunch='apex-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}if(desktop){if(apexPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=APEX_ID;desk.dataset.storeLaunch='apex-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}for(const win of ctx.state.windows.values()){if(win.appId!==APEX_ID)continue;ctx.setWindowTitle(win,id.name,'🏎');applyWindowIcon(win,id.icon,ctx);}ctx.initDesktopGrid?.();}
-  function sanitizeApexSave(d){const p=d?.prefs||{},one=(v,a,f)=>a.includes(String(v))?String(v):f,n=(v,a,b,f)=>Number.isFinite(Number(v))?Math.max(a,Math.min(b,Number(v))):f,hex=(v,f)=>/^#[0-9a-f]{6}$/i.test(String(v))?v:f,bestLaps={};for(const [k,v]of Object.entries(d?.bestLaps||{}))if(/^(harbour|canyon|alpine|metro|grandprix)-(clear|rain)$/.test(k)&&Number.isFinite(Number(v))&&Number(v)>=5&&Number(v)<=3600)bestLaps[k]=Number(v);return{prefs:{track:one(p.track,['harbour','canyon','alpine','metro','grandprix','random'],'harbour'),difficulty:one(p.difficulty,['rookie','club','pro','elite','random'],'club'),laps:one(p.laps,['1','2','3','4','5','6','7','8','random'],'3'),rivals:one(p.rivals,['3','5','7','random'],'5'),weather:one(p.weather,['clear','rain','random'],'clear'),paint:hex(p.paint,'#ff684f'),stripe:hex(p.stripe,'#fff3d4'),autoThrottle:p.autoThrottle===true,music:p.music!==false,sfx:p.sfx!==false,volume:n(p.volume,0,1,.42)},races:Math.floor(n(d?.races,0,1e9,0)),wins:Math.floor(n(d?.wins,0,1e9,0)),bestLaps};}
+  function sanitizeApexSave(d){const p=d?.prefs||{},one=(v,a,f)=>a.includes(String(v))?String(v):f,n=(v,a,b,f)=>Number.isFinite(Number(v))?Math.max(a,Math.min(b,Number(v))):f,hex=(v,f)=>/^#[0-9a-f]{6}$/i.test(String(v))?v:f,bestLaps={};for(const [k,v]of Object.entries(d?.bestLaps||{}))if(/^(harbour|canyon|alpine|metro|grandprix)-(clear|rain)$/.test(k)&&Number.isFinite(Number(v))&&Number(v)>=5&&Number(v)<=3600)bestLaps[k]=Number(v);return{prefs:{track:one(p.track,['harbour','canyon','alpine','metro','grandprix','random'],'harbour'),difficulty:one(p.difficulty,['rookie','club','pro','elite','random'],'club'),laps:one(p.laps,['1','2','3','4','5','6','7','8','random'],'3'),rivals:one(p.rivals,['3','5','7','random'],'5'),weather:one(p.weather,['clear','rain','random'],'clear'),paint:hex(p.paint,'#ff684f'),stripe:hex(p.stripe,'#fff3d4'),autoThrottle:p.autoThrottle===true,touchSize:one(p.touchSize,['large','xl'],'large'),touchControls:p.touchControls===true,music:p.music!==false,sfx:p.sfx!==false,volume:n(p.volume,0,1,.42)},races:Math.floor(n(d?.races,0,1e9,0)),wins:Math.floor(n(d?.wins,0,1e9,0)),bestLaps};}
 
   async function flappyInstalled(){for(const name of ['game.html','icon.png']){const node=await PocketDisk.getNode(FLAPPY_ROOT+'/'+name).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function flappyBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([path,node])=>node?.type==='file'&&path.startsWith(FLAPPY_ROOT+'/')).reduce((sum,[,node])=>sum+Number(node.size||0),0);}

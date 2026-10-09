@@ -12,6 +12,16 @@ A top-down arcade racer for PocketVM, with original Canvas cars and circuits. In
 - Random options for the circuit, difficulty, laps, grid and weather. “Randomise all” keeps those choices random for subsequent races.
 - Optional auto throttle, touch pedals, music volume and independent effects mute.
 
+## iPad and touch
+
+The `race-v2-ipad` update replaces the small single-row pedals with two spacious thumb groups. Large is the default; Extra large is available in the garage and saves with your settings. On tablet screens, Large steering and pedal targets are 88–112 pixels wide and Extra large targets are 100–128 pixels wide. Drift and nitro sit above the main controls. Phone and split-view layouts reduce the groups to fit while retaining generous targets.
+
+The race HUD has an **AUTO** button to toggle auto acceleration immediately. When enabled, steer and use BRAKE for corners; GAS remains available for manual driving. Touch controls appear on touch-capable devices even with a connected trackpad, and **Always show touch controls** provides a manual override.
+
+Multiple fingers work independently. You can hold GAS before lights out, slide from left to right or GAS to BRAKE without lifting, and slide outside the controls to release that finger. Pointer cancellation, focus loss, recovery and viewport resizing clear held controls. Rotating the device pauses an active race so you can adjust your grip before resuming. Safe-area padding keeps controls away from the home indicator and screen edges. Garage selectors, paint swatches, toggles and pause actions have larger touch targets; portrait garages scroll vertically.
+
+`tests/apex-touch-layout.html` embeds the actual shipped game at iPad portrait, landscape, Pro, split-view and phone sizes. Its **Check visible controls** action verifies that all six driving controls fit inside the viewport, are at least 44 × 44 pixels, and do not overlap. It does not alter game state or simulate driving.
+
 ## Drive
 
 | Action | Keyboard | Touch |
@@ -47,6 +57,6 @@ node tests/apex-package.cjs
 
 The engine suite uses `@napi-rs/canvas` (or `CODEX_PRIMARY_RUNTIME_NODE_MODULES` containing it), executes the shipped HTML and injects inspection hooks only in memory. The package suite executes the real Store installer and launcher with a disposable virtual drive; only SVG-to-PNG conversion is replaced in that harness.
 
-Nineteen gameplay checks cover geometry, random settings, saves, collisions, handling, nitro, ordered lap gates, recovery, pause, multi-touch and rendering. AI completes every circuit on both dry and wet roads, all four levels finish three-lap races, and an eight-car Elite grid completes a wet circuit. Keyboard pilots complete real races on three circuits using ordinary gas, brake, steering and boost inputs, with no position, speed or lap overrides. Fixed-step timing agrees at 120, 60 and 10 FPS, including a 200 ms frame. Three package checks verify installation, sandbox save routing and incomplete-download rollback. Results are in `tests/apex-results.json` and `tests/apex-package-results.json`.
+Twenty-two gameplay checks cover geometry, random settings, saves, collisions, handling, nitro, ordered lap gates, recovery, pause, multi-touch and rendering, including sliding between buttons, countdown-held pedals, saved touch settings, rotation, viewport changes and the live AUTO toggle. AI completes every circuit on both dry and wet roads, all four levels finish three-lap races, and an eight-car Elite grid completes a wet circuit. Keyboard pilots complete real races on three circuits using ordinary gas, brake, steering and boost inputs, with no position, speed or lap overrides. Fixed-step timing agrees at 120, 60 and 10 FPS, including a 200 ms frame. Four package checks verify installation, sandbox save routing, incomplete-download rollback and the automatic update of an installed race-v1 package while preserving music and saved settings. Results are in `tests/apex-results.json` and `tests/apex-package-results.json`.
 
 The published GitHub Pages build was also checked in Chrome: garage settings, random choices, custom paint, race countdown, keyboard acceleration, pause/resume and recovery worked. The included music loaded with a 105.85-second duration, played during racing and paused with the race. The live Midnight Metro race is shown in [the browser screenshot](../../tests/apex-rush-browser-1791577095456.jpg). All 59 checks across Apex Rush, its package installer and the existing Flappy Bird, Deadwave and Penguin regression suites passed before publication.

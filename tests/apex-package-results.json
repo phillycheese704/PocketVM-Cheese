@@ -1,8 +1,9 @@
 {
-  "checks": 3,
+  "checks": 4,
   "tests": [
     "Installer writes verified package and exact music bytes",
     "Sandbox boot and source-checked saves",
-    "Truncated music rollback"
+    "Truncated music rollback",
+    "Installed package migration preserves music and saved touch settings"
   ]
 }

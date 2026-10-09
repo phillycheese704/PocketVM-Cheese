@@ -1,6 +1,9 @@
 {
-  "checks": 19,
+  "checks": 22,
   "tests": [
+    "Touch size and visibility preferences survive both the game and PocketVM save sanitizers",
+    "Held touch input starts at lights out and fingers slide between buttons independently",
+    "Rotation pauses safely, viewport resizing clears controls, and AUTO toggles the real throttle",
     "All five circuits are closed, finite and have twelve evenly spaced lap gates",
     "Random settings resolve to legal, varied maps, difficulty, laps, grids and weather",
     "Settings, custom colours and dry/wet records survive sanitisation",
