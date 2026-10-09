@@ -186,14 +186,14 @@
   const FLAPPY_ID='flappy';
   const FLAPPY_ROOT='/home/user/Downloads/Flappy Bird';
   const FLAPPY_SOURCE='./store/flappy/';
-  const FLAPPY_GAME_REVISION='flight-v2';
+  const FLAPPY_GAME_REVISION='flight-v3';
   const FLAPPY_PIN_KEY='pocketvm.store.flappy.desktop';
   const FLAPPY_SAVE_KEY='pocketvm.game.flappy';
   const FLAPPY_NAME='Flappy Bird';
   const FLAPPY_NAME_FILE='name.txt';
   const FLAPPY_ICON_URL=FLAPPY_SOURCE+'icon.svg';
   const FLAPPY_ICON_ESTIMATE=28000;
-  const FLAPPY_GAME_BYTES=34675;
+  const FLAPPY_GAME_BYTES=34849;
   const FLAPPY_MUSIC={name:'music.mp3',mime:'audio/mpeg',size:1493465,urls:[
     'https://od.lk/s/ODdfMzQxNjQ0MTRf/03.%20Main%20Theme.mp3',
     'https://downloads.khinsider.com/game-soundtracks/album/flappy-bird-crypto-android-ios-online-gamerip-2024/03.%2520Main%2520Theme.mp3'

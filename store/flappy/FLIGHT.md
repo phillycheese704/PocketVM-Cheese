@@ -29,7 +29,7 @@ Holding Space does not repeatedly flap. Leaving the tab or window pauses a fligh
 
 A pass near the gap's centre adds to the clean streak. It still awards exactly one point. Morning, sunset and moonlight blend into one another every 12 pipes. The birds have articulated wings, feathers and reactive eyes; scenery uses parallax clouds, hills and a coastal skyline.
 
-Best score, best clean streak, flights, total Classic pipes, selected bird, mode and separate audio preferences save locally. Existing best scores and soundtrack preferences migrate automatically. The supplied Main Theme remains the soundtrack. PocketVM refreshes previously installed copies when opening the game; package `flight-v2` and shell cache `v78` contain this update.
+Best score, best clean streak, flights, total Classic pipes, selected bird, mode and separate audio preferences save locally. Existing best scores and soundtrack preferences migrate automatically. The supplied Main Theme remains the soundtrack. PocketVM refreshes previously installed copies when opening the game; package `flight-v3` and shell cache `v79` contain this update.
 
 ## Validation
 
