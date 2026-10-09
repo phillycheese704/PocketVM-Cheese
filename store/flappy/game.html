@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="pocketvm-flappy-build" content="v1">
+<meta name="pocketvm-flappy-build" content="flight-v2">
 <title>Flappy Bird</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#091a25;color:#fff;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -13,98 +13,154 @@ canvas{display:block;width:100%;height:100%;background:#72c8d4}
 .hud{position:absolute;inset:0;pointer-events:none}.score{position:absolute;top:22px;left:50%;translate:-50% 0;font:900 clamp(38px,8vw,72px)/1 Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;color:#fff;-webkit-text-stroke:3px #40372d;text-shadow:0 4px #0004}.top{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}.pill{pointer-events:auto;height:34px;border:2px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(38,53,56,.45);backdrop-filter:blur(7px);color:#fff;padding:0 12px;font:800 11px ui-sans-serif,sans-serif;box-shadow:0 4px 15px #0002}.pill:active{transform:translateY(1px)}.best{padding:8px 11px;border-radius:999px;background:rgba(38,53,56,.38);font-size:10px;font-weight:850;letter-spacing:.06em;text-shadow:0 2px #0004}
 .card{position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(84%,420px);padding:22px 24px;border-radius:22px;border:2px solid rgba(255,255,255,.32);background:linear-gradient(160deg,rgba(48,63,59,.92),rgba(24,35,33,.94));box-shadow:0 22px 70px #0006,inset 0 1px #fff3;text-align:center;pointer-events:auto}.card[hidden]{display:none}.logo{font:900 clamp(43px,9vw,78px)/.85 Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;letter-spacing:-.03em;color:#f7f0c3;-webkit-text-stroke:2px #44522f;text-shadow:0 5px 0 #406634,0 9px 0 #2a4326,0 14px 22px #0005}.logo span{color:#f4d05f;-webkit-text-stroke-color:#6c5227}.card p{margin:14px auto;color:#ced9d4;font-size:12px;line-height:1.55;max-width:320px}.tap{margin:15px auto 4px;padding:12px 18px;border-radius:13px;background:linear-gradient(#f3df69,#cfab39);border:2px solid #765d20;color:#2d2919;font-weight:950;font-size:13px;box-shadow:inset 0 2px #fff8,0 6px 0 #715520}.sub{font-size:9px;color:#94a8a1;letter-spacing:.08em;text-transform:uppercase}.medal{width:92px;height:92px;margin:8px auto 14px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 28%,#fff6b2,#d6a72d 48%,#805d18 75%);border:5px solid #efd66f;box-shadow:inset 0 -8px #6e4d18aa,0 8px 20px #0004;font:900 34px Impact;color:#fff7cf;text-shadow:0 3px #5e431b}.results{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0}.results div{padding:10px;border-radius:12px;background:#121d1a;border:1px solid #fff1}.results span,.results strong{display:block}.results span{font-size:8px;color:#80948d;letter-spacing:.11em}.results strong{margin-top:2px;font-size:24px}.buttons{display:flex;gap:8px}.buttons button{flex:1;height:42px;border-radius:11px;border:1px solid #ffffff20;background:#263c35;color:#eef7ed;font-weight:900}.buttons .primary{background:linear-gradient(#dfe96d,#91b547);color:#26301b;border-color:#effaa366}.paused{position:absolute;inset:0;display:grid;place-items:center;background:#07100fb8;backdrop-filter:blur(3px);font:900 40px Impact;letter-spacing:.04em;pointer-events:none}.paused[hidden]{display:none}
 @media(max-width:540px){.game{width:100vw;height:100vh;aspect-ratio:auto}.card{width:88%;padding:18px}.top{top:10px;left:10px;right:10px}}
+:root{color-scheme:dark}button{cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}button:focus-visible,canvas:focus-visible{outline:3px solid #fff0a0;outline-offset:3px}button:disabled{cursor:default;opacity:.35}body{background:radial-gradient(ellipse at 50% 22%,#365c69,#152f40 48%,#091b29)}.game{width:min(100vw,calc(100dvh * .75),680px);height:auto;aspect-ratio:3/4;border-radius:24px;isolation:isolate}canvas{outline:0}.top{gap:7px}.top-actions{display:flex;gap:5px}.pill{width:34px;height:34px;padding:0;border:1px solid #f0fbef55;border-radius:11px;background:#163d47ac;color:#f5f3cd;font-size:14px}.pill[aria-pressed="false"]{color:#7ea8ab}.best{background:#123442a6;border:1px solid #fff3;border-radius:12px;padding:8px 10px;backdrop-filter:blur(12px);font-size:13px}.best span{display:block;font-size:7px;letter-spacing:.13em;color:#c8e8de;margin-bottom:2px}.score{top:65px;font-size:clamp(37px,6vw,66px);color:#fff9dd;-webkit-text-stroke:2px #305a58;text-shadow:0 4px #1a464844;transition:transform .12s}.score.pop{transform:scale(1.15)}.mode-pill{position:absolute;left:50%;bottom:19px;translate:-50% 0;padding:6px 11px;border-radius:999px;color:#dcece0;background:#173a4099;font-size:8px;letter-spacing:.12em;font-weight:800;white-space:nowrap}.toast{position:absolute;left:50%;top:140px;translate:-50% 0;padding:8px 12px;border:1px solid #fff3;border-radius:11px;background:#153d41d9;color:#fff0b4;font-size:10px;font-weight:850;white-space:nowrap}.toast[hidden]{display:none}.card{width:88%;max-width:450px;max-height:calc(100% - 28px);overflow:auto;touch-action:pan-y;border:1px solid #f5ecd54d;border-radius:24px;background:linear-gradient(145deg,#183f45f5,#102d39f7);padding:25px 24px;scrollbar-width:thin}.card p{font-size:11px;color:#bbd6d4}.eyebrow{margin-bottom:10px;color:#91d9c1;font-size:8px;letter-spacing:.2em;font-weight:900}.logo{font-size:clamp(40px,8vw,75px);color:#fff3ca;-webkit-text-stroke:1.5px #3c5848;text-shadow:0 4px #4c744e,0 8px #1a342d}.mode-select{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mode-select button{height:44px;border-radius:12px;border:1px solid #91c7b833;background:#13323a;color:#a9c6c7;font-size:11px;font-weight:850}.mode-select button[aria-pressed="true"]{background:#e9cf79;color:#283628;border-color:#fff1a1}.mode-select small{display:block;margin-top:2px;font-size:8px;font-weight:600;opacity:.7}.mode-copy{font-size:9px!important;margin:9px auto 12px!important;min-height:29px}.flock-label{display:flex;justify-content:space-between;color:#8cb1ae;font-size:8px;font-weight:850;letter-spacing:.08em;margin:12px 0 6px}.flock-label strong{color:#e0ecce}.flock{display:flex;gap:6px;justify-content:center}.skin{height:46px;width:52px;border-radius:12px;background:#0f2b36;border:1px solid #fff2;position:relative;padding:3px;flex:1;max-width:64px}.skin canvas{height:36px;width:100%;pointer-events:none}.skin[aria-pressed="true"]{border-color:#f1d37c;background:#314942;box-shadow:0 0 0 2px #f3d27833}.skin.locked{opacity:.47}.skin small{position:absolute;bottom:2px;right:3px;border-radius:3px;background:#152c34;color:#f4df9c;font-size:7px;padding:0 2px}.stats,.results{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}.stats div,.results div{padding:9px 5px;background:#102c359c;border:1px solid #fff1;border-radius:11px}.stats span,.results span{display:block;color:#7fa8a6;font-size:7px;font-weight:850;letter-spacing:.1em}.stats strong,.results strong{display:block;margin-top:3px;color:#f4e7b1;font-size:19px}.play{width:100%;height:46px;border:1px solid #fff0a3;border-radius:13px;background:linear-gradient(135deg,#f9e7a4,#ecc768);box-shadow:0 5px 0 #a9843b,0 10px 25px #e0b75619;color:#25332e;font-size:12px;font-weight:900}.play:active{translate:0 2px;box-shadow:0 3px 0 #a9843b}.sub{margin-top:13px;color:#769b9c;font-size:8px;line-height:1.5;text-transform:none;letter-spacing:0}.medal{width:82px;height:82px;background:radial-gradient(circle at 32% 23%,#e9ce9d,#9e6d44);border-color:#e2b47f;font-size:35px}.medal[data-rank="silver"]{background:radial-gradient(circle at 30% 20%,#f1f7f5,#94a6b0);border-color:#d5e5e8}.medal[data-rank="gold"]{background:radial-gradient(circle at 30% 20%,#fff5b5,#daa13b);border-color:#ffe084}.medal[data-rank="platinum"]{background:radial-gradient(circle at 30% 20%,#e7fbff,#68a9b9);border-color:#a9e9ec}.result-title{margin:0;color:#f9e1a1;font-size:24px;letter-spacing:-.03em}.result-note{color:#91b8b6;font-size:9px;margin-top:6px}.buttons button{font-size:11px}.pause-cover{position:absolute;inset:0;background:#081f329f;backdrop-filter:blur(5px);pointer-events:auto;display:grid;place-items:center}.pause-cover[hidden]{display:none}.pause-cover .card{width:80%}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:540px){.game{width:min(100vw,calc(100dvh * .75));height:auto;aspect-ratio:3/4;border-radius:0}.card{padding:21px 18px;border-radius:20px}.score{top:57px}.toast{top:116px}}@media(max-height:560px){.card{padding:15px}.logo{font-size:43px}.card p{margin:10px auto;font-size:10px}.eyebrow{margin-bottom:7px}.stats{margin:9px 0}.flock-label{margin-top:8px}.mode-copy{min-height:0}.sub{margin-top:9px}.top{top:7px;left:7px;right:7px}.pill{width:29px;height:29px}.best{padding:6px}.score{top:45px;font-size:40px}}
+
 </style>
 </head>
 <body>
 <div class="game" id="game">
-<canvas id="canvas" width="576" height="768" aria-label="Flappy Bird game"></canvas>
+<canvas id="canvas" width="576" height="768" tabindex="0" aria-label="Flappy Bird. Tap, Space or Arrow Up to flap. P pauses."></canvas>
 <div class="hud">
 <div class="score" id="score">0</div>
-<div class="top"><div class="best" id="best">BEST 0</div><div><button class="pill" id="music">♫ MUSIC</button> <button class="pill" id="pause">Ⅱ</button></div></div>
-<section class="card" id="startCard"><div class="logo">FLAPPY <span>BIRD</span></div><p>Thread the bird through the pipes. One flap is small. One mistimed flap is extremely not small.</p><div class="tap">TAP TO FLY</div><div class="sub">Tap · click · Space / ↑</div></section>
-<section class="card" id="overCard" hidden><div class="logo" style="font-size:48px">GAME <span>OVER</span></div><div class="medal" id="medal">0</div><div class="results"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>BEST</span><strong id="finalBest">0</strong></div></div><div class="buttons"><button id="menuBtn">Menu</button><button class="primary" id="againBtn">Fly again</button></div></section>
-<div class="paused" id="paused" hidden>PAUSED</div>
+<div class="top"><div class="best"><span id="bestLabel">CLASSIC BEST</span> <b id="best">0</b></div><div class="top-actions"><button class="pill" id="music" aria-label="Toggle music" aria-pressed="true" title="Music">♫</button><button class="pill" id="sound" aria-label="Toggle sound effects" aria-pressed="true" title="Sound effects">◉</button><button class="pill" id="pause" aria-label="Pause" title="Pause (P)" disabled>Ⅱ</button></div></div>
+<div class="toast" id="toast" hidden></div><div class="mode-pill" id="modePill">CLASSIC · TAP / SPACE TO FLAP</div>
+<section class="card" id="startCard" aria-label="Flappy Bird menu"><div class="eyebrow">A LITTLE BIRD. A LONG WAY HOME.</div><div class="logo">FLAPPY <span>BIRD</span></div><p>Find your rhythm. Slip through the pipes.<br>Stay for just one more flight.</p><div class="mode-select" role="group" aria-label="Game mode"><button id="classicBtn" aria-pressed="true">Classic<small>One life. Chase your best.</small></button><button id="practiceBtn" aria-pressed="false">Practice<small>Checkpoints. Keep learning.</small></button></div><p class="mode-copy" id="modeCopy"></p><div class="flock-label"><span>YOUR FLOCK</span><strong id="skinName">Sunny</strong></div><div class="flock" id="flock" role="group" aria-label="Bird colour"></div><div class="stats"><div><span>CLASSIC BEST</span><strong id="startBest">0</strong></div><div><span>CLEAN STREAK</span><strong id="startStreak">0</strong></div><div><span>FLIGHTS</span><strong id="startRuns">0</strong></div></div><button class="play" id="playBtn">Let's fly</button><div class="sub">Tap / click · Space / ↑ · P pauses · R restarts<br>New skies every 12 pipes. Colours unlock with Classic scores.</div></section>
+<section class="card" id="overCard" aria-label="Flight results" hidden><div class="eyebrow" id="resultBadge">FLIGHT COMPLETE</div><div class="medal" id="medal" data-rank="bronze">✦</div><h1 class="result-title" id="resultTitle">One more flight?</h1><div class="result-note" id="resultNote"></div><div class="results"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>CLASSIC BEST</span><strong id="finalBest">0</strong></div><div><span>CLEAN PASSES</span><strong id="finalClean">0</strong></div></div><p id="nextMedal"></p><div class="buttons"><button id="menuBtn">My flock</button><button class="primary" id="againBtn">Fly again</button></div><div class="sub">Space / tap retries · R starts a fresh flight</div></section>
+<section class="card" id="practiceCard" aria-label="Practice checkpoint" hidden><div class="eyebrow">PRACTICE · NO LIVES LOST</div><h2 class="result-title">Try that gap again</h2><p id="practiceCopy">Your last cleared pipe is saved. Take a breath, then find your rhythm.</p><button class="play" id="checkpointBtn">Retry checkpoint</button><div class="buttons" style="margin-top:12px"><button id="practiceMenu">My flock</button><button id="practiceFresh">Fresh flight</button></div><div class="sub">Space / tap retries the checkpoint.</div></section>
+<div class="pause-cover" id="paused" hidden><section class="card"><div class="eyebrow">TAKE A BREATH</div><h2 class="result-title">Paused</h2><p>Your flight will wait for you.</p><button class="play" id="resumeBtn">Resume flight</button><div class="buttons" style="margin-top:12px"><button id="pauseMenu">My flock</button></div><div class="sub">P / Escape resumes · tap / Space resumes and flaps</div></section></div>
+</div><div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
 </div>
-</div>
+
 <script>
 (()=>{
 'use strict';
-const W=576,H=768,GROUND=106,BIRD_X=164,PIPE_W=82;
-const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
-const scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),startCard=document.getElementById('startCard'),overCard=document.getElementById('overCard'),pausedEl=document.getElementById('paused');
-const finalScore=document.getElementById('finalScore'),finalBest=document.getElementById('finalBest'),medal=document.getElementById('medal'),musicBtn=document.getElementById('music'),pauseBtn=document.getElementById('pause');
-const injected=window.__POCKETVM_SAVE||{};
-let save={best:Math.max(0,Math.floor(Number(injected.best)||0)),music:injected.music!==false};
-let state='menu',score=0,bird=null,pipes=[],spawn=0,last=0,paused=false,shake=0,flash=0,groundX=0,cloudX=0;
-const audio=new Audio(window.__POCKETVM_MUSIC||'https://od.lk/s/ODdfMzQxNjQ0MTRf/03.%20Main%20Theme.mp3');audio.loop=true;audio.volume=.48;audio.preload='auto';
-let ac=null;
-function sfx(freq,dur=.05,type='square',vol=.022,end=0){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);if(end)o.frequency.linearRampToValueAtTime(Math.max(40,freq+end),t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur)}catch{}}
-function syncMusic(){musicBtn.textContent=save.music?'♫ MUSIC':'♩ MUTED';musicBtn.setAttribute('aria-pressed',String(save.music));if(save.music){audio.play().catch(()=>{})}else audio.pause()}
-function persist(){parent.postMessage({type:'pocketvm-flappy-save',data:{best:save.best,music:save.music}},'*')}
-function rnd(a,b){return a+Math.random()*(b-a)}
-function resetBird(){bird={x:BIRD_X,y:H*.43,vy:0,rot:0,wing:0}}
-function resetRun(){score=0;pipes=[];spawn=1.1;shake=0;flash=0;groundX=0;resetBird();scoreEl.textContent='0'}
-function startRun(){resetRun();state='play';paused=false;startCard.hidden=true;overCard.hidden=true;pausedEl.hidden=true;flap();syncMusic()}
-function flap(){if(state==='menu'){startRun();return}if(state==='over'){return}if(state!=='play'||paused)return;bird.vy=-465;bird.wing=.13;sfx(520,.045,'square',.018,140)}
-function togglePause(){if(state!=='play')return;paused=!paused;pausedEl.hidden=!paused;pauseBtn.textContent=paused?'▶':'Ⅱ';if(paused)audio.pause();else if(save.music)audio.play().catch(()=>{})}
-function difficulty(){const s=Math.min(35,score);return{speed:185+s*1.8,gap:192-Math.min(30,s*.9),interval:1.55-Math.min(.18,s*.006)}}
-function addPipe(){const d=difficulty(),margin=110,gap=d.gap,top=rnd(margin,H-GROUND-margin-gap);pipes.push({x:W+28,top,gap,scored:false})}
-function rectHit(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw&&ax+aw>bx&&ay<by+bh&&ay+ah>by}
-function die(){if(state!=='play')return;state='over';paused=false;shake=9;flash=1;sfx(130,.22,'sawtooth',.035,-70);if(score>save.best){save.best=score;persist()}bestEl.textContent='BEST '+save.best;finalScore.textContent=score;finalBest.textContent=save.best;medal.textContent=score>=40?'★':score>=20?'A':score>=10?'B':'C';setTimeout(()=>{overCard.hidden=false},360)}
+const W=576,H=768,FLOOR=662,BIRD_X=164,PIPE_W=82,LIP=6,GRAVITY=1320,FLAP=-430,STEP=1/120,TAU=Math.PI*2;
+const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>lerp(a,b,Math.random());
+const SKINS=[
+ {id:'sunny',name:'Sunny',unlock:0,body:'#f5d353',wing:'#e9b83d',light:'#fff1a4',trail:'#fff4b2'},
+ {id:'mint',name:'Mint',unlock:5,body:'#8ed4a0',wing:'#55ad83',light:'#ddf5b6',trail:'#b7f4c4'},
+ {id:'berry',name:'Berry',unlock:10,body:'#eb9bb2',wing:'#bf658f',light:'#ffd4c6',trail:'#ffc3df'},
+ {id:'azure',name:'Azure',unlock:20,body:'#91c9eb',wing:'#659ecb',light:'#d7efff',trail:'#b7e6ff'},
+ {id:'midnight',name:'Midnight',unlock:35,body:'#a89fdc',wing:'#706caa',light:'#e1d7ff',trail:'#dfd2ff'}
+];
+const THEMES=[
+ {name:'Bluewater Morning',sky:[[91,185,210],[200,235,216]],far:[143,196,175],hill:[92,161,130],city:[114,183,169],sun:[255,242,176],night:0},
+ {name:'Golden Hour',sky:[[192,128,147],[255,217,172]],far:[198,174,170],hill:[151,147,130],city:[169,150,151],sun:[255,221,147],night:0},
+ {name:'Moonlight Coast',sky:[[34,53,94],[99,137,165]],far:[77,115,145],hill:[58,94,119],city:[65,105,140],sun:[218,232,235],night:1}
+];
+let injected=window.__POCKETVM_SAVE;
+if(!injected){try{injected=JSON.parse(localStorage.getItem('pocketvm.game.flappy')||'{}')}catch{injected={}}}
+const number=v=>clamp(Math.floor(Number(v)||0),0,1e9);
+let save={best:number(injected.best),practiceBest:number(injected.practiceBest),bestStreak:number(injected.bestStreak),runs:number(injected.runs),totalPipes:number(injected.totalPipes),skin:injected.skin||'sunny',mode:injected.mode==='practice'?'practice':'classic',music:injected.music!==false,sfx:injected.sfx!==false};
+if(!SKINS.some(s=>s.id===save.skin&&s.unlock<=save.best))save.skin='sunny';
+let state='menu',mode=save.mode,bird=null,pipes=[],score=0,streak=0,cleanPasses=0,spawn=.95,worldSpeed=178,worldDistance=0,elapsed=0,menuTime=0,paused=false,last=0,accumulator=0,deathTime=0,shake=0,flash=0,pop=0,toastTime=0,checkpoint=null,themeFrom=0,themeTo=0,themeBlend=1,fx=[],runBest=save.best,practiceAttempts=0,pipeId=1,audioCtx=null;
+const audio=new Audio(window.__POCKETVM_MUSIC||'https://od.lk/s/ODdfMzQxNjQ0MTRf/03.%20Main%20Theme.mp3');audio.loop=true;audio.volume=.38;audio.preload='none';
+function skin(){return SKINS.find(s=>s.id===save.skin)||SKINS[0]}
+function sfx(freq,dur=.07,type='triangle',vol=.025,end=0){
+ if(!save.sfx)return;
+ try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(Math.max(40,freq+end),t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+dur)}catch{}
+}
+function syncAudio(){if(save.music&&state==='play'&&!paused)audio.play().catch(()=>{});else audio.pause();$('music').setAttribute('aria-pressed',String(save.music));$('sound').setAttribute('aria-pressed',String(save.sfx))}
+function persist(){try{localStorage.setItem('pocketvm.game.flappy',JSON.stringify(save))}catch{}parent.postMessage({type:'pocketvm-flappy-save',data:{...save}},'*')}
+function announce(text){$('announcer').textContent=text}
+function toast(text){$('toast').textContent=text;$('toast').hidden=false;toastTime=2.4}
+function updateHUD(){
+ $('score').textContent=score;$('best').textContent=mode==='practice'?save.practiceBest:save.best;$('bestLabel').textContent=mode==='practice'?'PRACTICE BEST':'CLASSIC BEST';$('modePill').textContent=mode==='practice'?'PRACTICE · CHECKPOINTS ON':'CLASSIC · TAP / SPACE TO FLAP';
+ $('startBest').textContent=save.best;$('startStreak').textContent=save.bestStreak;$('startRuns').textContent=save.runs;$('skinName').textContent=skin().name;
+ $('pause').disabled=state!=='play';$('pause').textContent=paused?'▶':'Ⅱ';$('pause').setAttribute('aria-label',paused?'Resume':'Pause');$('paused').hidden=!paused;
+}
+function setMode(next){if(state!=='menu')return;mode=next==='practice'?'practice':'classic';save.mode=mode;$('classicBtn').setAttribute('aria-pressed',String(mode==='classic'));$('practiceBtn').setAttribute('aria-pressed',String(mode==='practice'));$('modeCopy').textContent=mode==='practice'?'Wider gaps, slower pipes, and a checkpoint after every pass. Practice has its own best score.':'One life, one point per pipe. Pass close to the centre to build a clean streak.';persist();updateHUD()}
+function resetBird(){bird={x:BIRD_X,y:330,vy:0,rot:0,wing:0}}
+function difficulty(n=score,m=mode){const s=Math.min(40,n);return m==='practice'?{speed:142+s*.9,gap:232-Math.min(18,s*.45),interval:1.8-Math.min(.12,s*.003),delta:92}:{speed:178+s*1.6,gap:198-Math.min(24,s*.6),interval:1.6-Math.min(.14,s*.0035),delta:100+Math.min(16,s*.4)}}
+function resetRun(){score=streak=cleanPasses=elapsed=worldDistance=deathTime=shake=flash=pop=practiceAttempts=0;pipes=[];fx=[];checkpoint=null;spawn=.95;worldSpeed=difficulty(0).speed;themeFrom=themeTo=0;themeBlend=1;pipeId=1;toastTime=0;$('toast').hidden=true;$('score').classList.remove('pop');resetBird();updateHUD()}
+function focusGame(){canvas.focus({preventScroll:true})}
+function startRun(){resetRun();state='play';paused=false;last=performance.now();accumulator=0;runBest=save.best;if(mode==='classic'){save.runs=number(save.runs+1);persist()}$('startCard').hidden=$('overCard').hidden=$('practiceCard').hidden=true;updateHUD();focusGame();flap();if(mode==='practice')rememberCheckpoint();syncAudio();announce(mode==='practice'?'Practice flight started. Checkpoints are on.':'Classic flight started.')}
+function addFX(x,y,color,count=6,speed=70){for(let i=0;i<count&&fx.length<110;i++){const angle=rnd(0,TAU),v=rnd(speed*.35,speed),life=rnd(.25,.65);fx.push({x,y,vx:Math.cos(angle)*v,vy:Math.sin(angle)*v,life,max:life,r:rnd(1.5,3.5),color})}}
+function flap(){if(state!=='play'||paused)return;bird.vy=FLAP;bird.wing=.15;addFX(BIRD_X-22,bird.y+4,skin().trail,3,40);sfx(510,.055,'triangle',.018,150)}
+function action(){if(state==='menu'||state==='over')startRun();else if(state==='practiceRetry')restoreCheckpoint();else if(state==='play'){if(paused)setPause(false);flap()}}
+function setPause(value){if(state!=='play')return;paused=Boolean(value);last=performance.now();accumulator=0;updateHUD();syncAudio();if(!paused)focusGame();announce(paused?'Flight paused.':'Flight resumed.')}
+function togglePause(){setPause(!paused)}
+function addPipe(){const d=difficulty(),min=76+d.gap/2,max=FLOOR-76-d.gap/2,previous=pipes.length?pipes[pipes.length-1].top+pipes[pipes.length-1].gap/2:330,centre=clamp(previous+rnd(-d.delta,d.delta),min,max);pipes.push({id:pipeId++,x:W+36,top:centre-d.gap/2,gap:d.gap,scored:false,clean:false})}
+// The four rectangles below are also the exact shapes used by the renderer.
+function pipeRects(p){const bottom=p.top+p.gap;return[{x:p.x,y:0,w:PIPE_W,h:p.top-24},{x:p.x-LIP,y:p.top-24,w:PIPE_W+LIP*2,h:24},{x:p.x-LIP,y:bottom,w:PIPE_W+LIP*2,h:24},{x:p.x,y:bottom+24,w:PIPE_W,h:FLOOR-bottom-24}]}
+function ellipseRectHit(x,y,r){const dx=(x-clamp(x,r.x,r.x+r.w))/17,dy=(y-clamp(y,r.y,r.y+r.h))/12;return dx*dx+dy*dy<1}
+function collides(y,p){return pipeRects(p).some(r=>ellipseRectHit(BIRD_X,y,r))}
+function rememberCheckpoint(){checkpoint={score,streak,cleanPasses,spawn,worldSpeed,worldDistance,elapsed,pipes:pipes.map(p=>({...p})),bird:{...bird,vy:0},themeFrom,themeTo,themeBlend,pipeId}}
+function restoreCheckpoint(){
+ if(mode!=='practice'||state!=='practiceRetry'||!checkpoint)return;
+ ({score,streak,cleanPasses,spawn,worldSpeed,worldDistance,elapsed,themeFrom,themeTo,themeBlend,pipeId}=checkpoint);pipes=checkpoint.pipes.map(p=>({...p}));bird={...checkpoint.bird};fx=[];shake=flash=deathTime=0;state='play';paused=false;last=performance.now();accumulator=0;$('practiceCard').hidden=true;updateHUD();focusGame();flap();syncAudio();toast(score?'Checkpoint '+score+' · keep going':'A fresh takeoff');announce('Checkpoint restored. Score '+score+'.')
+}
+function medalFor(n){return n>=50?{name:'Platinum',rank:'platinum',symbol:'♛',next:0}:n>=25?{name:'Gold',rank:'gold',symbol:'★',next:50}:n>=10?{name:'Silver',rank:'silver',symbol:'✦',next:25}:n>=5?{name:'Bronze',rank:'bronze',symbol:'✦',next:10}:{name:'First flight',rank:'first',symbol:'•',next:5}}
+function scorePipe(p){
+ if(p.scored)return;p.scored=true;score++;p.clean=Math.abs(bird.y-(p.top+p.gap/2))<p.gap*.17;if(p.clean){streak++;cleanPasses++}else streak=0;
+ if(mode==='classic'){const old=save.best;save.totalPipes=number(save.totalPipes+1);save.best=Math.max(save.best,score);save.bestStreak=Math.max(save.bestStreak,streak);const unlocked=SKINS.find(s=>s.unlock>old&&s.unlock<=save.best);if(unlocked)toast(unlocked.name+' joined your flock!')}else save.practiceBest=Math.max(save.practiceBest,score);
+ const theme=Math.floor(score/12)%THEMES.length;if(theme!==themeTo){themeFrom=themeTo;themeTo=theme;themeBlend=0;toast(THEMES[theme].name)}
+ pop=.18;$('score').classList.add('pop');sfx(p.clean?1040:840,.09,'sine',.026,100);if(p.clean)addFX(BIRD_X,bird.y,skin().light,7,95);persist();updateHUD();if(mode==='practice')rememberCheckpoint()
+}
+function crash(){if(state!=='play')return;state=mode==='practice'?'practiceRetry':'dying';paused=false;shake=5;flash=.24;deathTime=0;bird.vy=Math.max(140,bird.vy);addFX(BIRD_X,bird.y,skin().light,14,150);sfx(160,.2,'triangle',.05,-95);syncAudio();updateHUD();if(mode==='practice'){practiceAttempts++;$('practiceCopy').textContent=score?'Your '+score+' points are safe. Retry from the last cleared pipe with a fresh flap.':'Take another run at the first gap. Retry starts with a fresh flap.';$('practiceCard').hidden=false;announce('Practice checkpoint ready. Score '+score+'.')}}
+function showResults(){if(state!=='dying')return;state='over';const medal=medalFor(score);$('medal').dataset.rank=medal.rank;$('medal').textContent=medal.symbol;$('resultBadge').textContent=score>runBest?'A NEW PERSONAL BEST':medal.name.toUpperCase()+' FLIGHT';$('resultTitle').textContent=score>runBest?'Nice flying!':'One more flight?';$('resultNote').textContent=score?'You cleared '+score+' pipe'+(score===1?'':'s')+' and found '+cleanPasses+' clean pass'+(cleanPasses===1?'':'es')+'.':'A small flap goes a long way. Keep a steady rhythm.';$('finalScore').textContent=score;$('finalBest').textContent=save.best;$('finalClean').textContent=cleanPasses;$('nextMedal').textContent=medal.next?'Next medal: '+medal.next+' pipes.':'Platinum earned. How far can you fly?';$('overCard').hidden=false;updateHUD();announce('Flight over. Score '+score+'. Best '+save.best+'.')}
+function openMenu(){state='menu';paused=false;accumulator=0;last=performance.now();score=0;pipes=[];fx=[];shake=flash=pop=0;themeFrom=themeTo=0;themeBlend=1;toastTime=0;$('toast').hidden=true;$('score').classList.remove('pop');$('overCard').hidden=$('practiceCard').hidden=true;$('startCard').hidden=false;resetBird();setMode(mode);renderFlock();updateHUD();syncAudio()}
+function updateFX(dt){shake=Math.max(0,shake-dt*22);flash=Math.max(0,flash-dt);pop=Math.max(0,pop-dt);if(!pop)$('score').classList.remove('pop');toastTime=Math.max(0,toastTime-dt);if(!toastTime)$('toast').hidden=true;for(const f of fx){f.life-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=70*dt;f.vx*=Math.exp(-2*dt)}fx=fx.filter(f=>f.life>0)}
 function update(dt){
- if(paused)return;
- cloudX=(cloudX+dt*12)%W;groundX=(groundX+dt*(state==='play'?difficulty().speed:55))%48;
- if(state!=='play'){if(state==='menu'){bird.y=H*.43+Math.sin(performance.now()/380)*8;bird.rot=Math.sin(performance.now()/400)*.06}return}
- const d=difficulty();bird.vy+=1420*dt;bird.y+=bird.vy*dt;bird.rot=Math.max(-.45,Math.min(1.25,bird.vy/610));bird.wing=Math.max(0,bird.wing-dt);
- spawn-=dt;if(spawn<=0){addPipe();spawn=d.interval}
- for(const p of pipes){p.x-=d.speed*dt;if(!p.scored&&p.x+PIPE_W<BIRD_X){p.scored=true;score++;scoreEl.textContent=score;sfx(880,.055,'sine',.022,100)}}
- pipes=pipes.filter(p=>p.x>-PIPE_W-10);
- const bx=BIRD_X-18,by=bird.y-14,bw=36,bh=28;
- for(const p of pipes){if(rectHit(bx,by,bw,bh,p.x,0,PIPE_W,p.top)||rectHit(bx,by,bw,bh,p.x,p.top+p.gap,PIPE_W,H-GROUND-(p.top+p.gap))){die();break}}
- if(bird.y+18>=H-GROUND||bird.y-18<=0){bird.y=Math.min(H-GROUND-18,Math.max(18,bird.y));die()}
- shake=Math.max(0,shake-30*dt);flash=Math.max(0,flash-4*dt)
+ if(paused)return;updateFX(dt);menuTime+=dt;
+ if(state==='menu'){worldDistance+=38*dt;bird.y=330+Math.sin(menuTime*2.7)*8;bird.rot=Math.sin(menuTime*2.1)*.06;bird.wing=.07+Math.sin(menuTime*9)*.06;return}
+ if(state==='dying'){deathTime+=dt;bird.vy=Math.min(650,bird.vy+GRAVITY*dt);bird.y=Math.min(FLOOR-18,bird.y+bird.vy*dt);bird.rot=lerp(bird.rot,1.35,1-Math.exp(-8*dt));if(deathTime>=.65)showResults();return}
+ if(state!=='play')return;
+ elapsed+=dt;themeBlend=Math.min(1,themeBlend+dt*.5);const d=difficulty();worldSpeed=lerp(worldSpeed,d.speed,1-Math.exp(-.9*dt));worldDistance+=worldSpeed*dt;
+ const oldY=bird.y;bird.vy=Math.min(740,bird.vy+GRAVITY*dt);bird.y+=bird.vy*dt;bird.rot=lerp(bird.rot,clamp(bird.vy/660,-.47,1.18),1-Math.exp(-12*dt));bird.wing=Math.max(0,bird.wing-dt);if(bird.y<14){bird.y=14;bird.vy=Math.max(0,bird.vy)}
+ spawn-=dt;while(spawn<=0){addPipe();spawn+=d.interval}for(const p of pipes)p.x-=worldSpeed*dt;
+ if(bird.y+12>=FLOOR||pipes.some(p=>collides(bird.y,p)||collides((oldY+bird.y)/2,p))){bird.y=Math.min(bird.y,FLOOR-18);crash();return}
+ for(const p of pipes)if(!p.scored&&p.x+PIPE_W+LIP<BIRD_X-17)scorePipe(p);
+ pipes=pipes.filter(p=>p.x+PIPE_W+LIP>-20)
 }
-function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-function drawCloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,255,255,.76)';ctx.beginPath();ctx.arc(0,8,22,0,Math.PI*2);ctx.arc(27,0,31,0,Math.PI*2);ctx.arc(60,10,23,0,Math.PI*2);ctx.fill();ctx.restore()}
+function color(a,alpha=1){return 'rgba('+a.map(Math.round).join(',')+','+alpha+')'}
+function palette(key){const mix=(a,b)=>Array.isArray(a)?a.map((v,i)=>mix(v,b[i])):lerp(a,b,themeBlend);return mix(THEMES[themeFrom][key],THEMES[themeTo][key])}
+function rounded(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
+function drawCloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle=color([255,255,255],.56-palette('night')*.36);ctx.beginPath();ctx.arc(0,10,20,0,TAU);ctx.arc(25,0,28,0,TAU);ctx.arc(55,11,22,0,TAU);ctx.fill();ctx.restore()}
+function drawBackground(){
+ const colors=palette('sky'),g=ctx.createLinearGradient(0,0,0,FLOOR);g.addColorStop(0,color(colors[0]));g.addColorStop(1,color(colors[1]));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ const night=palette('night'),sun=palette('sun');ctx.fillStyle=color(sun,.11);ctx.beginPath();ctx.arc(460,110,69,0,TAU);ctx.fill();ctx.fillStyle=color(sun,.84);ctx.beginPath();ctx.arc(460,110,34,0,TAU);ctx.fill();
+ if(night>.01){ctx.globalAlpha=night;ctx.fillStyle=color(colors[0]);ctx.beginPath();ctx.arc(474,101,29,0,TAU);ctx.fill();ctx.fillStyle='#edf5f4';for(let i=0;i<36;i++){const x=(i*137+25)%W,y=(i*61+19)%340;ctx.globalAlpha=night*(.25+.35*(1+Math.sin(menuTime*1.5+i)));ctx.fillRect(x,y,i%7===0?3:2,i%7===0?3:2)}ctx.globalAlpha=1}
+ drawCloud(((80-worldDistance*.075)%730+730)%730-80,125,.85);drawCloud(((420-worldDistance*.05)%750+750)%750-80,205,.65);drawCloud(((675-worldDistance*.06)%770+770)%770-80,65,.58);
+ ctx.fillStyle=color(palette('far'));ctx.beginPath();ctx.moveTo(0,FLOOR);for(let x=0;x<=W+8;x+=8){const wx=x+worldDistance*.15;ctx.lineTo(x,535+Math.sin(wx*.009)*28+Math.sin(wx*.024)*12)}ctx.lineTo(W,FLOOR);ctx.closePath();ctx.fill();
+ const offset=worldDistance*.28%104;ctx.fillStyle=color(palette('city'));for(let i=-1;i<8;i++){const x=i*104-offset,h=66+((i+9)%4)*23;rounded(ctx,x,590-h,64,h+40,3);if(night>.1){ctx.fillStyle=color([254,224,164],night*.6);for(let r=0;r<h/18-1;r++)for(let j=0;j<3;j++)if((r+j+i+9)%3)ctx.fillRect(x+10+j*17,599-h+r*18,6,7);ctx.fillStyle=color(palette('city'))}}
+ ctx.fillStyle=color(palette('hill'));ctx.beginPath();ctx.moveTo(0,FLOOR);for(let x=0;x<=W+8;x+=8){const wx=x+worldDistance*.4;ctx.lineTo(x,607+Math.sin(wx*.019)*14+Math.sin(wx*.041)*7)}ctx.lineTo(W,FLOOR);ctx.closePath();ctx.fill();
+}
 function drawPipe(p){
- const lip=10;ctx.save();
- const g=ctx.createLinearGradient(p.x,0,p.x+PIPE_W,0);g.addColorStop(0,'#4b9a39');g.addColorStop(.18,'#82c64f');g.addColorStop(.58,'#66b642');g.addColorStop(1,'#347d30');
- ctx.fillStyle=g;ctx.strokeStyle='#285d29';ctx.lineWidth=4;
- ctx.fillRect(p.x,0,PIPE_W,p.top-lip);ctx.strokeRect(p.x,0,PIPE_W,p.top-lip);
- ctx.fillRect(p.x-7,p.top-lip-25,PIPE_W+14,28);ctx.strokeRect(p.x-7,p.top-lip-25,PIPE_W+14,28);
- const by=p.top+p.gap+lip;ctx.fillRect(p.x,by,PIPE_W,H-GROUND-by);ctx.strokeRect(p.x,by,PIPE_W,H-GROUND-by);
- ctx.fillRect(p.x-7,by-3,PIPE_W+14,28);ctx.strokeRect(p.x-7,by-3,PIPE_W+14,28);
- ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(p.x+10,0,9,Math.max(0,p.top-lip-2));ctx.fillRect(p.x+10,by+25,9,H-GROUND-by-25);ctx.restore()
+ ctx.save();const g=ctx.createLinearGradient(p.x-LIP,0,p.x+PIPE_W+LIP,0);g.addColorStop(0,'#367d4b');g.addColorStop(.18,'#9bd35e');g.addColorStop(.45,'#7fbb4f');g.addColorStop(1,'#326f47');ctx.fillStyle=g;ctx.strokeStyle='#285442';ctx.lineWidth=3;
+ for(const r of pipeRects(p)){ctx.fillRect(r.x,r.y,r.w,r.h);ctx.strokeRect(r.x+1.5,r.y+1.5,r.w-3,r.h-3)}
+ const bottom=p.top+p.gap;ctx.fillStyle='#dcf59a';ctx.globalAlpha=.6;ctx.fillRect(p.x-LIP+5,p.top-21,PIPE_W+LIP*2-10,3);ctx.fillRect(p.x-LIP+5,bottom+3,PIPE_W+LIP*2-10,3);ctx.globalAlpha=1;ctx.fillStyle='#285442';ctx.fillRect(p.x-LIP+3,p.top-5,PIPE_W+LIP*2-6,3);ctx.fillRect(p.x-LIP+3,bottom+19,PIPE_W+LIP*2-6,3);
+ ctx.fillStyle='rgba(226,252,178,.25)';ctx.fillRect(p.x+11,0,8,p.top-25);ctx.fillRect(p.x+11,bottom+25,8,FLOOR-bottom-25);ctx.fillStyle='#3f8450';for(const y of [p.top-13,bottom+12])for(const x of [p.x+3,p.x+PIPE_W-3]){ctx.beginPath();ctx.arc(x,y,2.2,0,TAU);ctx.fill()}ctx.restore()
 }
-function drawBird(){
- ctx.save();ctx.translate(BIRD_X,bird.y);ctx.rotate(bird.rot);
- ctx.fillStyle='rgba(0,0,0,.16)';ctx.beginPath();ctx.ellipse(3,20,25,6,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#f6d84b';ctx.strokeStyle='#6d5220';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,0,24,19,-.08,0,Math.PI*2);ctx.fill();ctx.stroke();
- ctx.fillStyle='#f2bd33';ctx.beginPath();ctx.ellipse(-13,bird.wing>0?5:1,14,bird.wing>0?6:11,.4,0,Math.PI*2);ctx.fill();ctx.stroke();
- ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(10,-8,9,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#171b16';ctx.beginPath();ctx.arc(13,-8,3.2,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#e77a2b';ctx.beginPath();ctx.moveTo(19,-2);ctx.lineTo(38,3);ctx.lineTo(20,9);ctx.closePath();ctx.fill();ctx.stroke();
- ctx.fillStyle='#fff4a8';ctx.beginPath();ctx.ellipse(-5,-8,9,4,-.4,0,Math.PI*2);ctx.fill();ctx.restore()
+function drawBirdModel(c,x,y,rot,wing,s,scale=1,fallen=false){
+ c.save();c.translate(x,y);c.rotate(rot);c.scale(scale,scale);c.strokeStyle='#514832';c.lineWidth=2.4;c.lineJoin='round';c.fillStyle=s.wing;c.beginPath();c.moveTo(-19,3);c.lineTo(-33,-6);c.lineTo(-30,5);c.lineTo(-35,10);c.lineTo(-18,12);c.closePath();c.fill();c.stroke();
+ const g=c.createLinearGradient(-10,-17,7,20);g.addColorStop(0,s.light);g.addColorStop(.4,s.body);g.addColorStop(1,s.wing);c.fillStyle=g;c.beginPath();c.ellipse(0,0,24,19,-.08,0,TAU);c.fill();c.stroke();c.fillStyle=s.light;c.beginPath();c.ellipse(5,10,15,7,-.2,0,TAU);c.fill();
+ const flap=clamp(wing/.15,0,1);c.save();c.translate(-12,5);c.rotate(-.2-flap*.55);c.fillStyle=s.wing;c.beginPath();c.ellipse(-2,0,13,6+flap*5,0,0,TAU);c.fill();c.stroke();c.strokeStyle='rgba(81,72,50,.35)';c.lineWidth=1;c.beginPath();c.moveTo(-11,2);c.lineTo(-4,4);c.moveTo(-5,3);c.lineTo(2,5);c.stroke();c.restore();
+ c.fillStyle='#fffdf3';c.strokeStyle='#514832';c.lineWidth=2;c.beginPath();c.ellipse(11,-7,9,10,-.1,0,TAU);c.fill();c.stroke();c.fillStyle='#243e45';if(fallen){c.beginPath();c.moveTo(9,-10);c.lineTo(15,-4);c.moveTo(15,-10);c.lineTo(9,-4);c.stroke()}else{c.beginPath();c.ellipse(14,-7,3.2,4,0,0,TAU);c.fill();c.fillStyle='#fff';c.beginPath();c.arc(15,-9,1.2,0,TAU);c.fill()}
+ c.fillStyle='#f09b46';c.beginPath();c.moveTo(20,-1);c.lineTo(35,3);c.lineTo(21,9);c.closePath();c.fill();c.stroke();c.strokeStyle='#ae683b';c.lineWidth=1;c.beginPath();c.moveTo(22,4);c.lineTo(31,4);c.stroke();c.fillStyle=s.light;c.beginPath();c.ellipse(-7,-10,8,3.5,-.35,0,TAU);c.fill();c.restore()
 }
-function draw(){
- ctx.save();if(shake)ctx.translate(rnd(-shake,shake),rnd(-shake,shake));
- const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#6bc8d8');sky.addColorStop(.68,'#aee1d0');sky.addColorStop(1,'#d6e8b9');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
- ctx.fillStyle='rgba(255,245,174,.75)';ctx.beginPath();ctx.arc(470,92,43,0,Math.PI*2);ctx.fill();
- drawCloud((90-cloudX+W)%W,112,.8);drawCloud((390-cloudX*.72+W)%W,184,.58);drawCloud((620-cloudX*.9+W)%W,78,.65);
- ctx.fillStyle='#75b66f';ctx.beginPath();ctx.moveTo(0,H-GROUND-45);for(let x=0;x<=W;x+=48)ctx.quadraticCurveTo(x+24,H-GROUND-90-(x%96?8:0),x+48,H-GROUND-45);ctx.lineTo(W,H-GROUND);ctx.lineTo(0,H-GROUND);ctx.fill();
- for(const p of pipes)drawPipe(p);drawBird();
- ctx.fillStyle='#8fc44f';ctx.fillRect(0,H-GROUND,W,GROUND);ctx.fillStyle='#d9d16b';ctx.fillRect(0,H-GROUND+16,W,GROUND-16);ctx.fillStyle='#708c3c';for(let x=-groundX;x<W+48;x+=48)ctx.fillRect(x,H-GROUND,29,13);ctx.fillStyle='#9d8845';for(let x=-groundX;x<W+48;x+=48)ctx.fillRect(x+12,H-GROUND+34,28,8);
- if(flash){ctx.globalAlpha=flash*.35;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}ctx.restore()
+function drawGround(){ctx.fillStyle='#446f47';ctx.fillRect(0,FLOOR,W,6);ctx.fillStyle='#b5d66a';ctx.fillRect(0,FLOOR+6,W,12);ctx.fillStyle='#e5ce96';ctx.fillRect(0,FLOOR+18,W,H-FLOOR-18);const offset=worldDistance%48;ctx.fillStyle='#83ae58';for(let x=-offset;x<W+48;x+=48){ctx.beginPath();ctx.moveTo(x,FLOOR+6);ctx.lineTo(x+9,FLOOR+16);ctx.lineTo(x+30,FLOOR+16);ctx.lineTo(x+20,FLOOR+6);ctx.fill()}ctx.fillStyle='#ccb47e';for(let x=-offset;x<W+48;x+=48){rounded(ctx,x+12,FLOOR+37,23,7,3);rounded(ctx,x-5,FLOOR+65,18,5,2)}ctx.fillStyle='rgba(49,64,47,.08)';ctx.fillRect(0,H-18,W,18)}
+function draw(){ctx.save();if(shake)ctx.translate(rnd(-shake,shake),rnd(-shake,shake));drawBackground();for(const p of pipes)drawPipe(p);for(const f of fx){ctx.globalAlpha=clamp(f.life/f.max,0,1);ctx.fillStyle=f.color;ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,TAU);ctx.fill()}ctx.globalAlpha=1;ctx.fillStyle='rgba(32,56,41,.13)';ctx.beginPath();ctx.ellipse(BIRD_X,FLOOR-2,22,4,0,0,TAU);ctx.fill();drawBirdModel(ctx,BIRD_X,bird.y,bird.rot,bird.wing,skin(),1,state==='dying'||state==='over'||state==='practiceRetry');drawGround();if(flash){ctx.globalAlpha=flash*.85;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}ctx.restore()}
+function renderFlock(){
+ $('flock').replaceChildren();for(const s of SKINS){const b=document.createElement('button');b.type='button';b.className='skin'+(s.unlock>save.best?' locked':'');b.dataset.skin=s.id;b.setAttribute('aria-label',s.name+(s.unlock>save.best?' · unlock at '+s.unlock+' Classic points':''));b.setAttribute('aria-pressed',String(save.skin===s.id));const portrait=document.createElement('canvas');portrait.width=66;portrait.height=42;drawBirdModel(portrait.getContext('2d'),30,22,-.08,.09,s,.66);portrait.setAttribute('aria-hidden','true');b.appendChild(portrait);const label=document.createElement('small');label.textContent=s.unlock>save.best?s.unlock+' pts':s.name;b.appendChild(label);b.onclick=()=>{if(state!=='menu')return;if(s.unlock>save.best){toast(s.name+' unlocks at '+s.unlock+' Classic points');return}save.skin=s.id;persist();renderFlock();updateHUD();sfx(650,.06,'sine',.02,100)};$('flock').appendChild(b)}
 }
-function loop(now){const dt=Math.min(.034,(now-last)/1000||0);last=now;update(dt);draw();requestAnimationFrame(loop)}
-function input(e){if(e?.target&&['BUTTON'].includes(e.target.tagName))return;e?.preventDefault?.();flap()}
-canvas.addEventListener('pointerdown',input);startCard.addEventListener('pointerdown',input);
-document.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'){input(e)}else if(e.code==='KeyP'||e.code==='Escape')togglePause();else if(e.code==='KeyR'&&state==='over')startRun()});
-document.getElementById('againBtn').onclick=()=>startRun();document.getElementById('menuBtn').onclick=()=>{state='menu';overCard.hidden=true;startCard.hidden=false;resetBird();scoreEl.textContent='0'};
-pauseBtn.onclick=e=>{e.stopPropagation();togglePause()};musicBtn.onclick=e=>{e.stopPropagation();save.music=!save.music;syncMusic();persist()};
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play'&&!paused)togglePause()});
-bestEl.textContent='BEST '+save.best;resetBird();syncMusic();requestAnimationFrame(loop);
-parent.postMessage({type:'pocketvm-flappy-ready'},'*');
+function input(e){if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();focusGame();action()}
+canvas.addEventListener('pointerdown',input);
+document.addEventListener('keydown',e=>{
+ if(e.repeat||!['Space','ArrowUp','KeyP','Escape','KeyR'].includes(e.code))return;e.preventDefault();
+ if(e.code==='Space'&&e.target?.tagName==='BUTTON'){e.target.click();return}
+ if(e.code==='Space'||e.code==='ArrowUp')action();else if(e.code==='KeyP'||e.code==='Escape')togglePause();else if(e.code==='KeyR'&&state!=='menu')startRun()
+});
+for(const id of ['playBtn','againBtn','practiceFresh'])$(id).onclick=startRun;
+for(const id of ['menuBtn','practiceMenu','pauseMenu'])$(id).onclick=openMenu;
+$('checkpointBtn').onclick=restoreCheckpoint;$('classicBtn').onclick=()=>setMode('classic');$('practiceBtn').onclick=()=>setMode('practice');$('resumeBtn').onclick=()=>setPause(false);$('pause').onclick=togglePause;
+$('music').onclick=()=>{save.music=!save.music;persist();syncAudio()};$('sound').onclick=()=>{save.sfx=!save.sfx;persist();syncAudio();if(save.sfx)sfx(720,.07,'sine',.025,100)};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play'&&!paused)setPause(true)});window.addEventListener('blur',()=>{if(state==='play'&&!paused)setPause(true)});
+function loop(now){const dt=Math.min(.25,Math.max(0,(now-last)/1000));last=now;if(paused)accumulator=0;else{accumulator+=dt;let steps=0;while(accumulator+1e-9>=STEP&&steps++<30){update(STEP);accumulator=Math.max(0,accumulator-STEP)}}draw();requestAnimationFrame(loop)}
+resetBird();setMode(mode);renderFlock();syncAudio();draw();last=performance.now();requestAnimationFrame(loop);parent.postMessage({type:'pocketvm-flappy-ready'},'*');
 })();
+
 </script>
 </body>
 </html>

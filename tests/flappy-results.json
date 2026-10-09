@@ -1,0 +1,52 @@
+{
+  "checks": 13,
+  "tests": [
+    "Legacy records and music preference survive; invalid or locked skins fall back safely",
+    "Space, Arrow Up, primary pointer and buttons flap; keyboard auto-repeat cannot fly for you",
+    "120 Hz physics agrees across 120, 60 and 10 FPS rendering and catches up after a 200 ms frame",
+    "Pipe caps and bodies share collision geometry; centre is safe and contacts are detected",
+    "Random pipe layouts have bounded climbs, safe margins and a capped difficulty",
+    "Normal flap controls clear 100 consecutive Classic pipes across multiple seeds and all three skies",
+    "Each cleared pipe earns exactly one point; collision takes precedence over scoring",
+    "Practice checkpoints restore passed pipes, score and flight without affecting Classic records",
+    "Pause, tab hiding and window blur freeze physics; resume does not fast-forward",
+    "Crash flash and shake fade away, result animation completes, and restart cannot inherit it",
+    "Music and effects have independent preferences and music stops on pause, crash and menu",
+    "All five bird colours and three animated skies render; colours only unlock with Classic scores",
+    "Package revision, file size, cache and installer save migration agree"
+  ],
+  "flights": [
+    {
+      "mode": "classic",
+      "seed": 12,
+      "score": 100,
+      "seconds": 151,
+      "state": "play",
+      "steps": 18095
+    },
+    {
+      "mode": "classic",
+      "seed": 42,
+      "score": 100,
+      "seconds": 151,
+      "state": "play",
+      "steps": 18095
+    },
+    {
+      "mode": "classic",
+      "seed": 273,
+      "score": 100,
+      "seconds": 151,
+      "state": "play",
+      "steps": 18095
+    },
+    {
+      "mode": "classic",
+      "seed": 907,
+      "score": 100,
+      "seconds": 151,
+      "state": "play",
+      "steps": 18095
+    }
+  ]
+}
