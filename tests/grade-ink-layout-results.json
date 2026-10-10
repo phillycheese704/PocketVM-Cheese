@@ -1,0 +1,161 @@
+{
+  "build": "school-v3",
+  "checks": [
+    {
+      "viewport": [
+        1024,
+        768
+      ],
+      "extraLarge": false,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "extraLarge": false,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        1366,
+        1024
+      ],
+      "extraLarge": false,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        507,
+        768
+      ],
+      "extraLarge": false,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "extraLarge": false,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "extraLarge": false,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        740,
+        390
+      ],
+      "extraLarge": false,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        1024,
+        768
+      ],
+      "extraLarge": true,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "extraLarge": true,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        1366,
+        1024
+      ],
+      "extraLarge": true,
+      "scrolling": false,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        507,
+        768
+      ],
+      "extraLarge": true,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "extraLarge": true,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "extraLarge": true,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    },
+    {
+      "viewport": [
+        740,
+        390
+      ],
+      "extraLarge": true,
+      "scrolling": true,
+      "buttons": 8,
+      "issues": [],
+      "pass": true
+    }
+  ],
+  "total": 14,
+  "passed": 14
+}
