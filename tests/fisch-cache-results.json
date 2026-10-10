@@ -1,9 +1,0 @@
-{
-  "checks": 4,
-  "tests": [
-    "All scripts in index.html are cached at their actual URL",
-    "All scripts in store/fisch/game.html are cached at their actual URL",
-    "Verified package sizes and cached revisions match production files",
-    "All eleven games retain their offline artwork"
-  ]
-}

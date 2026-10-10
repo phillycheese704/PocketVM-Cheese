@@ -1,0 +1,13 @@
+{
+  "checks": 8,
+  "tests": [
+    "Installer verifies the full game, both exact music files and matching artwork",
+    "Sandbox embeds both scripts and songs without relative dependencies",
+    "Source-checked game saves exactly match the core sanitizer",
+    "Six truncated download types cannot create a partial installation",
+    "A failed drive write rolls back the incomplete package",
+    "Repair preserves the custom name, collection and coins",
+    "Complete installed games start with code and music offline",
+    "Uninstall preserves collection and earned coins"
+  ]
+}

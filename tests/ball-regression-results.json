@@ -1,0 +1,22 @@
+{
+  "checks": 17,
+  "tests": [
+    "42 unique balls have distinct abilities and meaningful collection data",
+    "Circle collisions exchange momentum, separate penetration and apply one contact hit",
+    "Walls and bumpers reflect balls and preserve visible bounds",
+    "Every ability simulates to a finite, bounded end in 1v1 and 2v2",
+    "Same seed, ball choices and launch angles produce identical battles",
+    "Shield absorbs damage and Vampire heals only damage actually dealt",
+    "Phoenix revives exactly once and cannot exceed its max health",
+    "True team combat has two balls on each side and waits for the full team to fall",
+    "Three random offers are unique and collection choice is limited once per match",
+    "Reroll is free once per match and cannot replace a committed choice",
+    "Round and match settlement remove hearts and pay a reward exactly once",
+    "Tied rounds cannot create negative hearts or more than one match payout",
+    "Local players always use equal stats, even with hard AI selected",
+    "Direct unlocks enforce money and cannot charge for owned balls",
+    "Capsule duplicates refund 60 coins and pity grants a new unowned ball",
+    "Save sanitization rejects invalid roster data, infinities and unsupported preferences",
+    "Profile export/restore retains earned collection and never restores an unfinished match"
+  ]
+}

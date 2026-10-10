@@ -205,14 +205,15 @@
 
 
 
-  const FISCH_ID='fisch',FISCH_NAME='Fisch: Horizon',FISCH_ROOT='/home/user/Downloads/Fisch Horizon',FISCH_SOURCE='./store/fisch/',FISCH_ICON_URL=FISCH_SOURCE+'icon.svg?v=illustrated-v1',FISCH_GAME_REVISION='horizon-v1',FISCH_SAVE_KEY='pocketvm.game.fisch',FISCH_PIN_KEY='pocketvm.store.fisch.desktop';
-  const FISCH_FILES=[{"name":"game.html","size":21895,"mime":"text/html"},{"name":"engine.js","size":21405,"mime":"text/javascript"},{"name":"game.js","size":53051,"mime":"text/javascript"},{"name":"three.min.js","size":669885,"mime":"text/javascript"},{"name":"software-renderer.js","size":7682,"mime":"text/javascript"},{"name":"THREE-LICENSE.txt","size":1082,"mime":"text/plain"}];
-  const FISCH_TOTAL_BYTES=FISCH_FILES.reduce((n,f)=>n+f.size,0)+78145+FISCH_NAME.length;
-  const fischFeatureVariants=[
-    {kicker:'NEW FISHING ADVENTURE',title:'A world worth fishing.',copy:'Cast, reel and sail through six original 3D islands. Discover sixty species, chase living legends and earn the Horizon Rod.',tone:'sky'},
-    {kicker:'FOLLOW THE TIDE',title:'Your next great catch.',copy:'A skill-based reel, favourite baits, night fish, storms, aurora and five catch variants. Fill a field journal one story at a time.',tone:'sky'},
-    {kicker:'BEYOND THE HARBOR',title:'Six islands. One horizon.',copy:'Borrow your first skiff for free. Explore a reef, marsh, frozen peaks, a volcano and an astral sanctuary. Find their forgotten treasure.',tone:'sky'},
-    {kicker:'MAKE IT YOURS',title:'A little patience. A living legend.',copy:'Eight rods, three boats, enchantments, a daily catch challenge and twelve quests. Saved progression and large laptop, phone and iPad controls.',tone:'sky'}
+  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v1',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
+  const BALL_FILES=[{"name":"game.html","size":16950,"mime":"text/html"},{"name":"core.js","size":22577,"mime":"text/javascript"},{"name":"game.js","size":29109,"mime":"text/javascript"}];
+  const BALL_MUSIC=[{"name":"menu.mp3","size":3592704,"mime":"audio/mpeg"},{"name":"battle.mp3","size":2606393,"mime":"audio/mpeg"}];
+  const BALL_TOTAL_BYTES=[...BALL_FILES,...BALL_MUSIC].reduce((n,f)=>n+f.size,0)+71802+BALL_NAME.length;
+  const ballFeatureVariants=[
+    {kicker:'NEW AUTO-BATTLER',title:'Pick a ball. Let it battle.',copy:'Choose one of three balls, set your opening aim and watch the physics take over. Three hearts decide the match.',tone:'sky'},
+    {kicker:'42 DIFFERENT BALLS',title:'The next bounce changes everything.',copy:'Lasers, life steal, frost, fire, shields, gravity and a whole collection of tricks. Unlock a new way to win.',tone:'sky'},
+    {kicker:'1V1 + 2V2',title:'Small arena. Big collisions.',copy:'Duel an AI rival, battle with an ally or pass the device for a local two-player match. Four courts and adjustable difficulty.',tone:'sky'},
+    {kicker:'YOUR SOUNDTRACK',title:'One aim. All the chaos.',copy:'Clean battle view, touch aiming, keyboard controls and your supplied menu and battle music. Earn coins and grow your collection.',tone:'sky'}
   ];
 
   const GRADE_ID='gradeschool',GRADE_NAME='Grade School',GRADE_ROOT='/home/user/Downloads/Grade School',GRADE_SOURCE='./store/gradeschool/',GRADE_ICON_URL=GRADE_SOURCE+'icon.svg?v=illustrated-v1',GRADE_GAME_REVISION='school-v5',GRADE_SAVE_KEY='pocketvm.game.gradeschool',GRADE_PIN_KEY='pocketvm.store.gradeschool.desktop';
@@ -799,6 +800,91 @@ function sanitise(d={}){
 }
 return sanitise(d);
   }
+  function sanitizeBallSave(raw){
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,Number(n)||0)),len=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),TAU=Math.PI*2;
+const specs=[
+ ['classic','Classic','#f5d251','smile','A dependable bouncer. Every contact hits harder after a wall bounce.'],
+ ['spike','Spike','#ec6975','spikes','Spikes deal 45% more collision damage.'],
+ ['fire','Fire','#ed9a52','flame','Leaves burning patches and ignites opponents on contact.'],
+ ['ice','Ice','#83d3e6','snow','Freezes opponents briefly on contact.'],
+ ['laser','Laser','#dc7ddc','laser','Fires an accurate beam at the nearest enemy every 3.2 seconds.'],
+ ['vampire','Vampire','#a985ce','fangs','Collision damage restores some of your health.'],
+ ['shield','Shield','#7cadde','shield','A renewable shield absorbs incoming hits.'],
+ ['bolt','Lightning','#f5cc67','bolt','Chain lightning arcs through nearby opponents.'],
+ ['bomb','Bomb','#5c7189','bomb','Periodic explosions hurt nearby enemies.'],
+ ['grow','Giant','#bf9c73','grow','Grows and gains impact power as the round progresses.'],
+ ['heal','Medic','#8cd0a4','plus','Restores health every five seconds.'],
+ ['poison','Poison','#a9c67f','skull','Contact applies stacking poison damage.'],
+ ['shadow','Shadow','#83789a','crescent','Vanishes briefly, dodging damage, then strikes harder.'],
+ ['split','Splitter','#96c7b5','split','Launches two little bouncing fragments.'],
+ ['magnet','Magnet','#e78798','magnet','Pulls its nearest opponent closer for a heavy collision.'],
+ ['gravity','Gravity','#9b9bd8','orbit','Creates a gravity well that bends enemy paths.'],
+ ['rocket','Rocket','#edba89','rocket','Accelerates toward its target in explosive bursts.'],
+ ['rubber','Rubber','#e69bce','swirl','Wall hits boost speed and restore a little health.'],
+ ['stone','Stone','#8faaa8','rock','Heavy armour reduces all damage, but moves slowly.'],
+ ['ghost','Ghost','#c1dce2','ghost','Phases through contact damage during spectral windows.'],
+ ['thorn','Thorn','#85a883','thorn','Reflects a portion of collision damage back at the attacker.'],
+ ['mirror','Mirror','#c0ccd7','diamond','A reflective barrier sends projectile hits back as damage.'],
+ ['orbit','Orbiter','#78b4d1','orbit','Two orbiting satellites hurt enemies that come close.'],
+ ['chain','Chain','#a6a8cb','chain','Every third wall hit lashes its nearest enemy.'],
+ ['glacier','Glacier','#a9dce3','snow','Periodic frost waves slow the entire opposing team.'],
+ ['phoenix','Phoenix','#e59782','wings','Returns once from defeat with 35% health.'],
+ ['meteor','Meteor','#bf8b70','meteor','Calls a delayed meteor onto an enemy’s last position.'],
+ ['water','Water','#72b7cf','drop','A healing splash washes away poison and fire.'],
+ ['wind','Wind','#a1d6bf','wind','Air bursts push enemies away and increase your speed.'],
+ ['sticky','Sticky','#cad79d','slime','Collision goo drains an opponent’s speed and cooldown.'],
+ ['saw','Saw','#dca58c','saw','Spinning teeth stack collision power during sustained combat.'],
+ ['sonic','Sonic','#ada8e4','wave','Periodic shock rings damage and knock enemies away.'],
+ ['quake','Quake','#b99c76','quake','Wall slams send a tremor through the enemy team.'],
+ ['swap','Switcher','#cab5e1','swap','Swaps velocity with its target, then releases a pulse.'],
+ ['bee','Bee','#e2ca6b','bee','Sends homing stingers after its opponent.'],
+ ['cactus','Cactus','#80b68e','cactus','Releases six needles whenever it hits a wall.'],
+ ['crystal','Crystal','#a5c1ed','diamond','Launches a three-way crystal volley.'],
+ ['sun','Sun','#f1bd70','sun','An expanding solar aura burns nearby enemies.'],
+ ['moon','Moon','#a3b4d0','crescent','Charges between eclipses, then drains health at a distance.'],
+ ['rainbow','Rainbow','#e9a9bc','rainbow','Cycles between fire, frost and healing pulses.'],
+ ['void','Void','#8f91b8','void','Leaves dangerous void pools when it hits a wall.'],
+ ['king','King','#e8cb89','crown','Commands a volley of three royal bolts and gains armour.']
+];
+const BALLS=specs.map((a,i)=>({id:a[0],name:a[1]+' Ball',color:a[2],art:a[3],description:a[4],rarity:i<8?0:i<22?1:i<36?2:3,price:i<8?0:i<22?300:i<36?650:1100,hp:['stone','grow','king'].includes(a[0])?260:a[0]==='ghost'?190:220,mass:a[0]==='stone'?1.6:a[0]==='grow'?1.3:1,speed:a[0]==='stone'?115:a[0]==='rocket'?190:155,damage:a[0]==='spike'?30:a[0]==='stone'?25:21}));
+const STARTERS=BALLS.slice(0,8).map(b=>b.id),RARITIES=['Common','Uncommon','Rare','Legendary'];
+const ARENAS=[{id:'classic',name:'Classic Court',floor:'#d5d9de',wall:'#737e8d',accent:'#a3b2c3',obstacles:[]},
+ {id:'sky',name:'Sky Garden',floor:'#dae5d8',wall:'#879d8f',accent:'#b3cebd',obstacles:[{x:320,y:320,r:42}]},
+ {id:'forge',name:'Neon Forge',floor:'#293849',wall:'#50627a',accent:'#e5a169',obstacles:[{x:235,y:230,r:27},{x:405,y:410,r:27}]},
+ {id:'cosmic',name:'Moon Court',floor:'#d2cfdf',wall:'#8d839f',accent:'#b3a7ce',obstacles:[]}];
+const fin=(n,d=0)=>Number.isFinite(Number(n))?Number(n):d;
+function clean(raw={}){const d=raw&&typeof raw==='object'?raw:{},p=d.prefs||{},owned=[...new Set([...STARTERS,...(Array.isArray(d.owned)?d.owned:[]).filter(id=>BALLS.some(b=>b.id===id))])],stats={};for(const k of ['matches','wins','losses','rounds','knockouts','bestStreak','streak','packs'])stats[k]=Math.floor(clamp(fin(d.stats?.[k]),0,99999999));return{version:1,coins:Math.floor(clamp(fin(d.coins,300),0,999999999)),owned,selected:owned.includes(d.selected)?d.selected:'classic',stats,seed:Math.floor(clamp(fin(d.seed,951713),1,4294967295)),pity:Math.floor(clamp(fin(d.pity),0,4)),prefs:{music:p.music!==false,effects:p.effects!==false,volume:clamp(fin(p.volume,.35),0,1),difficulty:['easy','normal','hard','random'].includes(p.difficulty)?p.difficulty:'normal',arena:ARENAS.some(a=>a.id===p.arena)||p.arena==='random'?p.arena:'classic',motion:p.motion!==false,mode:['solo','team','local'].includes(p.mode)?p.mode:'solo'}};}
+return clean(raw);
+  }
+  async function fetchBallMusic(){return Promise.all(BALL_MUSIC.map(async file=>{const r=await fetch(new URL(BALL_SOURCE+file.name,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);const b=await r.blob();if(b.size!==file.size)throw new Error('Ball vs Ball soundtrack download is incomplete: '+file.name);return[file,b];}));}
+  async function ballInstalled(){for(const file of ['game.html','core.js','game.js','menu.mp3','battle.mp3','icon.png']){const node=await PocketDisk.getNode(BALL_ROOT+'/'+file).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
+  async function ballBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([p,n])=>n?.type==='file'&&p.startsWith(BALL_ROOT+'/')).reduce((a,[,n])=>a+Number(n.size||0),0);}
+  async function ballIdentity(){let name=BALL_NAME,icon=BALL_ICON_URL;if(await ballInstalled()){await refreshGameIcon(BALL_ROOT,BALL_SOURCE);try{name=String(await PocketDisk.readText(BALL_ROOT+'/name.txt')||BALL_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||BALL_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(BALL_ROOT+'/icon.png'));}catch{}}return{name,icon};}
+  function ballPinned(){return localStorage.getItem(BALL_PIN_KEY)==='1';}
+  function setBallPinned(v){if(v)localStorage.setItem(BALL_PIN_KEY,'1');else localStorage.removeItem(BALL_PIN_KEY);}
+  function verifyBallFile(file,text){if(new Blob([text]).size!==file.size)throw new Error('Ball vs Ball download is incomplete: '+file.name);if(file.name==='game.html'&&!text.includes('name="pocketvm-ball-build" content="'+BALL_GAME_REVISION+'"'))throw new Error('Ball vs Ball package verification failed.');return text;}
+  async function fetchBallFiles(){return Promise.all(BALL_FILES.map(async file=>{const r=await fetch(new URL(BALL_SOURCE+file.name+'?v='+BALL_GAME_REVISION,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);return[file,verifyBallFile(file,await r.text())];}));}
+  async function fetchBallIcon(){const r=await fetch(BALL_SOURCE+'icon-512.png',{cache:'no-cache'});if(!r.ok)throw new Error('Could not download the Ball vs Ball icon.');const b=await r.blob();if(!await validGameIcon(b))throw new Error('Ball vs Ball icon download is incomplete.');return b;}
+  async function installBall(progress){if(await ballInstalled())return;const [files,icon,music]=await Promise.all([fetchBallFiles(),fetchBallIcon(),fetchBallMusic()]);await PocketDisk.ensureDir(BALL_ROOT);let bytes=0;try{for(const [file,text]of files){await PocketDisk.writeText(BALL_ROOT+'/'+file.name,text,file.mime);bytes+=file.size;progress?.(bytes,BALL_TOTAL_BYTES,file.name);}for(const [file,blob]of music){await PocketDisk.writeBlob(BALL_ROOT+'/'+file.name,blob,file.mime);bytes+=file.size;progress?.(bytes,BALL_TOTAL_BYTES,file.name);}await PocketDisk.writeBlob(BALL_ROOT+'/icon.png',icon,'image/png');await PocketDisk.writeText(BALL_ROOT+'/icon-version.txt',ICON_REVISION,'text/plain');await PocketDisk.writeText(BALL_ROOT+'/name.txt',BALL_NAME,'text/plain');progress?.(BALL_TOTAL_BYTES,BALL_TOTAL_BYTES,'Ready');await shellCtx?.refreshFS?.();await syncBallShell();shellCtx?.notify?.('Ball vs Ball installed','Pick a ball. Set an aim. Watch it battle.','●');}catch(e){await PocketDisk.remove(BALL_ROOT).catch(()=>{});throw e;}}
+  async function uninstallBall(){if(!await ballInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===BALL_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(BALL_ROOT);setBallPinned(false);await shellCtx?.refreshFS?.();await syncBallShell();shellCtx?.notify?.('Ball vs Ball uninstalled','Your coins, collection and match statistics are saved for your next visit.','×');}
+  async function toggleBallPin(v){setBallPinned(v);await syncBallShell();}
+  async function syncBallShell(ctx=shellCtx){if(!ctx)return;const installed=await ballInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');let start=document.querySelector('[data-store-launch="ball-start"]'),desk=document.querySelector('[data-store-launch="ball-desktop"]');if(!installed){start?.remove();desk?.remove();setBallPinned(false);ctx.initDesktopGrid?.();return;}const id=await ballIdentity();if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=BALL_ID;start.dataset.storeLaunch='ball-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}if(desktop){if(ballPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=BALL_ID;desk.dataset.storeLaunch='ball-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}for(const win of ctx.state.windows.values()){if(win.appId!==BALL_ID)continue;ctx.setWindowTitle(win,id.name,'●');applyWindowIcon(win,id.icon,ctx);}ctx.initDesktopGrid?.();}
+  async function buildBall(win,options={},ctx){
+    shellCtx=ctx;if(!await ballInstalled()){ctx.setWindowTitle(win,BALL_NAME,'●');win.content.innerHTML='<div class="store-not-installed"><div>●</div><h2>Ball vs Ball isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
+    const id=await ballIdentity();ctx.setWindowTitle(win,id.name,'●');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe></div>`;
+    const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
+    try{
+      let files;
+      try{files=await Promise.all(BALL_FILES.map(async f=>[f,await PocketDisk.readText(BALL_ROOT+'/'+f.name)]));for(const [file,text]of files)verifyBallFile(file,text);}catch{files=await fetchBallFiles();for(const [file,text]of files)await PocketDisk.writeText(BALL_ROOT+'/'+file.name,text,file.mime);}
+      let html=files.find(([f])=>f.name==='game.html')[1];
+      for(const file of BALL_MUSIC){let blob;try{blob=await PocketDisk.readBlob(BALL_ROOT+'/'+file.name);if(blob.size!==file.size)throw Error('Old music');}catch{const pair=(await fetchBallMusic()).find(([f])=>f.name===file.name);blob=pair[1];await PocketDisk.writeBlob(BALL_ROOT+'/'+file.name,blob,file.mime);}const data=await blobToDataURL(blob);html=html.replace('src="./'+file.name+'"','src="'+data+'"');}
+      for(const [file,text]of files.filter(([f])=>f.mime==='text/javascript')){const data=await blobToDataURL(new Blob([text],{type:'text/javascript'}));html=html.replace('src="./'+file.name+'?v='+BALL_GAME_REVISION+'"','src="'+data+'"').replace('src="./'+file.name+'"','src="'+data+'"');}
+      const save=(()=>{try{return sanitizeBallSave(JSON.parse(localStorage.getItem(BALL_SAVE_KEY)||'{}'));}catch{return sanitizeBallSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
+      frame.srcdoc=gameFavicons(html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap),BALL_ID);
+    }catch(e){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(e?.message||'Reinstall Ball vs Ball from the Store.')}</small>`;return;}
+    const onMessage=e=>{if(e.source!==frame.contentWindow||!e.data||typeof e.data!=='object')return;if(e.data.type==='pocketvm-ball-ready')loading.classList.add('done');if(e.data.type==='pocketvm-ball-save')localStorage.setItem(BALL_SAVE_KEY,JSON.stringify(sanitizeBallSave(e.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
+  }
+
   async function gradeInstalled(){for(const file of ['game.html','core.js','game.js','icon.png']){const node=await PocketDisk.getNode(GRADE_ROOT+'/'+file).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
   async function gradeBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([p,n])=>n?.type==='file'&&p.startsWith(GRADE_ROOT+'/')).reduce((a,[,n])=>a+Number(n.size||0),0);}
   async function gradeIdentity(){let name=GRADE_NAME,icon=GRADE_ICON_URL;if(await gradeInstalled()){await refreshGameIcon(GRADE_ROOT,GRADE_SOURCE);try{name=String(await PocketDisk.readText(GRADE_ROOT+'/name.txt')||GRADE_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||GRADE_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(GRADE_ROOT+'/icon.png'));}catch{}}return{name,icon};}
@@ -824,108 +910,6 @@ return sanitise(d);
       frame.srcdoc=gameFavicons(html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap),GRADE_ID);
     }catch(e){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(e?.message||'Reinstall Grade School from the Store.')}</small>`;return;}
     const onMessage=e=>{if(e.source!==frame.contentWindow||!e.data||typeof e.data!=='object')return;if(e.data.type==='pocketvm-grade-ready')loading.classList.add('done');if(e.data.type==='pocketvm-grade-save')localStorage.setItem(GRADE_SAVE_KEY,JSON.stringify(sanitizeGradeSave(e.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
-  }
-
-  function sanitizeFischSave(raw){
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,Number(v)||0)),dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-const ISLANDS=[
- {id:'harbor',name:'Willow Harbor',x:0,z:0,r:32,color:'#79a66d',sand:'#ead3a2',accent:'#d87553',biome:'harbor',hint:'A gentle beginning. Sprats love worms; carp come out at dusk.'},
- {id:'reef',name:'Sunveil Reef',x:150,z:65,r:27,color:'#78b986',sand:'#f1dfb0',accent:'#f2ac68',biome:'tropical',hint:'Warm shallows, bright coral and fish with expensive taste.'},
- {id:'marsh',name:'Murkwood',x:-155,z:30,r:30,color:'#6e8c71',sand:'#aca985',accent:'#b798df',biome:'swamp',hint:'Mist hides the rarest inhabitants. Grubs make excellent bait.'},
- {id:'ice',name:'Frostglass Isle',x:70,z:-180,r:31,color:'#dfedf0',sand:'#a9cfdf',accent:'#6ccbd8',biome:'snow',hint:'Night, snow and crystal bait bring the frozen depths to life.'},
- {id:'ember',name:'Ember Reach',x:-150,z:-165,r:28,color:'#686675',sand:'#948477',accent:'#f69a55',biome:'volcano',hint:'Strong rods tame heavy fish. Storms stir something ancient.'},
- {id:'ruins',name:'Astral Sanctuary',x:20,z:205,r:29,color:'#87a4a0',sand:'#d7d1ad',accent:'#bba1ef',biome:'ruins',hint:'The moon awakens this sanctuary. Complete collections to earn the Horizon Rod.'}
-];
-const RARITIES=['Common','Uncommon','Rare','Legendary','Mythic'];
-const PALETTES=['#8dc0c9','#8bd391','#e4b26c','#91a0f1','#e48faf','#64d8cc','#ce814f','#bccfdc','#939edd','#f3c667'];
-const names=[
- ['Silver Sprat','Dock Goby','Pebble Perch','Willow Carp','Bluefin Bream','Harbor Bass','Golden Koi','Moon Catfish','Royal Sturgeon','Willow Guardian'],
- ['Reef Damsel','Sunfish','Clownfish','Parrotfish','Coral Grouper','Lionfish','Sailfin Ray','Pearl Marlin','Sunveil Manta','Prismatic Serpent'],
- ['Mud Minnow','Bog Loach','Moss Perch','Bullhead','Spotted Gar','Swamp Eel','Ghost Pike','Witchfin','Murkwood Gatorfish','Ancient Mire Wyrm'],
- ['Snow Herring','Ice Goby','Frost Trout','Crystal Char','Arctic Cod','Glacier Salmon','Aurora Pike','Glassfin Ray','Frozen Narwhal','Boreal Leviathan'],
- ['Ash Anchovy','Cinder Goby','Ember Snapper','Obsidian Eel','Lava Grouper','Coalfin Tuna','Inferno Shark','Molten Swordfish','Cinder Colossus','Volcanic Drake'],
- ['Star Sardine','Rune Wrasse','Lunar Bream','Temple Tang','Celestial Bass','Astral Ray','Moonstone Koi','Starlight Whale','Eclipse Serpent','Horizon Leviathan']
-];
-const BAITS=[{id:'none',name:'No bait',cost:0,luck:0,speed:0},
- {id:'worm',name:'Worms',cost:35,luck:.12,speed:.18},{id:'grub',name:'Grubs',cost:55,luck:.18,speed:.1},
- {id:'shrimp',name:'Shrimp',cost:85,luck:.25,speed:.14},{id:'crystal',name:'Crystal larvae',cost:160,luck:.4,speed:.18},
- {id:'squid',name:'Squid',cost:210,luck:.55,speed:.2},{id:'stardust',name:'Stardust',cost:390,luck:.85,speed:.25}];
-const FISH=ISLANDS.flatMap((island,i)=>names[i].map((name,j)=>({id:island.id+'-'+j,name,island:island.id,rarity:j<3?0:j<5?1:j<7?2:j<9?3:4,
- color:name==='Clownfish'?'#ee9867':name==='Golden Koi'?'#edbd67':name.includes('Ghost')?'#c7e0d0':name.includes('Whale')?'#809dbf':PALETTES[(i+j)%10],shape:/Ray|Manta/.test(name)?'ray':/Narwhal/.test(name)?'narwhal':/Whale|Boreal Leviathan/.test(name)?'whale':/Shark/.test(name)?'shark':/Swordfish|Marlin/.test(name)?'sword':/Eel|Serpent|Wyrm|Drake/.test(name)?'eel':/Gator/.test(name)?'gator':'fish',
- weight:[.4,.7,1.2,2,3.5,5,8,16,35,75][j]*(1+i*.3),value:[18,24,34,50,70,110,200,430,700,1600][j]*(1+i*.25),
- bait:BAITS[1+(i+j)%6].id,time:j===7||j===9?'night':'any',weather:j===8?'rain':j===9?(i===3?'aurora':i===4?'storm':i===2?'fog':'any'):'any',difficulty:.18+j*.072,
- lore:['A familiar flash beneath the dock.','A small fish with a big attitude.','A patient hunter in the shallows.','It changes colour in the evening light.','A favourite of local fishers.','Watch its sudden changes of direction.','An elusive prize with brilliant scales.','It follows the glow of the moon.','A giant whispered about in taverns.','A living legend from the deepest water.'][j]})));
-const RODS=[
- {id:'twig',name:'Driftwood Rod',price:0,luck:0,control:.31,resilience:.65,speed:1,max:140,color:'#aa805d',level:1},
- {id:'steady',name:'Steady Rod',price:380,luck:.15,control:.36,resilience:.78,speed:1.1,max:250,color:'#66c8b8',level:1},
- {id:'carbon',name:'Carbon Rod',price:1100,luck:.32,control:.32,resilience:.84,speed:1.2,max:400,color:'#677995',level:3},
- {id:'coral',name:'Coral Rod',price:2600,luck:.55,control:.37,resilience:.9,speed:1.25,max:550,color:'#ed977d',level:5},
- {id:'glacier',name:'Glacier Rod',price:5500,luck:.8,control:.4,resilience:1.08,speed:1.3,max:850,color:'#b3e9f5',level:8},
- {id:'obsidian',name:'Obsidian Rod',price:9500,luck:1.15,control:.35,resilience:1.2,speed:1.4,max:1300,color:'#ad83d5',level:11},
- {id:'astral',name:'Astral Rod',price:18000,luck:1.65,control:.43,resilience:1.3,speed:1.5,max:2200,color:'#f1ce79',level:15},
- {id:'horizon',name:'Horizon Rod',price:0,luck:2.2,control:.47,resilience:1.5,speed:1.65,max:5000,color:'#71f1dc',level:1,collection:35}
-];
-const BOATS=[{id:'skiff',name:'Harbor Skiff',price:0,speed:22,color:'#ae805f'}, {id:'cutter',name:'Reef Cutter',price:1800,speed:33,color:'#64b8ae'},{id:'voyager',name:'Star Voyager',price:7000,speed:47,color:'#a594d5'}];
-const ENCHANTS=[{id:'none',name:'Unenchanted',cost:0},{id:'lucky',name:'Lucky',cost:1,luck:.65},{id:'steady',name:'Steady',cost:1,control:.08},{id:'swift',name:'Swift',cost:1,speed:.3},{id:'treasure',name:'Prosperous',cost:2,value:.4}];
-const MUTATIONS=[{id:'normal',name:'',multi:1,color:null},{id:'shiny',name:'Shiny',multi:1.8,color:'#fcf5c2'},{id:'golden',name:'Golden',multi:2.8,color:'#ffcf50'},{id:'lunar',name:'Lunar',multi:3.3,color:'#9fc5ff'},{id:'abyssal',name:'Abyssal',multi:4,color:'#c486f3'}];
-const WEATHER=['clear','rain','fog','storm','aurora'];
-const QUESTS=[
- {id:'first',name:'A line in the water',text:'Land your first fish.',type:'catches',goal:1,coins:90,xp:45},
- {id:'five',name:'Find your rhythm',text:'Land five fish.',type:'catches',goal:5,coins:220,xp:90},
- {id:'sell',name:'A fisher’s living',text:'Earn 250 coins from selling fish.',type:'sold',goal:250,coins:180,xp:100},
- {id:'sail',name:'Beyond the harbor',text:'Visit a second island.',type:'visited',goal:2,coins:200,xp:100},
- {id:'ten',name:'Pocket naturalist',text:'Discover ten different fish.',type:'unique',goal:10,coins:650,xp:230},
- {id:'rare',name:'Something special',text:'Catch three Rare or better fish.',type:'rare',goal:3,coins:500,xp:180},
- {id:'all',name:'Island hopper',text:'Visit all six islands.',type:'visited',goal:6,coins:950,xp:300},
- {id:'twenty',name:'Born to fish',text:'Land twenty fish.',type:'catches',goal:20,coins:700,xp:200},
- {id:'mutation',name:'More than scales',text:'Catch a mutated fish.',type:'mutations',goal:1,coins:550,xp:160},
- {id:'treasure',name:'Forgotten riches',text:'Open three island treasure chests.',type:'chests',goal:3,coins:750,xp:220},
- {id:'legend',name:'Tavern stories',text:'Land a Legendary or Mythic fish.',type:'legendary',goal:1,coins:1200,xp:400},
- {id:'collector',name:'The Horizon',text:'Discover 35 species to unlock the Horizon Rod.',type:'unique',goal:35,coins:2500,xp:1000}
-];
-const finite=(v,f=0)=>Number.isFinite(Number(v))?Number(v):f;
-function clean(raw={}){
- const d=raw&&typeof raw==='object'?raw:{},ints=(v,a,b,f=0)=>Math.floor(clamp(finite(v,f),a,b));
- const ids=(a,allowed)=>[...new Set((Array.isArray(a)?a:[]).filter(x=>allowed.includes(x)))];
- const owned=ids(d.rods,RODS.map(x=>x.id));if(!owned.includes('twig'))owned.unshift('twig');
- const boats=ids(d.boats,BOATS.map(x=>x.id));if(!boats.includes('skiff'))boats.unshift('skiff');
- const seen={};for(const f of FISH){const x=d.seen?.[f.id];if(x&&typeof x==='object')seen[f.id]={count:ints(x.count,1,999999),weight:clamp(x.weight,0,5000)};}
- const bag=(Array.isArray(d.bag)?d.bag:[]).slice(-240).filter(x=>FISH.some(f=>f.id===x?.fish)).map((x,i)=>({uid:String(x.uid||'restore'+i).replace(/[^a-z0-9_-]/gi,'').slice(0,50),fish:x.fish,weight:clamp(x.weight,.01,5000),mutation:MUTATIONS.some(m=>m.id===x.mutation)?x.mutation:'normal',value:ints(x.value,1,1000000,20),locked:!!x.locked}));
- const bait={};for(const b of BAITS.slice(1))bait[b.id]=ints(d.bait?.[b.id],0,9999);
- const stats={};for(const k of ['catches','sold','rare','legendary','mutations','chests','escaped','perfect'])stats[k]=ints(d.stats?.[k],0,999999999);
- const prefs=d.prefs||{},p=d.position||{};
- return{version:1,coins:ints(d.coins,0,999999999,120),xp:ints(d.xp,0,99999999),rods:owned,rod:owned.includes(d.rod)?d.rod:'twig',boats,boat:boats.includes(d.boat)?d.boat:'skiff',enchant:ENCHANTS.some(e=>e.id===d.enchant)?d.enchant:'none',relics:ints(d.relics,0,9999),bag,seen,bait,baitId:BAITS.some(b=>b.id===d.baitId)?d.baitId:'none',visited:[...new Set(['harbor',...ids(d.visited,ISLANDS.map(i=>i.id))])],claimed:ids(d.claimed,QUESTS.map(q=>q.id).concat(['daily'])),chests:ids(d.chests,ISLANDS.map(i=>i.id)),stats,
- position:{x:clamp(finite(p.x,0),-350,350),z:clamp(finite(p.z,46),-350,350)},clock:clamp(finite(d.clock,110),0,720),weather:WEATHER.includes(d.weather)?d.weather:'clear',weatherClock:clamp(finite(d.weatherClock,0),0,180),seed:ints(d.seed,1,4294967295,1739423),dayKey:typeof d.dayKey==='string'?d.dayKey.slice(0,10):'',dailyCount:ints(d.dailyCount,0,30),
- prefs:{sound:prefs.sound!==false,assist:prefs.assist!==false,quality:['high','balanced','low'].includes(prefs.quality)?prefs.quality:'balanced',touch:['auto','on','off'].includes(prefs.touch)?prefs.touch:'auto',color:/^#[0-9a-f]{6}$/i.test(prefs.color)?prefs.color:'#e8a068',sensitivity:clamp(finite(prefs.sensitivity,1),.4,2)}};
-}
-return clean(raw);
-  }
-  async function fischInstalled(){for(const file of ['game.html','engine.js','game.js','three.min.js','icon.png']){const node=await PocketDisk.getNode(FISCH_ROOT+'/'+file).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
-  async function fischBytes(){const snap=await PocketDisk.snapshot();return Object.entries(snap).filter(([p,n])=>n?.type==='file'&&p.startsWith(FISCH_ROOT+'/')).reduce((a,[,n])=>a+Number(n.size||0),0);}
-  async function fischIdentity(){let name=FISCH_NAME,icon=FISCH_ICON_URL;if(await fischInstalled()){await refreshGameIcon(FISCH_ROOT,FISCH_SOURCE);try{name=String(await PocketDisk.readText(FISCH_ROOT+'/name.txt')||FISCH_NAME).replace(/[\r\n\t]+/g,' ').trim().slice(0,30)||FISCH_NAME;}catch{}try{icon=await blobToDataURL(await PocketDisk.readBlob(FISCH_ROOT+'/icon.png'));}catch{}}return{name,icon};}
-  function fischPinned(){return localStorage.getItem(FISCH_PIN_KEY)==='1';}
-  function setFischPinned(v){if(v)localStorage.setItem(FISCH_PIN_KEY,'1');else localStorage.removeItem(FISCH_PIN_KEY);}
-  function verifyFischFile(file,text){if(new Blob([text]).size!==file.size)throw new Error('Fisch: Horizon download is incomplete: '+file.name);if(file.name==='game.html'&&!text.includes('name="pocketvm-fisch-build" content="'+FISCH_GAME_REVISION+'"'))throw new Error('Fisch: Horizon package verification failed.');return text;}
-  async function fetchFischFiles(){return Promise.all(FISCH_FILES.map(async file=>{const r=await fetch(new URL(FISCH_SOURCE+file.name+'?v='+FISCH_GAME_REVISION,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);return[file,verifyFischFile(file,await r.text())];}));}
-  async function fetchFischIcon(){const r=await fetch(FISCH_SOURCE+'icon-512.png',{cache:'no-cache'});if(!r.ok)throw new Error('Could not download the Fisch: Horizon icon.');const b=await r.blob();if(!await validGameIcon(b))throw new Error('Fisch: Horizon icon download is incomplete.');return b;}
-  async function installFisch(progress){if(await fischInstalled())return;const [files,icon]=await Promise.all([fetchFischFiles(),fetchFischIcon()]);await PocketDisk.ensureDir(FISCH_ROOT);let bytes=0;try{for(const [file,text]of files){await PocketDisk.writeText(FISCH_ROOT+'/'+file.name,text,file.mime);bytes+=file.size;progress?.(bytes,FISCH_TOTAL_BYTES,file.name);}await PocketDisk.writeBlob(FISCH_ROOT+'/icon.png',icon,'image/png');await PocketDisk.writeText(FISCH_ROOT+'/icon-version.txt',ICON_REVISION,'text/plain');await PocketDisk.writeText(FISCH_ROOT+'/name.txt',FISCH_NAME,'text/plain');progress?.(FISCH_TOTAL_BYTES,FISCH_TOTAL_BYTES,'Ready');await shellCtx?.refreshFS?.();await syncFischShell();shellCtx?.notify?.('Fisch: Horizon installed','Six islands. Sixty fish. Your next great catch.','🐟');}catch(e){await PocketDisk.remove(FISCH_ROOT).catch(()=>{});throw e;}}
-  async function uninstallFisch(){if(!await fischInstalled())return;for(const win of [...(shellCtx?.state?.windows?.values?.()||[])])if(win.appId===FISCH_ID)shellCtx.closeWindow?.(win.id);await PocketDisk.remove(FISCH_ROOT);setFischPinned(false);await shellCtx?.refreshFS?.();await syncFischShell();shellCtx?.notify?.('Fisch: Horizon uninstalled','Your catches, gear and discoveries are saved for your next visit.','×');}
-  async function toggleFischPin(v){setFischPinned(v);await syncFischShell();}
-  async function syncFischShell(ctx=shellCtx){if(!ctx)return;const installed=await fischInstalled().catch(()=>false),startGrid=document.querySelector('.start-grid'),desktop=document.getElementById('desktop-icons');let start=document.querySelector('[data-store-launch="fisch-start"]'),desk=document.querySelector('[data-store-launch="fisch-desktop"]');if(!installed){start?.remove();desk?.remove();setFischPinned(false);ctx.initDesktopGrid?.();return;}const id=await fischIdentity();if(startGrid){if(!start){start=document.createElement('button');start.dataset.open=FISCH_ID;start.dataset.storeLaunch='fisch-start';startGrid.appendChild(start);}fillLauncher(start,id.name,id.icon,false);}if(desktop){if(fischPinned()){if(!desk){desk=document.createElement('button');desk.className='desktop-icon store-game-desktop';desk.dataset.open=FISCH_ID;desk.dataset.storeLaunch='fisch-desktop';desktop.appendChild(desk);}fillLauncher(desk,id.name,id.icon,true);}else desk?.remove();}for(const win of ctx.state.windows.values()){if(win.appId!==FISCH_ID)continue;ctx.setWindowTitle(win,id.name,'🐟');applyWindowIcon(win,id.icon,ctx);}ctx.initDesktopGrid?.();}
-  async function buildFisch(win,options={},ctx){
-    shellCtx=ctx;if(!await fischInstalled()){ctx.setWindowTitle(win,FISCH_NAME,'🐟');win.content.innerHTML='<div class="store-not-installed"><div>🐟</div><h2>Fisch: Horizon isn\'t installed</h2><p>Get it from the PocketVM Store first.</p><button class="store-primary">Open Store</button></div>';ctx.queryOne('button',win.content).addEventListener('click',()=>ctx.openApp('store'));return;}
-    const id=await fischIdentity();ctx.setWindowTitle(win,id.name,'🐟');applyWindowIcon(win,id.icon,ctx);win.content.innerHTML=`<div class="store-game-host"><div class="store-game-loading"><span></span><strong>Opening ${ctx.escapeHTML(id.name)}…</strong></div><iframe title="${ctx.escapeHTML(id.name)}" sandbox="allow-scripts" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe></div>`;
-    const frame=ctx.queryOne('iframe',win.content),loading=ctx.queryOne('.store-game-loading',win.content);
-    try{
-      let files;
-      try{files=await Promise.all(FISCH_FILES.map(async f=>[f,await PocketDisk.readText(FISCH_ROOT+'/'+f.name)]));for(const [file,text]of files)verifyFischFile(file,text);}catch{files=await fetchFischFiles();for(const [file,text]of files)await PocketDisk.writeText(FISCH_ROOT+'/'+file.name,text,file.mime);}
-      let html=files.find(([f])=>f.name==='game.html')[1];
-      html=html.replace('src="./icon.svg"','src="'+new URL(FISCH_SOURCE+'icon.svg',location.href).href+'"');
-      for(const [file,text]of files.filter(([f])=>f.mime==='text/javascript')){const data=await blobToDataURL(new Blob([text],{type:'text/javascript'}));html=html.replace('src="./'+file.name+'?v='+FISCH_GAME_REVISION+'"','src="'+data+'"').replace('src="./'+file.name+'"','src="'+data+'"');}
-      const save=(()=>{try{return sanitizeFischSave(JSON.parse(localStorage.getItem(FISCH_SAVE_KEY)||'{}'));}catch{return sanitizeFischSave({});}})(),bootstrap='<script>window.__POCKETVM_SAVE='+JSON.stringify(save)+';</'+'script>';
-      frame.srcdoc=gameFavicons(html.replace(/<head([^>]*)>/i,'<head$1>'+bootstrap),FISCH_ID);
-    }catch(e){loading.innerHTML=`<strong>Could not start ${ctx.escapeHTML(id.name)}</strong><small>${ctx.escapeHTML(e?.message||'Reinstall Fisch: Horizon from the Store.')}</small>`;return;}
-    const onMessage=e=>{if(e.source!==frame.contentWindow||!e.data||typeof e.data!=='object')return;if(e.data.type==='pocketvm-fisch-ready')loading.classList.add('done');if(e.data.type==='pocketvm-fisch-save')localStorage.setItem(FISCH_SAVE_KEY,JSON.stringify(sanitizeFischSave(e.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
   async function wobbleInstalled(){for(const file of ['game.html','engine.js','game.js','three.min.js','icon.png']){const node=await PocketDisk.getNode(WOBBLE_ROOT+'/'+file).catch(()=>null);if(!node||node.type!=='file')return false;}return true;}
@@ -1310,14 +1294,14 @@ return clean(raw);
   async function buildStore(win, options = {}, ctx) {
     shellCtx=ctx; ctx.setWindowTitle(win,'Store','▣');
     let active=options.tab==='library'?'library':'home';
-    const featureIds=['snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','fisch'];let featured='fisch';
+    const featureIds=['snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','ballvsball'];let featured='ballvsball';
     let variant=Math.floor(Math.random()*4),busy=false,progressState=null;
     win.content.innerHTML=`<div class="store-app"><header class="store-topbar"><div class="store-wordmark"><span>▣</span><div><strong>Store</strong><small>PocketVM games</small></div></div><nav class="store-tabs"><button data-store-tab="home">Home</button><button data-store-tab="library">Library</button></nav><div class="store-space"></div><div class="store-drive" data-store-drive>Checking storage…</div></header><main class="store-page" data-store-page></main></div>`;
     const page=ctx.queryOne('[data-store-page]',win.el),drive=ctx.queryOne('[data-store-drive]',win.el);
 
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
-      if(id==='fisch'){const installed=await fischInstalled(),ident=await fischIdentity();return{id,app:FISCH_ID,name:ident.name,icon:ident.icon,installed,pinned:fischPinned(),size:installed?await fischBytes():FISCH_TOTAL_BYTES,category:'3D fishing adventure',summary:'6 islands · 60 species · 8 rods · boats · weather · quests',install:installFisch,pin:toggleFischPin,uninstall:uninstallFisch};}
+      if(id==='ballvsball'){const installed=await ballInstalled(),ident=await ballIdentity();return{id,app:BALL_ID,name:ident.name,icon:ident.icon,installed,pinned:ballPinned(),size:installed?await ballBytes():BALL_TOTAL_BYTES,category:'Physics auto-battler',summary:'42 balls · 1v1 + 2v2 · local duels · your soundtrack',install:installBall,pin:toggleBallPin,uninstall:uninstallBall};}
       if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'13 weapons · 136 cards · 19 zombie breeds · 8 bosses',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
       if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Ghost clear helper · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       if(id==='crumbclicker'){const installed=await crumbClickerInstalled(),ident=await crumbClickerIdentity();return{id,app:'crumbclicker',name:ident.name,icon:ident.icon,installed,pinned:crumbClickerPinned(),size:installed?await crumbClickerBytes():CRUMBCLICKER_TOTAL_BYTES,category:'Incremental',summary:'Idle bakery · upgrades · offline earnings · prestige',install:installCrumbClicker,pin:toggleCrumbClickerPin,uninstall:uninstallCrumbClicker};}
@@ -1329,14 +1313,14 @@ return clean(raw);
       if(id==='penguinpull'){const installed=await penguinInstalled(),ident=await penguinIdentity();return{id,app:'penguinpull',name:ident.name,icon:ident.icon,installed,pinned:penguinPinned(),size:installed?await penguinBytes():PENGUIN_TOTAL_BYTES,category:'Physics',summary:'Endless random stages · every splash scores · reactive physics',install:installPenguin,pin:togglePenguinPin,uninstall:uninstallPenguin};}
       const installed=await isInstalled(),ident=await identity();return{id:'snake',app:'snake',name:ident.name,icon:ident.icon,installed,pinned:pinned(),size:installed?await installedBytes():TOTAL_BYTES,category:'Arcade',summary:'Classic Snake · Smooth touch controls · Original soundtrack',install:installSnake,pin:toggleDesktopPin,uninstall:uninstallSnake};
     }
-    function featureCopy(id){const arr=id==='fisch'?fischFeatureVariants:id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:id==='crumbclicker'?crumbClickerFeatureVariants:id==='pvz'?pvzFeatureVariants:id==='flappy'?flappyFeatureVariants:id==='penguinpull'?penguinFeatureVariants:id==='apexrush'?apexFeatureVariants:id==='wobblebay'?wobbleFeatureVariants:id==='gradeschool'?gradeFeatureVariants:featureVariants;return arr[variant%arr.length];}
+    function featureCopy(id){const arr=id==='ballvsball'?ballFeatureVariants:id==='deadwave'?deadwaveFeatureVariants:id==='blockblast'?blockBlastFeatureVariants:id==='crumbclicker'?crumbClickerFeatureVariants:id==='pvz'?pvzFeatureVariants:id==='flappy'?flappyFeatureVariants:id==='penguinpull'?penguinFeatureVariants:id==='apexrush'?apexFeatureVariants:id==='wobblebay'?wobbleFeatureVariants:id==='gradeschool'?gradeFeatureVariants:featureVariants;return arr[variant%arr.length];}
     function deadwavePreview(){return '<div class="deadwave-preview"><div class="dw-grid"></div><i class="survivor"></i><b class="z z1"></b><b class="z z2"></b><b class="z z3"></b><b class="z z4"></b><b class="z z5"></b><span class="shot s1"></span><span class="shot s2"></span></div>';}
     function snakePreview(){return '<div class="store-game-preview"><div class="preview-grid"></div><b class="preview-apple"></b><i style="--px:36%;--py:64%"></i><i style="--px:44%;--py:64%"></i><i style="--px:52%;--py:64%"></i><i style="--px:60%;--py:64%"></i><i style="--px:60%;--py:50%" class="head"></i></div>';}
     function blockBlastPreview(){return '<div class="blockblast-preview"><div class="bb-mini-grid">'+Array.from({length:64},(_,i)=>'<i class="'+([10,11,12,18,26,34,42,50,51,52,53,54].includes(i)?'on b'+(i%4):'')+'"></i>').join('')+'</div><div class="bb-mini-pieces"><b></b><b></b><b></b></div></div>';}
     function crumbClickerPreview(){return '<div class="crumbclicker-preview"><div class="cc-number">12.48 M biscuits</div><div class="cc-cookie"><i></i><i></i><i></i><i></i><i></i></div><div class="cc-shop"><b></b><b></b><b></b><b></b></div></div>';}
     function pvzPreview(){return '<div class="pvz-preview"><div class="pvz-sun">☀ 325</div><div class="pvz-lawn">'+Array.from({length:45},(_,i)=>'<i class="'+([1,9,18,27,36].includes(i)?'sunflower':([3,12,21,30,39].includes(i)?'pea':''))+'"></i>').join('')+'</div><b class="pvz-z z1">🧟</b><b class="pvz-z z2">🧟‍♂️</b><span class="pvz-shot"></span></div>';}
     function flappyPreview(){return '<div class="flappy-preview"><span class="fp-sun"></span><i class="fp-cloud c1"></i><i class="fp-cloud c2"></i><b class="fp-pipe p1"></b><b class="fp-pipe p2"></b><div class="fp-bird"><i></i></div><strong>12</strong><em></em></div>';}
-    function fischPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#7dad9f,#153d4e);border-radius:20px"><img src="./store/fisch/icon.svg?v=illustrated-v1" alt="Fisch Horizon sea and fish" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
+    function ballPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#647ca0,#1c2943);border-radius:20px"><img src="./store/ballvsball/icon.svg?v=illustrated-v1" alt="Ball vs Ball fighters" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
     function gradePreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#e1ebc5,#85b6a2);border-radius:20px"><img src="./store/gradeschool/icon.svg?v=illustrated-v1" alt="Grade School paper and pencil" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
     function wobblePreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#cdece5,#58aab4);border-radius:20px"><img src="./store/wobblebay/icon.svg?v=illustrated-v1" alt="Wobble Bay explorer" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0003)"></div>';}
     function apexPreview(){return '<div style="width:100%;height:100%;min-height:260px;display:grid;place-items:center;background:linear-gradient(150deg,#274b43,#10232d);border-radius:20px"><img src="./store/apexrush/icon.svg?v=illustrated-v1" alt="Apex Rush race car" style="width:70%;max-width:270px;filter:drop-shadow(0 18px 25px #0005)"></div>';}
@@ -1353,10 +1337,10 @@ return clean(raw);
     async function renderHome(){
       const games=await Promise.all(featureIds.map(gameState)),f=games.find(g=>g.id===featured)||games[0],others=games.filter(g=>g.id!==f.id),v=featureCopy(featured);
       const stats=await PocketDisk.stats().catch(()=>null);
-      const control=f.id==='fisch'?'Touch · keys · 3D exploration':f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':f.id==='crumbclicker'?'Tap / click':f.id==='pvz'?'Tap + drag':f.id==='flappy'?'Tap / Space':f.id==='penguinpull'?'Drag + release':f.id==='apexrush'?'WASD / arrows + touch':f.id==='wobblebay'?'Touch · keys · Xbox pad':f.id==='gradeschool'?'Draw · red/green ink · touch':'Touch + keys';
-      const visual=f.id==='fisch'?fischPreview():f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():f.id==='crumbclicker'?crumbClickerPreview():f.id==='pvz'?pvzPreview():f.id==='flappy'?flappyPreview():f.id==='penguinpull'?penguinPreview():f.id==='apexrush'?apexPreview():f.id==='wobblebay'?wobblePreview():f.id==='gradeschool'?gradePreview():snakePreview();
-      const features=f.id==='fisch'
-        ?'<article><span>01</span><div><strong>A world worth fishing</strong><p>Explore six 3D islands, steer three boats and discover sixty fish species. Weather, night and bait shape your catches.</p></div></article><article><span>02</span><div><strong>Master the reel</strong><p>Charge a perfect cast, follow the fish and fill your control meter. Eight rods and four enchantments change your approach.</p></div></article><article><span>03</span><div><strong>Your next chapter</strong><p>Sell catches, lock favourites, claim quests, open treasure and earn the Horizon Rod. Saved progress and large touch controls.</p></div></article>'
+      const control=f.id==='ballvsball'?'Drag to aim · touch + keys':f.id==='deadwave'?'Joystick + auto-fire':f.id==='blockblast'?'Drag + tap':f.id==='crumbclicker'?'Tap / click':f.id==='pvz'?'Tap + drag':f.id==='flappy'?'Tap / Space':f.id==='penguinpull'?'Drag + release':f.id==='apexrush'?'WASD / arrows + touch':f.id==='wobblebay'?'Touch · keys · Xbox pad':f.id==='gradeschool'?'Draw · red/green ink · touch':'Touch + keys';
+      const visual=f.id==='ballvsball'?ballPreview():f.id==='deadwave'?deadwavePreview():f.id==='blockblast'?blockBlastPreview():f.id==='crumbclicker'?crumbClickerPreview():f.id==='pvz'?pvzPreview():f.id==='flappy'?flappyPreview():f.id==='penguinpull'?penguinPreview():f.id==='apexrush'?apexPreview():f.id==='wobblebay'?wobblePreview():f.id==='gradeschool'?gradePreview():snakePreview();
+      const features=f.id==='ballvsball'
+        ?'<article><span>01</span><div><strong>Pick. Aim. Watch.</strong><p>Three random choices every round. Lock one launch direction and let physical collisions and automatic abilities decide the fight.</p></div></article><article><span>02</span><div><strong>42 ways to battle</strong><p>Collect balls with shields, lasers, poison, frost, fire, rockets, satellites and more. Earn coins and choose direct unlocks or capsules.</p></div></article><article><span>03</span><div><strong>Three hearts. Your soundtrack.</strong><p>AI 1v1, team 2v2 and local two-player duels. Four arenas, saved collection, clean controls and your supplied menu/battle tracks.</p></div></article>'
         :f.id==='gradeschool'
         ?'<article><span>01</span><div><strong>Be the teacher</strong><p>Pick red or green ink and draw your grade directly on the paper. Eighty absurd questions, generated snack maths and suspicious doodles.</p></div></article><article><span>02</span><div><strong>Career + three challenges</strong><p>Progress through school days, beat the 60-second bell, survive three mistakes or try today’s class.</p></div></article><article><span>03</span><div><strong>Your classroom</strong><p>Spend earned coins on colours, desks, pens, books and a hamster. Big iPad ink controls and saved unfinished drawings.</p></div></article>'
         :f.id==='wobblebay'
@@ -1398,7 +1382,7 @@ return clean(raw);
     async function render(){ctx.queryAll('[data-store-tab]',win.el).forEach(b=>b.classList.toggle('active',b.dataset.storeTab===active));if(active==='library')await renderLibrary();else await renderHome();await refreshDrive();}
     ctx.queryAll('[data-store-tab]',win.el).forEach(button=>button.addEventListener('click',()=>{active=button.dataset.storeTab;render();}));
     const featureTimer=setInterval(()=>{if(active!=='home')return;featured=featureIds[(featureIds.indexOf(featured)+1)%featureIds.length];variant=Math.floor(Math.random()*4);renderHome();},FEATURE_ROTATE_MS);
-    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT)&&!path.startsWith(GRADE_ROOT)&&!path.startsWith(FISCH_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();syncBlockBlastShell();syncCrumbClickerShell();syncPvzShell();syncFlappyShell();syncPenguinShell();syncApexShell();syncWobbleShell();syncGradeShell();syncFischShell();render();},80);};
+    const diskListener=event=>{const path=String(event.detail?.path||'');if(!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT)&&!path.startsWith(GRADE_ROOT)&&!path.startsWith(BALL_ROOT))return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{syncShell();syncDeadwaveShell();syncBlockBlastShell();syncCrumbClickerShell();syncPvzShell();syncFlappyShell();syncPenguinShell();syncApexShell();syncWobbleShell();syncGradeShell();syncBallShell();render();},80);};
     window.addEventListener('pocketdiskchange',diskListener);
     win.cleanup=()=>{clearInterval(featureTimer);window.removeEventListener('pocketdiskchange',diskListener);};
     await render();
@@ -1543,16 +1527,18 @@ return clean(raw);
     const onMessage=event=>{if(event.source!==frame.contentWindow||!event.data||typeof event.data!=='object')return;if(event.data.type==='pocketvm-penguin-ready')loading.classList.add('done');if(event.data.type==='pocketvm-penguin-save')localStorage.setItem(PENGUIN_SAVE_KEY,JSON.stringify(sanitizePenguinSave(event.data.data||{})));};window.addEventListener('message',onMessage);win.cleanup=()=>window.removeEventListener('message',onMessage);
   }
 
+  async function retireFisch(ctx){const root='/home/user/Downloads/Fisch Horizon';if(await PocketDisk.getNode(root).catch(()=>null))await PocketDisk.remove(root);localStorage.removeItem('pocketvm.store.fisch.desktop');document.querySelector('[data-store-launch="fisch-start"]')?.remove();document.querySelector('[data-store-launch="fisch-desktop"]')?.remove();}
   function init(ctx) {
     shellCtx=ctx;
-    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{}); syncBlockBlastShell(ctx).catch(()=>{}); syncCrumbClickerShell(ctx).catch(()=>{}); syncPvzShell(ctx).catch(()=>{}); syncFlappyShell(ctx).catch(()=>{}); syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});syncGradeShell(ctx).catch(()=>{});syncFischShell(ctx).catch(()=>{});
+    retireFisch(ctx).catch(()=>{});
+    syncShell(ctx).catch(()=>{}); syncDeadwaveShell(ctx).catch(()=>{}); syncBlockBlastShell(ctx).catch(()=>{}); syncCrumbClickerShell(ctx).catch(()=>{}); syncPvzShell(ctx).catch(()=>{}); syncFlappyShell(ctx).catch(()=>{}); syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});syncGradeShell(ctx).catch(()=>{});syncBallShell(ctx).catch(()=>{});
     window.addEventListener('pocketdiskchange',event=>{
       const path=String(event.detail?.path||'');
-      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT)&&!path.startsWith(GRADE_ROOT)&&!path.startsWith(FISCH_ROOT))return;
+      if(path&&!path.startsWith(ROOT)&&!path.startsWith(DEADWAVE_ROOT)&&!path.startsWith(BLOCKBLAST_ROOT)&&!path.startsWith(CRUMBCLICKER_ROOT)&&!path.startsWith(PVZ_ROOT)&&!path.startsWith(FLAPPY_ROOT)&&!path.startsWith(PENGUIN_ROOT)&&!path.startsWith(APEX_ROOT)&&!path.startsWith(WOBBLE_ROOT)&&!path.startsWith(GRADE_ROOT)&&!path.startsWith(BALL_ROOT))return;
       clearTimeout(syncTimer);
-      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});syncBlockBlastShell(ctx).catch(()=>{});syncCrumbClickerShell(ctx).catch(()=>{});syncPvzShell(ctx).catch(()=>{});syncFlappyShell(ctx).catch(()=>{});syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});syncGradeShell(ctx).catch(()=>{});syncFischShell(ctx).catch(()=>{});},90);
+      syncTimer=setTimeout(()=>{syncShell(ctx).catch(()=>{});syncDeadwaveShell(ctx).catch(()=>{});syncBlockBlastShell(ctx).catch(()=>{});syncCrumbClickerShell(ctx).catch(()=>{});syncPvzShell(ctx).catch(()=>{});syncFlappyShell(ctx).catch(()=>{});syncPenguinShell(ctx).catch(()=>{});syncApexShell(ctx).catch(()=>{});syncWobbleShell(ctx).catch(()=>{});syncGradeShell(ctx).catch(()=>{});syncBallShell(ctx).catch(()=>{});},90);
     });
   }
 
-  window.PocketStoreApp = Object.freeze({ init, syncFischShell, buildFisch, fischInstalled, installFisch, uninstallFisch, toggleFischPin, syncShell, syncDeadwaveShell, syncBlockBlastShell, syncCrumbClickerShell, syncPvzShell, syncFlappyShell, syncPenguinShell, syncApexShell, syncWobbleShell, syncGradeShell, buildGrade, gradeInstalled, installGrade, uninstallGrade, toggleGradePin, buildWobble, wobbleInstalled, installWobble, uninstallWobble, toggleWobblePin, buildStore, buildSnake, buildDeadwave, buildBlockBlast, buildCrumbClicker, buildPvz, buildFlappy, buildPenguin, buildApex, isInstalled, deadwaveInstalled, blockBlastInstalled, crumbClickerInstalled, pvzInstalled, flappyInstalled, penguinInstalled, apexInstalled, installSnake, installDeadwave, installBlockBlast, installCrumbClicker, installPvz, installFlappy, installPenguin, installApex, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, uninstallCrumbClicker, uninstallPvz, uninstallFlappy, uninstallPenguin, uninstallApex, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, toggleCrumbClickerPin, togglePvzPin, toggleFlappyPin, togglePenguinPin, toggleApexPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins, installedBlockBlastMods, installedCrumbClickerMods });
+  window.PocketStoreApp = Object.freeze({ init, syncBallShell, buildBall, ballInstalled, installBall, uninstallBall, toggleBallPin, syncShell, syncDeadwaveShell, syncBlockBlastShell, syncCrumbClickerShell, syncPvzShell, syncFlappyShell, syncPenguinShell, syncApexShell, syncWobbleShell, syncGradeShell, buildGrade, gradeInstalled, installGrade, uninstallGrade, toggleGradePin, buildWobble, wobbleInstalled, installWobble, uninstallWobble, toggleWobblePin, buildStore, buildSnake, buildDeadwave, buildBlockBlast, buildCrumbClicker, buildPvz, buildFlappy, buildPenguin, buildApex, isInstalled, deadwaveInstalled, blockBlastInstalled, crumbClickerInstalled, pvzInstalled, flappyInstalled, penguinInstalled, apexInstalled, installSnake, installDeadwave, installBlockBlast, installCrumbClicker, installPvz, installFlappy, installPenguin, installApex, uninstallSnake, uninstallDeadwave, uninstallBlockBlast, uninstallCrumbClicker, uninstallPvz, uninstallFlappy, uninstallPenguin, uninstallApex, toggleDesktopPin, toggleDeadwavePin, toggleBlockBlastPin, toggleCrumbClickerPin, togglePvzPin, toggleFlappyPin, togglePenguinPin, toggleApexPin, modsPage, handleModAction, installedMods, installedDeadwaveMods, installedDeadwaveSkins, installedBlockBlastMods, installedCrumbClickerMods });
 })();

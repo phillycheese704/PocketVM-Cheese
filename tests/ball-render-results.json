@@ -1,0 +1,13 @@
+{
+  "checks": 7,
+  "tests": [
+    "Production canvas boots without a graphics dependency",
+    "Play displays three real choices",
+    "Choosing a ball opens aiming and Lock aim launches combat",
+    "Automatic physics completes an actual round",
+    "Round result and saves use production game handlers",
+    "Canvas renders floor, avatars, ball models and effects",
+    "Menu and battle audio switch on real phase transitions"
+  ],
+  "sampledColors": 517
+}

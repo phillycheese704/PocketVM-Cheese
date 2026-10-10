@@ -1,0 +1,10 @@
+{
+  "checks": 5,
+  "tests": [
+    "Every script in index.html is precached at its exact versioned URL",
+    "Every script in store/ballvsball/game.html is precached at its exact versioned URL",
+    "All eleven versioned illustrated SVG icons remain available offline",
+    "Every verified package file matches its real byte size and offline versioned source",
+    "Retired Fisch is absent from the offline cache"
+  ]
+}

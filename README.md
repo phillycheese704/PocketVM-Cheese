@@ -14,7 +14,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 - Photos viewer and image wallpapers
 - Draggable desktop icon grid with iPad long-press context menus
 - Browser, Calculator, Notes, Terminal, System and Task Manager
-- PocketVM Store with real virtual-drive installs; games include Snake, Deadwave, Block Blast, Crumb Clicker, Plants vs Zombies, Flappy Bird, Penguin Pull, Apex Rush, Wobble Bay, Grade School and Fisch: Horizon, with local `.pvmod` support
+- PocketVM Store with real virtual-drive installs; games include Snake, Deadwave, Block Blast, Crumb Clicker, Plants vs Zombies, Flappy Bird, Penguin Pull, Apex Rush, Wobble Bay, Grade School and Ball vs Ball, with local `.pvmod` support
 - Themes, wallpaper presets, avatar borders and desktop customization
 - Installable/offline-capable PWA
 
@@ -70,4 +70,4 @@ Wobble Bay adds an original single-player 3D physics island with eight paid jobs
 
 Grade School is an original classroom comedy inspired by mobile teacher-and-papers games. Choose red or green ink, draw your grade directly on a paper, then hand it back. Eighty absurd prompts, generated snack maths, suspicious doodles, twelve animated students and four modes keep the class chaotic. Buy classroom upgrades with earned coins. Unfinished papers and drawings save automatically; controls support finger, stylus and mouse. See [the guide](store/gradeschool/GUIDE.md).
 
-Fisch: Horizon adds an original 3D fishing adventure inspired by Roblox Fisch: six explorable islands, sixty fish species, eight rods, three boats, skill-based fishing, weather, day/night, bait, mutations, enchantments, treasure, twelve quests and a daily challenge. Laptop and touch controls, saved progression, and a Canvas fallback are included. Install it in the Store or play `store/fisch/game.html`; see [the guide](store/fisch/GUIDE.md).
+Ball vs Ball replaces the cancelled Fisch game with a physics auto-battler inspired by Roblox Ball VS Ball. Choose one of three balls, lock a launch direction, and watch its automatic ability fight for three-heart matches. There are 42 balls, AI 1v1/2v2, local two-player duels, four arenas, unlocks, capsules and saved progression. The supplied first track is menu music; the second plays during matches. See [the guide](store/ballvsball/GUIDE.md).
