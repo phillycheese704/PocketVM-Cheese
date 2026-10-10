@@ -1,10 +1,11 @@
 {
-  "checks": 6,
+  "checks": 7,
   "tests": [
     "Production game boots, renders original scenery and opens the campaign",
     "Campaign briefing launches paid unit training and actual strategy simulation",
     "Pause, tab visibility and held inputs freeze gameplay without hidden progress",
     "Touch selection, direct movement and release use production handlers",
+    "The compact Army tray clears held controls and restores on desktop resize",
     "Army attack orders, renderer and victory settle a real campaign round",
     "Returning to the menu restores the campaign, armoury and modes"
   ]

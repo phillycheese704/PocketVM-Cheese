@@ -205,8 +205,8 @@
 
 
 
-  const STICK_ID='stickwar',STICK_NAME='Stick War',STICK_ROOT='/home/user/Downloads/Stick War',STICK_SOURCE='./store/stickwar/',STICK_ICON_URL=STICK_SOURCE+'icon.svg?v=illustrated-v1',STICK_GAME_REVISION='stick-v3',STICK_SAVE_KEY='pocketvm.game.stickwar',STICK_PIN_KEY='pocketvm.store.stickwar.desktop';
-  const STICK_FILES=[{"name":"game.html","size":24350,"mime":"text/html"},{"name":"core.js","size":24309,"mime":"text/javascript"},{"name":"game.js","size":39348,"mime":"text/javascript"}];
+  const STICK_ID='stickwar',STICK_NAME='Stick War',STICK_ROOT='/home/user/Downloads/Stick War',STICK_SOURCE='./store/stickwar/',STICK_ICON_URL=STICK_SOURCE+'icon.svg?v=illustrated-v1',STICK_GAME_REVISION='stick-v4',STICK_SAVE_KEY='pocketvm.game.stickwar',STICK_PIN_KEY='pocketvm.store.stickwar.desktop';
+  const STICK_FILES=[{"name":"game.html","size":34180,"mime":"text/html"},{"name":"core.js","size":24309,"mime":"text/javascript"},{"name":"game.js","size":41007,"mime":"text/javascript"}];
   const STICK_TOTAL_BYTES=STICK_FILES.reduce((n,f)=>n+f.size,0)+55788+STICK_NAME.length;
   const stickFeatureVariants=[
     {kicker:'NEW STRATEGY GAME',title:'Raise your standard.',copy:'Mine gold, train six kinds of stick soldiers and command a real army. Take direct control, capture twelve territories and forge permanent upgrades.',tone:'sky'},
