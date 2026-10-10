@@ -307,6 +307,7 @@
     pvz: { name: 'Plants vs Zombies', icon: '🌻', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildPvz(win, options, storeAppContext()) },
     flappy: { name: 'Flappy Bird', icon: '🐦', width: 760, height: 820, singleton: true, build: (win, options) => PocketStoreApp.buildFlappy(win, options, storeAppContext()) },
     penguinpull: { name: 'Penguin Pull', icon: '🐧', width: 960, height: 920, singleton: true, build: (win, options) => PocketStoreApp.buildPenguin(win, options, storeAppContext()) },
+    gradeschool: { name: 'Grade School', icon: '✎', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildGrade(win, options, storeAppContext()) },
     wobblebay: { name: 'Wobble Bay', icon: '☀', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildWobble(win, options, storeAppContext()) },
     apexrush: { name: 'Apex Rush', icon: '🏎', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildApex(win, options, storeAppContext()) },
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
@@ -318,7 +319,7 @@
   function openApp(appId, options = {}) {
     const app = apps[appId];
     if (!app) return;
-    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast' || appId === 'crumbclicker' || appId === 'pvz' || appId === 'flappy' || appId === 'penguinpull' || appId === 'apexrush' || appId === 'wobblebay';
+    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast' || appId === 'crumbclicker' || appId === 'pvz' || appId === 'flappy' || appId === 'penguinpull' || appId === 'apexrush' || appId === 'wobblebay' || appId === 'gradeschool';
     if (app.singleton) {
       const existing = [...state.windows.values()].find(w => w.appId === appId);
       if (existing) {
@@ -1384,7 +1385,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
             applyWallpaper();
           }
           for (const w of [...state.windows.values()]) {
-            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay'].includes(w.appId)) closeWindow(w.id, { force:true });
+            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool'].includes(w.appId)) closeWindow(w.id, { force:true });
           }
           renderStorage();
           notify('Drive erased', 'PocketVM files were deleted. System folders were recreated.', '◫');
@@ -2026,6 +2027,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           PocketStoreApp.togglePvzPin(false);
         } else if (icon.dataset.storeLaunch === 'flappy-desktop' && window.PocketStoreApp) {
           PocketStoreApp.toggleFlappyPin(false);
+        } else if (icon.dataset.storeLaunch === 'grade-desktop' && window.PocketStoreApp) {
+          PocketStoreApp.toggleGradePin(false);
         } else if (icon.dataset.storeLaunch === 'wobble-desktop' && window.PocketStoreApp) {
           PocketStoreApp.toggleWobblePin(false);
         } else if (icon.dataset.storeLaunch === 'apex-desktop' && window.PocketStoreApp) {

@@ -1,0 +1,12 @@
+{
+  "checks": 6,
+  "tests": [
+    "Actual game UI boots to the welcome menu and signals PocketVM readiness",
+    "Production Canvas renders original students, windows, desks and classroom in hundreds of colours",
+    "Production career buttons start a paper with both touch stamps and persist a resumable session",
+    "Real answer-key, stamp, feedback and next-student event handlers complete one grading cycle",
+    "Offline cache contains exact versioned scripts, illustrated icon and all touch exports",
+    "Store package verification sizes match every production file"
+  ],
+  "sampledColours": 1239
+}

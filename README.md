@@ -14,7 +14,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 - Photos viewer and image wallpapers
 - Draggable desktop icon grid with iPad long-press context menus
 - Browser, Calculator, Notes, Terminal, System and Task Manager
-- PocketVM Store with real virtual-drive installs; games include Snake, Deadwave, Block Blast, Crumb Clicker, Plants vs Zombies, Flappy Bird, Penguin Pull and Apex Rush, with local `.pvmod` support
+- PocketVM Store with real virtual-drive installs; games include Snake, Deadwave, Block Blast, Crumb Clicker, Plants vs Zombies, Flappy Bird, Penguin Pull, Apex Rush, Wobble Bay and Grade School, with local `.pvmod` support
 - Themes, wallpaper presets, avatar borders and desktop customization
 - Installable/offline-capable PWA
 
@@ -30,7 +30,7 @@ PocketVM is a touch-first browser PC designed for iPad and static hosting on Git
 ├── system.js               System and Task Manager
 ├── store.js                Store, installs, Mods Hub and game launchers
 ├── code.js                 Pocket Code editor
-├── store/                   Store package sources for all eight games
+├── store/                   Store package sources for all ten games
 ├── sw.js                   PWA service worker
 ├── manifest.webmanifest    PWA manifest
 ├── icons/                  Canonical app/PWA icons
@@ -66,4 +66,6 @@ MIT.
 
 
 
-Wobble Bay adds an original single-player 3D physics island with eight paid jobs, seven vehicles, grab-and-throw cargo, ragdolls, hats, three purchasable homes, a dog and sixteen hidden stars. It supports large iPad controls, keyboard and Xbox controllers. Install it from the Store or play `store/wobblebay/game.html`; see [the guide](store/wobblebay/GUIDE.md). All nine games and PocketVM now use a matching illustrated icon family, with SVG, small PNG favicons and iPad home-screen exports. Installed game artwork refreshes while retaining saves, names and music.
+Wobble Bay adds an original single-player 3D physics island with eight paid jobs, seven vehicles, grab-and-throw cargo, ragdolls, hats, three purchasable homes, a dog and sixteen hidden stars. It supports large iPad controls, keyboard and Xbox controllers. Install it from the Store or play `store/wobblebay/game.html`; see [the guide](store/wobblebay/GUIDE.md). The original nine games and PocketVM now use a matching illustrated icon family, with SVG, small PNG favicons and iPad home-screen exports. Installed game artwork refreshes while retaining saves, names and music.
+
+Grade School is an original classroom grading game inspired by the teacher-and-papers loop in mobile ad games. Six subjects, twelve animated students, generated maths and visual questions, four-answer worksheets, classroom incidents, sixteen cosmetic upgrades and four modes are included. Career days unlock new subjects and principal inspections; Bell Rush, Class Marathon and Daily Class provide quick challenges. Progress and unfinished classes save automatically. See [the guide](store/gradeschool/GUIDE.md).

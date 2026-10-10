@@ -1,0 +1,13 @@
+{
+  "checks": 8,
+  "tests": [
+    "Installer stores all verified code, icon and identity files with completed progress",
+    "Sandbox embeds both scripts, absolute favicons and a saved unfinished class",
+    "Only the owning iframe can save, and both progress and session data are bounded",
+    "Four truncated download cases cannot leave a partial installation",
+    "A write failure rolls back an incomplete installation",
+    "Package repair updates code while preserving the custom name and career",
+    "A complete installation launches offline without remote scripts",
+    "Uninstall keeps career and classroom purchases for the next installation"
+  ]
+}

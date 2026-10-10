@@ -1,5 +1,17 @@
-const CACHE = 'pocketvm-shell-v85';
+const CACHE = 'pocketvm-shell-v86';
 const ASSETS = [
+  "./store/gradeschool/icon.svg",
+  "./store/gradeschool/favicon-32.png",
+  "./store/gradeschool/icon-180.png",
+  "./store/gradeschool/icon-512.png",
+  "./store/gradeschool/icon.svg?v=illustrated-v1",
+  "./store/gradeschool/game.html",
+  "./store/gradeschool/core.js",
+  "./store/gradeschool/game.js",
+  "./store/gradeschool/game.html?v=school-v1",
+  "./store/gradeschool/core.js?v=school-v1",
+  "./store/gradeschool/game.js?v=school-v1",
+
   './',
   './index.html',
   './styles.css',
@@ -29,8 +41,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=85",
-  "./store.js?v=85",
+  "./app.js?v=86",
+  "./store.js?v=86",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

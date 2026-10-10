@@ -1,0 +1,21 @@
+{
+  "checks": 15,
+  "tests": [
+    "Fresh career starts on day 1 with safe defaults and six single-answer papers",
+    "All generated sums and visual counts have a valid, distinct wrong answer",
+    "Every curated question has a correct answer and three distinct false alternatives",
+    "Fair stamps pay coins, mistakes do not, and streak bonuses are bounded",
+    "A completed day settles and advances only once, including after reload",
+    "A mid-day reload preserves exact papers, marks and money without replaying awards",
+    "Thirty career days unlock all subjects, worksheets and classroom incidents",
+    "All five whole-worksheet grades correspond to four independent answer marks",
+    "Inspection expiry records one timeout, resets the next clock, and respects timer preference",
+    "Bell Rush uses elapsed seconds and cannot submit after the 60-second bell",
+    "Three mistakes end a marathon and every previous fair mark remains counted",
+    "Daily papers are deterministic for the date and differ on the next date",
+    "Answer-key assistance pays one coin and is excluded from all challenge records",
+    "Shop purchases deduct once, reject insufficient coins and enforce owned equipment",
+    "Save sanitisation bounds inputs, preserves zero reputation and drops unknown purchases"
+  ],
+  "generatedQuestionsChecked": 2320
+}
