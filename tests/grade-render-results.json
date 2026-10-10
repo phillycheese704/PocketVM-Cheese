@@ -1,5 +1,5 @@
 {
-  "checks": 10,
+  "checks": 11,
   "tests": [
     "Actual game UI boots to the welcome menu and signals PocketVM readiness",
     "Production Canvas renders original students, windows, desks and classroom in hundreds of colours",
@@ -9,6 +9,7 @@
     "Undo and redo work with buttons and laptop shortcuts while browser refresh and select-all remain untouched",
     "Move page blocks accidental ink, choosing a colour restores drawing, and focus loss safely saves and releases a stroke",
     "Phone and laptop controls relocate without losing ink, and hidden tabs do not redraw the classroom",
+    "The dock advances to the next student after feedback without depending on animation frames",
     "Offline cache contains exact versioned scripts, illustrated icon and all touch exports",
     "Store package verification sizes match every production file"
   ],
