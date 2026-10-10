@@ -1,13 +1,13 @@
-const CACHE = 'pocketvm-shell-v92';
+const CACHE = 'pocketvm-shell-v93';
 const ASSETS = [
   "./store/ballvsball/game.html",
   "./store/ballvsball/core.js",
   "./store/ballvsball/game.js",
   "./store/ballvsball/menu.mp3",
   "./store/ballvsball/battle.mp3",
-  "./store/ballvsball/game.html?v=ball-v1",
-  "./store/ballvsball/core.js?v=ball-v1",
-  "./store/ballvsball/game.js?v=ball-v1",
+  "./store/ballvsball/game.html?v=ball-v2",
+  "./store/ballvsball/core.js?v=ball-v2",
+  "./store/ballvsball/game.js?v=ball-v2",
   "./store/ballvsball/icon.svg",
   "./store/ballvsball/icon.svg?v=illustrated-v1",
   "./store/ballvsball/favicon-32.png",
@@ -55,8 +55,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=92",
-  "./store.js?v=92",
+  "./app.js?v=93",
+  "./store.js?v=93",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

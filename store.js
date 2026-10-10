@@ -205,14 +205,14 @@
 
 
 
-  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v1',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
-  const BALL_FILES=[{"name":"game.html","size":16950,"mime":"text/html"},{"name":"core.js","size":22577,"mime":"text/javascript"},{"name":"game.js","size":29109,"mime":"text/javascript"}];
+  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v2',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
+  const BALL_FILES=[{"name":"game.html","size":16997,"mime":"text/html"},{"name":"core.js","size":29838,"mime":"text/javascript"},{"name":"game.js","size":29876,"mime":"text/javascript"}];
   const BALL_MUSIC=[{"name":"menu.mp3","size":3592704,"mime":"audio/mpeg"},{"name":"battle.mp3","size":2606393,"mime":"audio/mpeg"}];
   const BALL_TOTAL_BYTES=[...BALL_FILES,...BALL_MUSIC].reduce((n,f)=>n+f.size,0)+71802+BALL_NAME.length;
   const ballFeatureVariants=[
     {kicker:'NEW AUTO-BATTLER',title:'Pick a ball. Let it battle.',copy:'Choose one of three balls, set your opening aim and watch the physics take over. Three hearts decide the match.',tone:'sky'},
-    {kicker:'42 DIFFERENT BALLS',title:'The next bounce changes everything.',copy:'Lasers, life steal, frost, fire, shields, gravity and a whole collection of tricks. Unlock a new way to win.',tone:'sky'},
-    {kicker:'1V1 + 2V2',title:'Small arena. Big collisions.',copy:'Duel an AI rival, battle with an ally or pass the device for a local two-player match. Four courts and adjustable difficulty.',tone:'sky'},
+    {kicker:'60 DIFFERENT BALLS',title:'The next bounce changes everything.',copy:'Lasers, life steal, frost, fire, shields, gravity and a whole collection of tricks. Unlock a new way to win.',tone:'sky'},
+    {kicker:'1V1 + 2V2 + 4V4',title:'A bigger arena. Wilder collisions.',copy:'Duel an AI rival, battle with an ally or pass the device for a local two-player match. Six spacious courts, eight-ball chaos and adjustable difficulty.',tone:'sky'},
     {kicker:'YOUR SOUNDTRACK',title:'One aim. All the chaos.',copy:'Clean battle view, touch aiming, keyboard controls and your supplied menu and battle music. Earn coins and grow your collection.',tone:'sky'}
   ];
 
@@ -801,8 +801,8 @@ function sanitise(d={}){
 return sanitise(d);
   }
   function sanitizeBallSave(raw){
-const clamp=(n,a,b)=>Math.max(a,Math.min(b,Number(n)||0)),len=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),TAU=Math.PI*2;
-const specs=[
+    const WORLD=960,clamp=(n,a,b)=>Math.max(a,Math.min(b,Number(n)||0));
+    const specs=[
  ['classic','Classic','#f5d251','smile','A dependable bouncer. Every contact hits harder after a wall bounce.'],
  ['spike','Spike','#ec6975','spikes','Spikes deal 45% more collision damage.'],
  ['fire','Fire','#ed9a52','flame','Leaves burning patches and ignites opponents on contact.'],
@@ -844,16 +844,36 @@ const specs=[
  ['moon','Moon','#a3b4d0','crescent','Charges between eclipses, then drains health at a distance.'],
  ['rainbow','Rainbow','#e9a9bc','rainbow','Cycles between fire, frost and healing pulses.'],
  ['void','Void','#8f91b8','void','Leaves dangerous void pools when it hits a wall.'],
- ['king','King','#e8cb89','crown','Commands a volley of three royal bolts and gains armour.']
+ ['king','King','#e8cb89','crown','Commands a volley of three royal bolts and gains armour.'],
+ ['bubble','Bubble','#8bd8d0','bubble','Gains a bubble shield on wall hits and releases a splash.'],
+ ['dice','Dice','#efddba','dice','Rolls a different power: heal, shield, speed or a wild volley.'],
+ ['comet','Comet','#efa293','comet','Dashes diagonally past its target and leaves a fiery wake.'],
+ ['prism','Prism','#b7c9ea','prism','Splits light into five ricocheting coloured bolts.'],
+ ['ninja','Ninja','#788fa8','ninja','Phases briefly and throws a fast pair of shuriken.'],
+ ['boomerang','Boomerang','#deb375','boomerang','Sends curved homing blades that bounce twice.'],
+ ['scorpion','Scorpion','#c08ea2','scorpion','A venom sting slows and poisons the closest opponent.'],
+ ['angel','Angel','#e9dfba','angel','Heals every surviving ally and grants them a small shield.'],
+ ['portal','Portal','#b290da','portal','Blinks to a safe random place, then bursts outward.'],
+ ['drill','Drill','#bda68b','drill','Charges an enemy with a temporary boost to impact damage.'],
+ ['tornado','Tornado','#93cfb8','tornado','A swirling vortex bends paths and flings nearby enemies.'],
+ ['mushroom','Mushroom','#da9e9b','mushroom','Drops a spore patch that poisons and slows enemies.'],
+ ['anchor','Anchor','#8da9bc','anchor','Drops an anchor pulse that freezes nearby opponents.'],
+ ['neon','Neon','#97e0ce','neon','Rapid little laser pulses chain through nearby enemies.'],
+ ['clock','Clockwork','#dcc794','clock','Delays enemy abilities while accelerating its own team.'],
+ ['dragon','Dragon','#da907d','dragon','Breathes a fan of fireballs and burns nearby rivals.'],
+ ['spark','Spark','#e8d88c','spark','Wall impacts release electric sparks toward an enemy.'],
+ ['echo','Echo','#b4a8da','echo','Repeats its shockwave twice, with a delayed second hit.']
 ];
-const BALLS=specs.map((a,i)=>({id:a[0],name:a[1]+' Ball',color:a[2],art:a[3],description:a[4],rarity:i<8?0:i<22?1:i<36?2:3,price:i<8?0:i<22?300:i<36?650:1100,hp:['stone','grow','king'].includes(a[0])?260:a[0]==='ghost'?190:220,mass:a[0]==='stone'?1.6:a[0]==='grow'?1.3:1,speed:a[0]==='stone'?115:a[0]==='rocket'?190:155,damage:a[0]==='spike'?30:a[0]==='stone'?25:21}));
-const STARTERS=BALLS.slice(0,8).map(b=>b.id),RARITIES=['Common','Uncommon','Rare','Legendary'];
+const BALLS=specs.map((a,i)=>{const rarity=i<8||i>=42&&i<46?0:i<22||i>=46&&i<50?1:i<36||i>=50&&i<56?2:3;return{id:a[0],name:a[1]+' Ball',color:a[2],art:a[3],description:a[4],rarity,price:[0,300,650,1100][rarity],hp:['stone','grow','king','anchor'].includes(a[0])?260:a[0]==='ghost'?190:220,mass:['stone','anchor'].includes(a[0])?1.6:a[0]==='grow'?1.3:1,speed:['stone','anchor'].includes(a[0])?145:a[0]==='rocket'?245:200,damage:a[0]==='spike'?30:a[0]==='stone'?25:21};});
+const STARTERS=BALLS.filter(b=>b.rarity===0).map(b=>b.id),RARITIES=['Common','Uncommon','Rare','Legendary'];
 const ARENAS=[{id:'classic',name:'Classic Court',floor:'#d5d9de',wall:'#737e8d',accent:'#a3b2c3',obstacles:[]},
- {id:'sky',name:'Sky Garden',floor:'#dae5d8',wall:'#879d8f',accent:'#b3cebd',obstacles:[{x:320,y:320,r:42}]},
- {id:'forge',name:'Neon Forge',floor:'#293849',wall:'#50627a',accent:'#e5a169',obstacles:[{x:235,y:230,r:27},{x:405,y:410,r:27}]},
- {id:'cosmic',name:'Moon Court',floor:'#d2cfdf',wall:'#8d839f',accent:'#b3a7ce',obstacles:[]}];
+ {id:'sky',name:'Sky Garden',floor:'#dae5d8',wall:'#879d8f',accent:'#b3cebd',obstacles:[{x:480,y:480,r:65}]},
+ {id:'forge',name:'Neon Forge',floor:'#293849',wall:'#50627a',accent:'#e5a169',obstacles:[{x:350,y:320,r:40},{x:610,y:640,r:40}]},
+ {id:'cosmic',name:'Moon Court',floor:'#d2cfdf',wall:'#8d839f',accent:'#b3a7ce',obstacles:[]},
+ {id:'pinball',name:'Pinball Park',floor:'#dbd7c6',wall:'#979078',accent:'#c3a67a',obstacles:[{x:350,y:275,r:36},{x:610,y:275,r:36},{x:480,y:480,r:44},{x:350,y:685,r:36},{x:610,y:685,r:36}]},
+ {id:'reef',name:'Coral Circuit',floor:'#c7dfdf',wall:'#729b9f',accent:'#95bab8',obstacles:[{x:335,y:420,r:48},{x:625,y:540,r:48}]}];
 const fin=(n,d=0)=>Number.isFinite(Number(n))?Number(n):d;
-function clean(raw={}){const d=raw&&typeof raw==='object'?raw:{},p=d.prefs||{},owned=[...new Set([...STARTERS,...(Array.isArray(d.owned)?d.owned:[]).filter(id=>BALLS.some(b=>b.id===id))])],stats={};for(const k of ['matches','wins','losses','rounds','knockouts','bestStreak','streak','packs'])stats[k]=Math.floor(clamp(fin(d.stats?.[k]),0,99999999));return{version:1,coins:Math.floor(clamp(fin(d.coins,300),0,999999999)),owned,selected:owned.includes(d.selected)?d.selected:'classic',stats,seed:Math.floor(clamp(fin(d.seed,951713),1,4294967295)),pity:Math.floor(clamp(fin(d.pity),0,4)),prefs:{music:p.music!==false,effects:p.effects!==false,volume:clamp(fin(p.volume,.35),0,1),difficulty:['easy','normal','hard','random'].includes(p.difficulty)?p.difficulty:'normal',arena:ARENAS.some(a=>a.id===p.arena)||p.arena==='random'?p.arena:'classic',motion:p.motion!==false,mode:['solo','team','local'].includes(p.mode)?p.mode:'solo'}};}
+function clean(raw={}){const d=raw&&typeof raw==='object'?raw:{},p=d.prefs||{},owned=[...new Set([...STARTERS,...(Array.isArray(d.owned)?d.owned:[]).filter(id=>BALLS.some(b=>b.id===id))])],stats={};for(const k of ['matches','wins','losses','rounds','knockouts','bestStreak','streak','packs'])stats[k]=Math.floor(clamp(fin(d.stats?.[k]),0,99999999));return{version:1,coins:Math.floor(clamp(fin(d.coins,300),0,999999999)),owned,selected:owned.includes(d.selected)?d.selected:'classic',stats,seed:Math.floor(clamp(fin(d.seed,951713),1,4294967295)),pity:Math.floor(clamp(fin(d.pity),0,4)),prefs:{music:p.music!==false,effects:p.effects!==false,volume:clamp(fin(p.volume,.35),0,1),difficulty:['easy','normal','hard','random'].includes(p.difficulty)?p.difficulty:'normal',arena:ARENAS.some(a=>a.id===p.arena)||p.arena==='random'?p.arena:'classic',motion:p.motion!==false,mode:['solo','team','chaos','local'].includes(p.mode)?p.mode:'solo'}};}
 return clean(raw);
   }
   async function fetchBallMusic(){return Promise.all(BALL_MUSIC.map(async file=>{const r=await fetch(new URL(BALL_SOURCE+file.name,location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error('Could not download '+file.name);const b=await r.blob();if(b.size!==file.size)throw new Error('Ball vs Ball soundtrack download is incomplete: '+file.name);return[file,b];}));}
@@ -1301,7 +1321,7 @@ return clean(raw);
 
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
-      if(id==='ballvsball'){const installed=await ballInstalled(),ident=await ballIdentity();return{id,app:BALL_ID,name:ident.name,icon:ident.icon,installed,pinned:ballPinned(),size:installed?await ballBytes():BALL_TOTAL_BYTES,category:'Physics auto-battler',summary:'42 balls · 1v1 + 2v2 · local duels · your soundtrack',install:installBall,pin:toggleBallPin,uninstall:uninstallBall};}
+      if(id==='ballvsball'){const installed=await ballInstalled(),ident=await ballIdentity();return{id,app:BALL_ID,name:ident.name,icon:ident.icon,installed,pinned:ballPinned(),size:installed?await ballBytes():BALL_TOTAL_BYTES,category:'Physics auto-battler',summary:'60 balls · 1v1 + 2v2 · local duels · your soundtrack',install:installBall,pin:toggleBallPin,uninstall:uninstallBall};}
       if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'13 weapons · 136 cards · 19 zombie breeds · 8 bosses',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
       if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Ghost clear helper · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       if(id==='crumbclicker'){const installed=await crumbClickerInstalled(),ident=await crumbClickerIdentity();return{id,app:'crumbclicker',name:ident.name,icon:ident.icon,installed,pinned:crumbClickerPinned(),size:installed?await crumbClickerBytes():CRUMBCLICKER_TOTAL_BYTES,category:'Incremental',summary:'Idle bakery · upgrades · offline earnings · prestige',install:installCrumbClicker,pin:toggleCrumbClickerPin,uninstall:uninstallCrumbClicker};}
