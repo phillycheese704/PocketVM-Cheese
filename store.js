@@ -205,8 +205,8 @@
 
 
 
-  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v3',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
-  const BALL_FILES=[{"name":"game.html","size":16997,"mime":"text/html"},{"name":"core.js","size":29838,"mime":"text/javascript"},{"name":"game.js","size":29875,"mime":"text/javascript"}];
+  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v4',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
+  const BALL_FILES=[{"name":"game.html","size":17659,"mime":"text/html"},{"name":"core.js","size":31076,"mime":"text/javascript"},{"name":"game.js","size":30691,"mime":"text/javascript"}];
   const BALL_MUSIC=[{"name":"menu.mp3","size":3592704,"mime":"audio/mpeg"},{"name":"battle.mp3","size":2606393,"mime":"audio/mpeg"}];
   const BALL_TOTAL_BYTES=[...BALL_FILES,...BALL_MUSIC].reduce((n,f)=>n+f.size,0)+71802+BALL_NAME.length;
   const ballFeatureVariants=[

@@ -1,0 +1,287 @@
+{
+  "checks": 4,
+  "tests": [
+    "Fullscreen court occupies 88% of viewport width and keeps reserved HUD space",
+    "Wide courts use their full physical width for wall and projectile reflection",
+    "Orientation changes preserve health, time, abilities and mapped combat positions",
+    "Portrait and landscape eight-ball rounds stay bounded through sudden death"
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 640,
+      "court": {
+        "x": 19.19999999999999,
+        "y": 116,
+        "width": 281.6,
+        "height": 456,
+        "scale": 0.5623797543288441,
+        "worldWidth": 556.7292631578948
+      }
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "court": {
+        "x": 21.599999999999994,
+        "y": 116,
+        "width": 316.8,
+        "height": 556,
+        "scale": 0.6857086478220117,
+        "worldWidth": 518.0037985611511
+      }
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "court": {
+        "x": 22.5,
+        "y": 116.00000000000003,
+        "width": 330,
+        "height": 482.99999999999994,
+        "scale": 0.5956785555719993,
+        "worldWidth": 609.9900621118013
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "court": {
+        "x": 23.400000000000006,
+        "y": 116,
+        "width": 343.2,
+        "height": 660,
+        "scale": 0.813970697054906,
+        "worldWidth": 477.6368
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "court": {
+        "x": 25.80000000000001,
+        "y": 116,
+        "width": 378.4,
+        "height": 748,
+        "scale": 0.9225001233288934,
+        "worldWidth": 466.18964705882354
+      }
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "court": {
+        "x": 40.01999999999998,
+        "y": 64,
+        "width": 586.96,
+        "height": 255,
+        "scale": 0.3144886784075773,
+        "worldWidth": 1922.394691764706
+      }
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "court": {
+        "x": 44.39999999999998,
+        "y": 64,
+        "width": 651.2,
+        "height": 240,
+        "scale": 0.2959893443836022,
+        "worldWidth": 2256.0792
+      }
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "court": {
+        "x": 50.639999999999986,
+        "y": 64,
+        "width": 742.72,
+        "height": 270,
+        "scale": 0.33298801243155246,
+        "worldWidth": 2286.4706844444445
+      }
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "court": {
+        "x": 55.920000000000016,
+        "y": 64,
+        "width": 820.16,
+        "height": 310,
+        "scale": 0.3823195698288195,
+        "worldWidth": 2201.2210787096774
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "court": {
+        "x": 46.079999999999984,
+        "y": 63.99999999999994,
+        "width": 675.84,
+        "height": 898.5600000000001,
+        "scale": 1.1081841053722066,
+        "worldWidth": 665.8625641025642
+      }
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "court": {
+        "x": 48.60000000000002,
+        "y": 64.80000000000011,
+        "width": 712.8,
+        "height": 950.3999999999999,
+        "scale": 1.1721178037590645,
+        "worldWidth": 664.1300000000001
+      }
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "court": {
+        "x": 49.19999999999999,
+        "y": 70.8,
+        "width": 721.6,
+        "height": 1038.4,
+        "scale": 1.2806472300330523,
+        "worldWidth": 619.4650847457627
+      }
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "court": {
+        "x": 50.04000000000002,
+        "y": 71.64,
+        "width": 733.92,
+        "height": 1050.7199999999998,
+        "scale": 1.29584134971141,
+        "worldWidth": 622.3656281407036
+      }
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "court": {
+        "x": 61.44,
+        "y": 64,
+        "width": 901.12,
+        "height": 644,
+        "scale": 0.7942380740959992,
+        "worldWidth": 1190.571647204969
+      }
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "court": {
+        "x": 64.80000000000001,
+        "y": 64,
+        "width": 950.4,
+        "height": 686,
+        "scale": 0.8460362093631295,
+        "worldWidth": 1179.356174927114
+      }
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "court": {
+        "x": 70.79999999999995,
+        "y": 64,
+        "width": 1038.4,
+        "height": 696,
+        "scale": 0.8583690987124463,
+        "worldWidth": 1265.7360000000003
+      }
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "court": {
+        "x": 71.63999999999999,
+        "y": 64,
+        "width": 1050.72,
+        "height": 710,
+        "scale": 0.8756351438014898,
+        "worldWidth": 1255.951837746479
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "court": {
+        "x": 76.79999999999995,
+        "y": 64,
+        "width": 1126.4,
+        "height": 596,
+        "scale": 0.7350402052192787,
+        "worldWidth": 1588.4331812080538
+      }
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "court": {
+        "x": 81.96000000000004,
+        "y": 64,
+        "width": 1202.08,
+        "height": 644,
+        "scale": 0.7942380740959992,
+        "worldWidth": 1569.5008496894409
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "court": {
+        "x": 86.39999999999998,
+        "y": 64,
+        "width": 1267.2,
+        "height": 776,
+        "scale": 0.9570322135069804,
+        "worldWidth": 1380.0933608247424
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "court": {
+        "x": 115.20000000000005,
+        "y": 64.80000000000011,
+        "width": 1689.6,
+        "height": 950.3999999999999,
+        "scale": 1.1721178037590645,
+        "worldWidth": 1497.4933333333336
+      }
+    },
+    {
+      "width": 2560,
+      "height": 1440,
+      "court": {
+        "x": 153.5999999999999,
+        "y": 86.39999999999999,
+        "width": 2252.8,
+        "height": 1267.1999999999998,
+        "scale": 1.5628237383454193,
+        "worldWidth": 1497.4933333333336
+      }
+    },
+    {
+      "width": 320,
+      "height": 1100,
+      "court": {
+        "x": 19.19999999999999,
+        "y": 242.12130232558133,
+        "width": 281.6,
+        "height": 663.7573953488373,
+        "scale": 0.8186046511627908,
+        "worldWidth": 400
+      }
+    }
+  ]
+}
