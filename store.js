@@ -204,8 +204,8 @@
   ];
 
 
-  const GRADE_ID='gradeschool',GRADE_NAME='Grade School',GRADE_ROOT='/home/user/Downloads/Grade School',GRADE_SOURCE='./store/gradeschool/',GRADE_ICON_URL=GRADE_SOURCE+'icon.svg?v=illustrated-v1',GRADE_GAME_REVISION='school-v1',GRADE_SAVE_KEY='pocketvm.game.gradeschool',GRADE_PIN_KEY='pocketvm.store.gradeschool.desktop';
-  const GRADE_FILES=[{"name":"game.html","size":23945,"mime":"text/html"},{"name":"core.js","size":21946,"mime":"text/javascript"},{"name":"game.js","size":41068,"mime":"text/javascript"}];
+  const GRADE_ID='gradeschool',GRADE_NAME='Grade School',GRADE_ROOT='/home/user/Downloads/Grade School',GRADE_SOURCE='./store/gradeschool/',GRADE_ICON_URL=GRADE_SOURCE+'icon.svg?v=illustrated-v1',GRADE_GAME_REVISION='school-v2',GRADE_SAVE_KEY='pocketvm.game.gradeschool',GRADE_PIN_KEY='pocketvm.store.gradeschool.desktop';
+  const GRADE_FILES=[{"name":"game.html","size":24201,"mime":"text/html"},{"name":"core.js","size":21960,"mime":"text/javascript"},{"name":"game.js","size":41068,"mime":"text/javascript"}];
   const GRADE_TOTAL_BYTES=GRADE_FILES.reduce((n,f)=>n+f.size,0)+72277+GRADE_NAME.length;
   const gradeFeatureVariants=[
     {kicker:'NEW CLASSROOM SIM',title:'Little papers. Big opinions.',copy:'A teacher’s desk, twelve expressive students and a stack of spectacular answers. Read, decide, stamp — then make the classroom your own.',tone:'sky'},

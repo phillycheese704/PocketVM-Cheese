@@ -67,7 +67,7 @@ function makeRounds(session){
  const rounds=[];
  for(let i=0;i<length;i++){
   const student=STUDENTS[(Math.floor(r()*12)+i)%12],subject=order[i%order.length].id,level=mode==='career'?day:mode==='endless'?5+Math.floor(i/12):7;
-  if((mode==='career'&&day>=2&&i===length-2)||(mode==='daily'&&i===5)||(mode==='endless'&&i%12===11)){
+  if((mode==='career'&&day>=2&&i===(day%5===0?2:length-2))||(mode==='daily'&&i===5)||(mode==='endless'&&i%12===11)){
    rounds.push({kind:'incident',student,incident:INCIDENTS[((mode==='career'?day:session.seed%INCIDENTS.length)+Math.floor(i/12)-2+INCIDENTS.length)%INCIDENTS.length],subject:'homeroom'});continue;
   }
   const multiple=(mode==='career'?day>=5:mode!=='rush')&&i%4===3,count=multiple?4:1,questions=[];
