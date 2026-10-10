@@ -1,0 +1,38 @@
+{
+  "build": "ball-v3",
+  "mode": "4v4 Chaos",
+  "arena": "Pinball Park",
+  "completedRound": 4,
+  "result": "Match won",
+  "initialCoins": 300,
+  "savedCoins": "◈ 515",
+  "resultView": "- generic \"Ball battle arena\"\n- banner:\n  - generic: Ball vs Ball\n  - generic: ◈ 515\n  - button \"Toggle music\": ♫\n  - button \"Pause battle\" [active]: Ⅱ\n- generic: ♥ ♥ ♡\n- generic: Round 4\n- generic: ♡ ♡ ♡\n- generic: ✦\n- heading \"Match won!\" [level=2]\n- paragraph: +215 coins · 12 / 60 balls collected\n- generic: ♥ ♥\n- button \"Play another match →\"\n- button \"Return to menu\"",
+  "savedStatistics": "1\nmatches won\n1\nmatches played\n1\nbest streak\n12\nballs collected",
+  "musicOnReturn": [
+    {
+      "duration": 112.272,
+      "error": null,
+      "id": "menu-music",
+      "paused": false,
+      "ready": 4
+    },
+    {
+      "duration": 81.449781,
+      "error": null,
+      "id": "battle-music",
+      "paused": true,
+      "ready": 4
+    }
+  ],
+  "checks": [
+    "Eight-ball live match completed through four rounds",
+    "Heart counts carry between rounds",
+    "Three round wins award exactly 215 coins",
+    "Reward and match stats survive reload",
+    "Menu and battle tracks load and switch successfully",
+    "Keyboard aiming and Enter launch combat",
+    "Pause and resume return to combat",
+    "120 viewport/state checks passed"
+  ],
+  "playURL": "https://phillycheese704.github.io/PocketVM-Cheese/store/ballvsball/game.html?v=ball-v3"
+}

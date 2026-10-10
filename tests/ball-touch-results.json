@@ -1,0 +1,727 @@
+{
+  "checks": 120,
+  "passed": 120,
+  "failed": [],
+  "results": [
+    {
+      "width": 320,
+      "height": 640,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 320,
+      "height": 640,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "pause",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "menu",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "settings",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "collection",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "choose",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "aim",
+      "issues": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "pause",
+      "issues": []
+    }
+  ]
+}
