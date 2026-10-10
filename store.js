@@ -204,8 +204,8 @@
   ];
 
 
-  const GRADE_ID='gradeschool',GRADE_NAME='Grade School',GRADE_ROOT='/home/user/Downloads/Grade School',GRADE_SOURCE='./store/gradeschool/',GRADE_ICON_URL=GRADE_SOURCE+'icon.svg?v=illustrated-v1',GRADE_GAME_REVISION='school-v3',GRADE_SAVE_KEY='pocketvm.game.gradeschool',GRADE_PIN_KEY='pocketvm.store.gradeschool.desktop';
-  const GRADE_FILES=[{"name":"game.html","size":27253,"mime":"text/html"},{"name":"core.js","size":23056,"mime":"text/javascript"},{"name":"game.js","size":47440,"mime":"text/javascript"}];
+  const GRADE_ID='gradeschool',GRADE_NAME='Grade School',GRADE_ROOT='/home/user/Downloads/Grade School',GRADE_SOURCE='./store/gradeschool/',GRADE_ICON_URL=GRADE_SOURCE+'icon.svg?v=illustrated-v1',GRADE_GAME_REVISION='school-v4',GRADE_SAVE_KEY='pocketvm.game.gradeschool',GRADE_PIN_KEY='pocketvm.store.gradeschool.desktop';
+  const GRADE_FILES=[{"name":"game.html","size":36644,"mime":"text/html"},{"name":"core.js","size":23056,"mime":"text/javascript"},{"name":"game.js","size":50826,"mime":"text/javascript"}];
   const GRADE_TOTAL_BYTES=GRADE_FILES.reduce((n,f)=>n+f.size,0)+72277+GRADE_NAME.length;
   const gradeFeatureVariants=[
     {kicker:'NEW CLASSROOM SIM',title:'Tiny brains. Big confidence.',copy:'A teacher’s desk, twelve expressive students and a stack of spectacular answers. Choose red or green ink, draw a grade on the paper and hand it back — then spend your coins on a classroom glow-up.',tone:'sky'},

@@ -1,10 +1,14 @@
 {
-  "checks": 6,
+  "checks": 10,
   "tests": [
     "Actual game UI boots to the welcome menu and signals PocketVM readiness",
     "Production Canvas renders original students, windows, desks and classroom in hundreds of colours",
-    "Production career buttons start a paper with both touch stamps and persist a resumable session",
+    "Production career buttons start a paper with both ink selectors and persist a resumable session",
     "Real pointer strokes paint ink, save the drawing, undo, switch colour and hand back a graded paper",
+    "Right clicks and secondary touches cannot draw; empty coalesced events and secondary cancellation preserve the primary stroke",
+    "Undo and redo work with buttons and laptop shortcuts while browser refresh and select-all remain untouched",
+    "Move page blocks accidental ink, choosing a colour restores drawing, and focus loss safely saves and releases a stroke",
+    "Phone and laptop controls relocate without losing ink, and hidden tabs do not redraw the classroom",
     "Offline cache contains exact versioned scripts, illustrated icon and all touch exports",
     "Store package verification sizes match every production file"
   ],
