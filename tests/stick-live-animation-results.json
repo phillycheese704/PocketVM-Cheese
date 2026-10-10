@@ -1,0 +1,19 @@
+{
+  "build": "stick-v3",
+  "automatedChecks": 33,
+  "campaignSimulations": 12,
+  "codeCommit": "dc2856997bdaf60c54b2657b022f5df5961df726",
+  "pagesRun": 38094742841,
+  "pagesConclusion": "success",
+  "liveUrl": "https://phillycheese704.github.io/PocketVM-Cheese/store/stickwar/game.html?v=stick-v3",
+  "liveChecks": [
+    "Published build metadata is stick-v3",
+    "Paid training queues and 2x battle speed work",
+    "Marching poses render with articulated legs",
+    "Live battle renders hit flashes, shielded units, mage casts and rotating arrows",
+    "Unit selection opens the spearman controls and defeat closes them",
+    "Pause opens correctly and Leave battle restores the menu",
+    "No game console errors observed"
+  ],
+  "screenshot": "tests/stick-war-animation-menu-1791674710842.jpg"
+}
