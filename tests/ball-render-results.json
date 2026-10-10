@@ -1,9 +1,10 @@
 {
-  "checks": 7,
+  "checks": 8,
   "tests": [
     "Production canvas boots without a graphics dependency",
     "Play displays three real choices",
     "Choosing a ball opens aiming and Lock aim launches combat",
+    "Low frame rates keep countdown and fixed-step combat advancing",
     "Automatic physics completes an actual round",
     "Round result and saves use production game handlers",
     "Canvas renders floor, avatars, ball models and effects",

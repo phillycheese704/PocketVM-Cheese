@@ -205,8 +205,8 @@
 
 
 
-  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v2',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
-  const BALL_FILES=[{"name":"game.html","size":16997,"mime":"text/html"},{"name":"core.js","size":29838,"mime":"text/javascript"},{"name":"game.js","size":29876,"mime":"text/javascript"}];
+  const BALL_ID='ballvsball',BALL_NAME='Ball vs Ball',BALL_ROOT='/home/user/Downloads/Ball vs Ball',BALL_SOURCE='./store/ballvsball/',BALL_ICON_URL=BALL_SOURCE+'icon.svg?v=illustrated-v1',BALL_GAME_REVISION='ball-v3',BALL_SAVE_KEY='pocketvm.game.ballvsball',BALL_PIN_KEY='pocketvm.store.ballvsball.desktop';
+  const BALL_FILES=[{"name":"game.html","size":16997,"mime":"text/html"},{"name":"core.js","size":29838,"mime":"text/javascript"},{"name":"game.js","size":29875,"mime":"text/javascript"}];
   const BALL_MUSIC=[{"name":"menu.mp3","size":3592704,"mime":"audio/mpeg"},{"name":"battle.mp3","size":2606393,"mime":"audio/mpeg"}];
   const BALL_TOTAL_BYTES=[...BALL_FILES,...BALL_MUSIC].reduce((n,f)=>n+f.size,0)+71802+BALL_NAME.length;
   const ballFeatureVariants=[
@@ -1321,7 +1321,7 @@ return clean(raw);
 
     async function refreshDrive(){try{const stats=await PocketDisk.stats();drive.textContent=formatBytes(stats.free)+' free';}catch{drive.textContent='Storage unavailable';}}
     async function gameState(id){
-      if(id==='ballvsball'){const installed=await ballInstalled(),ident=await ballIdentity();return{id,app:BALL_ID,name:ident.name,icon:ident.icon,installed,pinned:ballPinned(),size:installed?await ballBytes():BALL_TOTAL_BYTES,category:'Physics auto-battler',summary:'60 balls · 1v1 + 2v2 · local duels · your soundtrack',install:installBall,pin:toggleBallPin,uninstall:uninstallBall};}
+      if(id==='ballvsball'){const installed=await ballInstalled(),ident=await ballIdentity();return{id,app:BALL_ID,name:ident.name,icon:ident.icon,installed,pinned:ballPinned(),size:installed?await ballBytes():BALL_TOTAL_BYTES,category:'Physics auto-battler',summary:'60 balls · 1v1 + 2v2 + 4v4 · local duels · your soundtrack',install:installBall,pin:toggleBallPin,uninstall:uninstallBall};}
       if(id==='deadwave'){const installed=await deadwaveInstalled(),ident=await deadwaveIdentity();return{id,app:'deadwave',name:ident.name,icon:ident.icon,installed,pinned:deadwavePinned(),size:installed?await deadwaveBytes():DEADWAVE_TOTAL_BYTES,category:'Endless survival',summary:'13 weapons · 136 cards · 19 zombie breeds · 8 bosses',install:installDeadwave,pin:toggleDeadwavePin,uninstall:uninstallDeadwave};}
       if(id==='blockblast'){const installed=await blockBlastInstalled(),ident=await blockBlastIdentity();return{id,app:'blockblast',name:ident.name,icon:ident.icon,installed,pinned:blockBlastPinned(),size:installed?await blockBlastBytes():BLOCKBLAST_TOTAL_BYTES,category:'Puzzle',summary:'8×8 block puzzle · Ghost clear helper · Tiny install',install:installBlockBlast,pin:toggleBlockBlastPin,uninstall:uninstallBlockBlast};}
       if(id==='crumbclicker'){const installed=await crumbClickerInstalled(),ident=await crumbClickerIdentity();return{id,app:'crumbclicker',name:ident.name,icon:ident.icon,installed,pinned:crumbClickerPinned(),size:installed?await crumbClickerBytes():CRUMBCLICKER_TOTAL_BYTES,category:'Incremental',summary:'Idle bakery · upgrades · offline earnings · prestige',install:installCrumbClicker,pin:toggleCrumbClickerPin,uninstall:uninstallCrumbClicker};}
