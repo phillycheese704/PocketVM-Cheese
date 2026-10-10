@@ -1,0 +1,13 @@
+{
+  "checks": 8,
+  "tests": [
+    "Real Store installs every verified game file and original artwork",
+    "Sandbox embeds production scripts, saved upgrades and matching favicons",
+    "Source-checked saves repair invalid progress and match the game sanitizer",
+    "Truncated downloads cannot create a partial installation",
+    "Interrupted writes roll back the game package",
+    "Package repair preserves custom names and campaign progress",
+    "An installed battle starts without network dependencies",
+    "Uninstall preserves campaign, armoury and survival saves"
+  ]
+}

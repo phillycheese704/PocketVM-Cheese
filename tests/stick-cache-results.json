@@ -1,0 +1,8 @@
+{
+  "checks": 3,
+  "tests": [
+    "Package sizes and build version exactly match the installed game",
+    "Shell revision and all game assets are in the offline cache",
+    "Store registration, automatic maximise and desktop save sync include Stick War"
+  ]
+}

@@ -1,0 +1,591 @@
+{
+  "strategy": "Four miners, a shield/ranged/magic/heavy army; normal difficulty; only earned upgrade points",
+  "results": [
+    {
+      "mission": 1,
+      "name": "First Banner",
+      "winner": 0,
+      "seconds": 77,
+      "kills": 9,
+      "upgrades": {
+        "miner": 0,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 200,
+          "army": 3,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 900
+        },
+        {
+          "t": 30,
+          "gold": 70,
+          "army": 9,
+          "enemy": 5,
+          "hp": 1800,
+          "enemyHp": 900
+        },
+        {
+          "t": 60,
+          "gold": 80,
+          "army": 15,
+          "enemy": 5,
+          "hp": 1800,
+          "enemyHp": 900
+        }
+      ]
+    },
+    {
+      "mission": 2,
+      "name": "Archer Ridge",
+      "winner": 0,
+      "seconds": 72,
+      "kills": 13,
+      "upgrades": {
+        "miner": 2,
+        "archer": 0,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 260,
+          "army": 4,
+          "enemy": 6,
+          "hp": 1800,
+          "enemyHp": 1700
+        },
+        {
+          "t": 30,
+          "gold": 115,
+          "army": 12,
+          "enemy": 11,
+          "hp": 1800,
+          "enemyHp": 1700
+        },
+        {
+          "t": 60,
+          "gold": 115,
+          "army": 19,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 1458
+        }
+      ]
+    },
+    {
+      "mission": 3,
+      "name": "Night Ambush",
+      "winner": 0,
+      "seconds": 100,
+      "kills": 14,
+      "upgrades": {
+        "miner": 3,
+        "archer": 1,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 350,
+          "army": 6,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 1750
+        },
+        {
+          "t": 30,
+          "gold": 205,
+          "army": 14,
+          "enemy": 7,
+          "hp": 1800,
+          "enemyHp": 1750
+        },
+        {
+          "t": 60,
+          "gold": 460,
+          "army": 14,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 1750
+        },
+        {
+          "t": 90,
+          "gold": 865,
+          "army": 4,
+          "enemy": 12,
+          "hp": 1800,
+          "enemyHp": 1750
+        }
+      ]
+    },
+    {
+      "mission": 4,
+      "name": "The Shield Line",
+      "winner": 0,
+      "seconds": 112,
+      "kills": 17,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 0,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 420,
+          "army": 5,
+          "enemy": 6,
+          "hp": 1800,
+          "enemyHp": 1800
+        },
+        {
+          "t": 30,
+          "gold": 105,
+          "army": 12,
+          "enemy": 8,
+          "hp": 1800,
+          "enemyHp": 1800
+        },
+        {
+          "t": 60,
+          "gold": 190,
+          "army": 21,
+          "enemy": 11,
+          "hp": 1800,
+          "enemyHp": 1800
+        },
+        {
+          "t": 90,
+          "gold": 175,
+          "army": 28,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 1540
+        }
+      ]
+    },
+    {
+      "mission": 5,
+      "name": "Dust and Iron",
+      "winner": 0,
+      "seconds": 97,
+      "kills": 18,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 2,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 420,
+          "army": 6,
+          "enemy": 8,
+          "hp": 1800,
+          "enemyHp": 1850
+        },
+        {
+          "t": 30,
+          "gold": 105,
+          "army": 13,
+          "enemy": 14,
+          "hp": 1800,
+          "enemyHp": 1850
+        },
+        {
+          "t": 60,
+          "gold": 190,
+          "army": 25,
+          "enemy": 9,
+          "hp": 1800,
+          "enemyHp": 1850
+        },
+        {
+          "t": 90,
+          "gold": 275,
+          "army": 32,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 726
+        }
+      ]
+    },
+    {
+      "mission": 6,
+      "name": "Broken Pass",
+      "winner": 0,
+      "seconds": 84,
+      "kills": 15,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "income": 1,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 500,
+          "army": 7,
+          "enemy": 9,
+          "hp": 1800,
+          "enemyHp": 1900
+        },
+        {
+          "t": 30,
+          "gold": 321,
+          "army": 17,
+          "enemy": 15,
+          "hp": 1800,
+          "enemyHp": 1900
+        },
+        {
+          "t": 60,
+          "gold": 242,
+          "army": 24,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 1900
+        }
+      ]
+    },
+    {
+      "mission": 7,
+      "name": "The Spellkeepers",
+      "winner": 0,
+      "seconds": 81,
+      "kills": 19,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "income": 0,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 600,
+          "army": 7,
+          "enemy": 9,
+          "hp": 1800,
+          "enemyHp": 1950
+        },
+        {
+          "t": 30,
+          "gold": 285,
+          "army": 17,
+          "enemy": 13,
+          "hp": 1800,
+          "enemyHp": 1950
+        },
+        {
+          "t": 60,
+          "gold": 350,
+          "army": 26,
+          "enemy": 1,
+          "hp": 1800,
+          "enemyHp": 1950
+        }
+      ]
+    },
+    {
+      "mission": 8,
+      "name": "Siege of Ember",
+      "winner": 0,
+      "seconds": 87,
+      "kills": 23,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "income": 2,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 600,
+          "army": 8,
+          "enemy": 11,
+          "hp": 1800,
+          "enemyHp": 2000
+        },
+        {
+          "t": 30,
+          "gold": 457,
+          "army": 18,
+          "enemy": 14,
+          "hp": 1800,
+          "enemyHp": 2000
+        },
+        {
+          "t": 60,
+          "gold": 34,
+          "army": 26,
+          "enemy": 4,
+          "hp": 1800,
+          "enemyHp": 2000
+        }
+      ]
+    },
+    {
+      "mission": 9,
+      "name": "Footsteps of Giants",
+      "winner": 0,
+      "seconds": 111,
+      "kills": 16,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "giant": 3,
+        "income": 1,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 850,
+          "army": 11,
+          "enemy": 9,
+          "hp": 1800,
+          "enemyHp": 2050
+        },
+        {
+          "t": 30,
+          "gold": 571,
+          "army": 21,
+          "enemy": 10,
+          "hp": 1800,
+          "enemyHp": 2050
+        },
+        {
+          "t": 60,
+          "gold": 252,
+          "army": 24,
+          "enemy": 13,
+          "hp": 1800,
+          "enemyHp": 2050
+        },
+        {
+          "t": 90,
+          "gold": 373,
+          "army": 28,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 1647
+        }
+      ]
+    },
+    {
+      "mission": 10,
+      "name": "The Long Night",
+      "winner": 0,
+      "seconds": 140,
+      "kills": 37,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "giant": 3,
+        "income": 3,
+        "statue": 0,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 750,
+          "army": 11,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 2100
+        },
+        {
+          "t": 30,
+          "gold": 593,
+          "army": 21,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 2100
+        },
+        {
+          "t": 60,
+          "gold": 186,
+          "army": 27,
+          "enemy": 3,
+          "hp": 1800,
+          "enemyHp": 2100
+        },
+        {
+          "t": 90,
+          "gold": 1489,
+          "army": 36,
+          "enemy": 0,
+          "hp": 1800,
+          "enemyHp": 2100
+        },
+        {
+          "t": 120,
+          "gold": 3042,
+          "army": 36,
+          "enemy": 4,
+          "hp": 1800,
+          "enemyHp": 2100
+        }
+      ]
+    },
+    {
+      "mission": 11,
+      "name": "Icebound",
+      "winner": 0,
+      "seconds": 104,
+      "kills": 21,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "giant": 3,
+        "income": 3,
+        "statue": 2,
+        "sword": 0
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 800,
+          "army": 11,
+          "enemy": 13,
+          "hp": 2400,
+          "enemyHp": 2150
+        },
+        {
+          "t": 30,
+          "gold": 493,
+          "army": 21,
+          "enemy": 17,
+          "hp": 2400,
+          "enemyHp": 2150
+        },
+        {
+          "t": 60,
+          "gold": 346,
+          "army": 24,
+          "enemy": 13,
+          "hp": 2400,
+          "enemyHp": 2150
+        },
+        {
+          "t": 90,
+          "gold": 339,
+          "army": 29,
+          "enemy": 0,
+          "hp": 2400,
+          "enemyHp": 1505
+        }
+      ]
+    },
+    {
+      "mission": 12,
+      "name": "The Last Standard",
+      "winner": 0,
+      "seconds": 181,
+      "kills": 28,
+      "upgrades": {
+        "miner": 3,
+        "archer": 3,
+        "spear": 3,
+        "mage": 3,
+        "giant": 3,
+        "income": 3,
+        "statue": 3,
+        "sword": 1
+      },
+      "history": [
+        {
+          "t": 0,
+          "gold": 1000,
+          "army": 11,
+          "enemy": 15,
+          "hp": 2700,
+          "enemyHp": 2200
+        },
+        {
+          "t": 30,
+          "gold": 93,
+          "army": 21,
+          "enemy": 19,
+          "hp": 2700,
+          "enemyHp": 2200
+        },
+        {
+          "t": 60,
+          "gold": 186,
+          "army": 18,
+          "enemy": 25,
+          "hp": 2700,
+          "enemyHp": 2200
+        },
+        {
+          "t": 90,
+          "gold": 139,
+          "army": 18,
+          "enemy": 7,
+          "hp": 2700,
+          "enemyHp": 2200
+        },
+        {
+          "t": 120,
+          "gold": 12,
+          "army": 30,
+          "enemy": 0,
+          "hp": 2700,
+          "enemyHp": 1298
+        },
+        {
+          "t": 150,
+          "gold": 185,
+          "army": 20,
+          "enemy": 6,
+          "hp": 2700,
+          "enemyHp": 798
+        },
+        {
+          "t": 180,
+          "gold": 58,
+          "army": 21,
+          "enemy": 0,
+          "hp": 2700,
+          "enemyHp": 17
+        }
+      ]
+    }
+  ]
+}

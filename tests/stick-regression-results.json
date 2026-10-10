@@ -1,0 +1,15 @@
+{
+  "checks": 10,
+  "tests": [
+    "Gold is paid once, training takes time, cancelling refunds and population is reserved",
+    "Miners physically carry gold home and direct control mines faster",
+    "Campaign unlocks, first-win upgrades and save repair cannot duplicate rewards",
+    "Frontal shields and guarding reduce damage; flanking bypasses frontal armour",
+    "Garrison retreats, heals, deposits gold and towers damage approaching attackers",
+    "Mage spells stun a crowd and summon minions; giant stomps damage formations",
+    "Hold missions and endless waves attack the player statue and grow with real time",
+    "Direct spearmen can throw once and mages summon with a real cooldown",
+    "Final statue damage awakens a unique guardian, and random options are seeded",
+    "All six unit types remain finite, bounded and population-aware in long battles"
+  ]
+}

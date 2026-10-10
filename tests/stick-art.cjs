@@ -1,0 +1,2 @@
+const fs=require('node:fs'),path=require('node:path'),{createCanvas,Image}=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas');
+const dir=path.join(__dirname,'../store/stickwar'),im=new Image();im.src=fs.readFileSync(path.join(dir,'icon.svg'));for(const [name,size]of [['favicon-32.png',32],['icon-180.png',180],['icon-512.png',512]]){const c=createCanvas(size,size);c.getContext('2d').drawImage(im,0,0,size,size);fs.writeFileSync(path.join(dir,name),c.toBuffer('image/png'));}console.log('Stick War vector and PNG icons ready');
