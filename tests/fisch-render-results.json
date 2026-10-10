@@ -1,0 +1,12 @@
+{
+  "checks": 5,
+  "tests": [
+    "Production world boots using the fallback renderer",
+    "Harbor renders original landscape, buildings, boats and avatar",
+    "Play opens the production controls",
+    "Real Space press and release charges and casts the line",
+    "Game bridges bounded save data"
+  ],
+  "averageNativeFrameMs": 21,
+  "sampledColors": 4293
+}
