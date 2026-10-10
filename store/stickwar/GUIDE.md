@@ -21,8 +21,12 @@ Swordsmen pressure archers. Spearmen resist frontal attacks. Archers outrange ma
 
 Touch or click the bottom unit cards to train. **Defend / Attack / Garrison** issue army orders. Tap a friendly unit to control it; movement uses the touch joystick or WASD/arrows, attacks use Attack/Space, and guarding uses Block/Q. Controlled miners work faster, but you must move them back to the statue to deposit a full load. E or the special button throws a spearman’s spear once or summons a mage’s minions on cooldown. Release/R returns a unit to automatic orders. Drag the battlefield, tap the minimap or use Home/Front to move the camera. Keys 1–6 train units; Z/X/C choose commands; Escape pauses. Leaving the tab pauses the battle and releases held inputs. Battle speed is 1× or 2×.
 
+## Animation
+
+Articulated knees and elbows, grounded strides tied to distance, idle breathing and smooth interpolation give each unit its own movement. Miners wind up, strike and recover; archers draw and release; swordsmen follow through; spearmen thrust, guard and throw; mages cast with flowing robes and orbiting sparks; giants shift their weight and leave footfall dust. Hits cause directional recoil, shields spark, defeated soldiers fall and settle before fading, and projectiles rotate along their flight arcs. Battle poses, mining, cloth and spells freeze while paused. Motion effects can be switched off in Settings.
+
 ## Reference
 
 Core mechanics were informed by the developer's [official game site](https://www.stickwar.com/), [official Legacy listing](https://play.google.com/store/apps/details?id=com.maxgames.stickwarlegacy) and [creator-authored original-game strategy guide](https://www.stickpage.com/stickwarguide.shtml). Campaign text, maps, code, balance, graphics and audio in this package are original.
 
-Build: `stick-v2`.
+Build: `stick-v3`.

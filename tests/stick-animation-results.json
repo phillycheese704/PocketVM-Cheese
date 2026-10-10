@@ -1,0 +1,11 @@
+{
+  "checks": 6,
+  "tests": [
+    "All six units have distinct articulated walking frames, in both directions",
+    "Mining, bow release, thrust, spells and melee recovery produce valid, changing poses",
+    "Damage recoil, shield impacts and death falls animate and clean up without gameplay drift",
+    "Render interpolation smooths positions without rewinding a newly started attack",
+    "Throwing, summoning and undead silhouettes render, and miners face their actual gold",
+    "Paused unit, orbit and hit poses freeze, and arrows and spears follow valid flight arcs"
+  ]
+}

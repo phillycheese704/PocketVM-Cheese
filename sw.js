@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v97';
+const CACHE = 'pocketvm-shell-v98';
 const ASSETS = [
   "./store/stickwar/game.html",
   "./store/stickwar/core.js",
@@ -7,9 +7,9 @@ const ASSETS = [
   "./store/stickwar/favicon-32.png",
   "./store/stickwar/icon-180.png",
   "./store/stickwar/icon-512.png",
-  "./store/stickwar/game.html?v=stick-v2",
-  "./store/stickwar/core.js?v=stick-v2",
-  "./store/stickwar/game.js?v=stick-v2",
+  "./store/stickwar/game.html?v=stick-v3",
+  "./store/stickwar/core.js?v=stick-v3",
+  "./store/stickwar/game.js?v=stick-v3",
   "./store/stickwar/icon.svg?v=illustrated-v1",
 
   "./store/ballvsball/game.html",
@@ -67,8 +67,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=97",
-  "./store.js?v=97",
+  "./app.js?v=98",
+  "./store.js?v=98",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",
