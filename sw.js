@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v113';
+const CACHE = 'pocketvm-shell-v115';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -32,6 +32,19 @@ const ASSETS = [
   "./store/matchsurvival/render.js?v=matchsurvival-v5",
   "./store/matchsurvival/game.js?v=matchsurvival-v5",
   "./store/matchsurvival/icon.svg?v=illustrated-v1",
+  "./store/subwaysurfers/game.html",
+  "./store/subwaysurfers/core.js",
+  "./store/subwaysurfers/render.js",
+  "./store/subwaysurfers/game.js",
+  "./store/subwaysurfers/icon.svg",
+  "./store/subwaysurfers/favicon-32.png",
+  "./store/subwaysurfers/icon-180.png",
+  "./store/subwaysurfers/icon-512.png",
+  "./store/subwaysurfers/game.html?v=subwaysurfers-v1",
+  "./store/subwaysurfers/core.js?v=subwaysurfers-v1",
+  "./store/subwaysurfers/render.js?v=subwaysurfers-v1",
+  "./store/subwaysurfers/game.js?v=subwaysurfers-v1",
+  "./store/subwaysurfers/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
   "./store/knockout/game.html",
@@ -129,8 +142,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=113",
-  "./store.js?v=113",
+  "./app.js?v=115",
+  "./store.js?v=115",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

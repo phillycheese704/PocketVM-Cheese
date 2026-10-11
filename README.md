@@ -76,3 +76,11 @@ Boost League adds original 3D car football inspired by Rocket League: local 1v1,
 
 ## Knockout
 New penguin ice survival game: secret aim/power, simultaneous launches, 8–16 AI penguins, shrinking floes, collision knockouts, three arenas, three difficulties, Random, practice and earned cosmetics. Touch and keyboard controls; saved career and offline Store installation. [Play Knockout](./store/knockout/game.html).
+
+## New arcade series
+
+Shoot is an original movement FPS inspired by Krunker: six classes, three block-world maps, free-for-all, team deathmatch and rotating hardpoint against configurable AI. Sliding, jump momentum, headshots, cover, respawns, career records, mouse or touch aiming and three native mods. [Play Shoot](./store/shoot/game.html).
+
+Match Survival is an original Gridland-inspired match-three survival game. Gather resources and automatically build six workshop chains by day; equip shields and swords, summon creatures and defeat bosses by night. Twelve successful swaps per day, resumable cascades and expeditions, magic, potions, bombs, three difficulties, twenty-five-night completion followed by endless play, and three native mods. Store banner: **Grid- Match- Survive**. [Play Match Survival](./store/matchsurvival/game.html).
+
+Subway Surfers is an original fan-inspired three-lane railway runner. Four original worlds, rooftop ramps, stationary/oncoming trains, jumps/rolls, guard pursuit, hoverboards, four power-ups, earned cosmetic unlocks, mission multipliers and seeded daily routes. Large touch buttons, swipes and keyboard inputs. Career currency banks without duplication after a key continuation. Three native mods and offline installation. [Play Subway Surfers](./store/subwaysurfers/game.html).

@@ -1,0 +1,20 @@
+{
+  "checks": 15,
+  "tests": [
+    "Lane inputs interpolate smoothly and stop at the outer tracks",
+    "Jump clears barriers and roll clears overhead signs",
+    "First grazes summon the guard, repeated grazes and train impacts end the run",
+    "Ramps lead onto train roofs, roof exits fall safely and sneakers reach trains",
+    "Jump timing clears gaps; running into a gap causes a fall",
+    "A hoverboard absorbs one crash and a key continuation is limited to one per run",
+    "Magnets collect cross-lane coins, jetpacks bypass trains and powers expire",
+    "Score boost doubles distance scoring and all power upgrades reach thirty seconds",
+    "Career banking after a continuation credits only new coins, distance and keys",
+    "Completing mission sets raises the multiplier and grants real rewards",
+    "Daily layouts are deterministic and new-day personal records reset safely",
+    "All three mods change actual gravity, coin collection and running speed",
+    "Ten four-minute courses keep bounded objects, finite physics and an open train route",
+    "Production renderer draws all four worlds with trains, runner, guard and collectible geometry",
+    "Overhead sign collision uses its full vertical bounds and permits jumping above it"
+  ]
+}

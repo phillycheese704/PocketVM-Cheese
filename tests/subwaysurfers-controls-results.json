@@ -1,0 +1,13 @@
+{
+  "checks": 8,
+  "tests": [
+    "Menu settings save consecutively and configure the production run",
+    "Keyboard movement, jumping and repeat prevention reach the actual physics",
+    "Pause, focus loss and rotation freeze movement and power-up timers",
+    "Swipe lane changes work and pointer cancellation performs no action",
+    "Large touch buttons activate once, spend a board token and cancel safely on resize",
+    "Crash banking and key continuation credit only new progress, exactly once",
+    "Crew unlocks, board tokens and power-up upgrades debit earned currency and save selections",
+    "Touch preference, purchased cosmetics and upgraded powers reach the deterministic daily run"
+  ]
+}

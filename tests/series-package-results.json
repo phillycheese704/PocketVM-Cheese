@@ -1,11 +1,14 @@
 {
-  "checks": 6,
+  "checks": 9,
   "tests": [
     "Shoot: complete package, exact bytes, offline inline scripts",
     "Shoot: source-checked sanitised saves, safe repair, offline launch, preserved progress",
     "Shoot: truncated downloads and interrupted writes leave no partial installation",
     "Match Survival: complete package, exact bytes, offline inline scripts",
     "Match Survival: source-checked sanitised saves, safe repair, offline launch, preserved progress",
-    "Match Survival: truncated downloads and interrupted writes leave no partial installation"
+    "Match Survival: truncated downloads and interrupted writes leave no partial installation",
+    "Subway Surfers: complete package, exact bytes, offline inline scripts",
+    "Subway Surfers: source-checked sanitised saves, safe repair, offline launch, preserved progress",
+    "Subway Surfers: truncated downloads and interrupted writes leave no partial installation"
   ]
 }

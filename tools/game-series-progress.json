@@ -15,8 +15,15 @@
       "checks": 31,
       "layouts": 6,
       "proof": "tests/shoot-live-1791754336067.jpg"
+    },
+    "matchsurvival": {
+      "commit": "6262d7aeabb0a830cf2c063e2fd3a97109abe3f1",
+      "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/matchsurvival/game.html?v=matchsurvival-v5",
+      "checks": 18,
+      "layouts": 6,
+      "proof": "tests/matchsurvival-live-1791755569133.jpg"
     }
   },
-  "active": "matchsurvival",
+  "active": "subwaysurfers",
   "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
 }
