@@ -1,0 +1,8 @@
+{
+  "checks": 3,
+  "tests": [
+    "Shoot / shootmoon: real download, renamed-file activation, isolated progress and clean removal",
+    "Shoot / shootbottomless: real download, renamed-file activation, isolated progress and clean removal",
+    "Shoot / shootoverdrive: real download, renamed-file activation, isolated progress and clean removal"
+  ]
+}

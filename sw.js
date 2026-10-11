@@ -1,5 +1,26 @@
-const CACHE = 'pocketvm-shell-v105';
+const CACHE = 'pocketvm-shell-v107';
 const ASSETS = [
+  // SERIES_CACHE_START
+  "./store/shoot/game.html",
+  "./store/shoot/three.min.js",
+  "./store/shoot/software-renderer.js",
+  "./store/shoot/core.js",
+  "./store/shoot/render.js",
+  "./store/shoot/game.js",
+  "./store/shoot/THREE-LICENSE.txt",
+  "./store/shoot/icon.svg",
+  "./store/shoot/favicon-32.png",
+  "./store/shoot/icon-180.png",
+  "./store/shoot/icon-512.png",
+  "./store/shoot/game.html?v=shoot-v1",
+  "./store/shoot/three.min.js?v=shoot-v1",
+  "./store/shoot/software-renderer.js?v=shoot-v1",
+  "./store/shoot/core.js?v=shoot-v1",
+  "./store/shoot/render.js?v=shoot-v1",
+  "./store/shoot/game.js?v=shoot-v1",
+  "./store/shoot/icon.svg?v=illustrated-v1",
+  // SERIES_CACHE_END
+
   "./store/knockout/game.html",
   "./store/knockout/core.js",
   "./store/knockout/render.js",
@@ -95,8 +116,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=105",
-  "./store.js?v=105",
+  "./app.js?v=107",
+  "./store.js?v=107",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

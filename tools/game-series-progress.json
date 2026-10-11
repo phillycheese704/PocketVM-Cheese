@@ -1,0 +1,14 @@
+{
+  "order": [
+    "shoot",
+    "matchsurvival",
+    "subwaysurfers",
+    "avengefps",
+    "footyphysics",
+    "swarmsim",
+    "bouncemasters"
+  ],
+  "completed": {},
+  "active": "shoot",
+  "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
+}

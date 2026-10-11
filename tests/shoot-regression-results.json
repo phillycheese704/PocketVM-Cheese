@@ -1,0 +1,17 @@
+{
+  "checks": 12,
+  "tests": [
+    "First-person ray hits, headshots and elimination credit use actual target geometry",
+    "Solid cover blocks hitscan damage",
+    "Reload time gates firing and restores the magazine",
+    "Jumping and crouching preserve movement momentum",
+    "Moon Hops changes actual gravity",
+    "Bottomless ammunition and Movement Overdrive change gameplay",
+    "Player movement cannot pass through buildings",
+    "Deaths respawn safely with temporary protection",
+    "Uncontested hardpoint awards points and rotates locations",
+    "Nine full AI matches across every map and difficulty stay finite and finish",
+    "All three match modes finish once and freeze the final scoreboard",
+    "All three maps render; camera direction agrees with hitscan aiming"
+  ]
+}
