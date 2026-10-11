@@ -1,0 +1,14 @@
+{
+  "checks": 9,
+  "tests": [
+    "iPad touch detection and sandbox ready messaging use the shipped UI",
+    "Keyboard acceleration and boost drive actual free-play physics",
+    "Independent joystick and boost pointers combine and clear on cancellation",
+    "Two touch taps produce a physical jump and directional dodge",
+    "Pause freezes physics and releases all held inputs before resume",
+    "Resizing clears stale controls and rotating the device pauses safely",
+    "Focus loss pauses the game; free-play reset restores the ball without reloading",
+    "Garage and touch preferences persist through the real save protocol",
+    "Full-time UI records career statistics exactly once"
+  ]
+}

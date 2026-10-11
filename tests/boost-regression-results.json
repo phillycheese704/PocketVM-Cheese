@@ -1,0 +1,24 @@
+{
+  "checks": 19,
+  "tests": [
+    "Throttle and limited boost have distinct speeds; free play has unlimited boost",
+    "Jump, directional dodge, two-jump limit and landing reset operate in actual physics",
+    "Banked-wall height returns cleanly to the floor without floating",
+    "Large and small pads refill correctly and respect respawn cooldowns",
+    "Car hull contact transfers momentum, lifts the ball and records the toucher",
+    "Only a whole ball inside the goal aperture scores, once; high and wide shots rebound",
+    "Zero-second airborne play and tied sudden-death overtime finish by the correct rules",
+    "Boosted high-speed car impacts demolish and respawn the opponent",
+    "Random setups are varied and valid; forged statistics and garage values sanitize",
+    "rookie 1v1 runs 180 seconds with contacts, goals and bounded physics",
+    "rookie 2v2 runs 180 seconds with contacts, goals and bounded physics",
+    "rookie 3v3 runs 180 seconds with contacts, goals and bounded physics",
+    "pro 1v1 runs 180 seconds with contacts, goals and bounded physics",
+    "pro 2v2 runs 180 seconds with contacts, goals and bounded physics",
+    "pro 3v3 runs 180 seconds with contacts, goals and bounded physics",
+    "allstar 1v1 runs 180 seconds with contacts, goals and bounded physics",
+    "allstar 2v2 runs 180 seconds with contacts, goals and bounded physics",
+    "allstar 3v3 runs 180 seconds with contacts, goals and bounded physics",
+    "All stadiums render in both quality modes, including near-wall camera poses"
+  ]
+}

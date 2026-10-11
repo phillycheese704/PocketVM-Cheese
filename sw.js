@@ -1,5 +1,19 @@
-const CACHE = 'pocketvm-shell-v102';
+const CACHE = 'pocketvm-shell-v103';
 const ASSETS = [
+  "./store/boostleague/game.html",
+  "./store/boostleague/core.js",
+  "./store/boostleague/render.js",
+  "./store/boostleague/game.js",
+  "./store/boostleague/icon.svg",
+  "./store/boostleague/favicon-32.png",
+  "./store/boostleague/icon-180.png",
+  "./store/boostleague/icon-512.png",
+  "./store/boostleague/game.html?v=boost-v1",
+  "./store/boostleague/core.js?v=boost-v1",
+  "./store/boostleague/render.js?v=boost-v1",
+  "./store/boostleague/game.js?v=boost-v1",
+  "./store/boostleague/icon.svg?v=illustrated-v1",
+
   "./store/stickwar/game.html",
   "./store/stickwar/core.js",
   "./store/stickwar/game.js",
@@ -67,8 +81,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=102",
-  "./store.js?v=102",
+  "./app.js?v=103",
+  "./store.js?v=103",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",
