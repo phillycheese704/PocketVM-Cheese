@@ -1,0 +1,24 @@
+{
+  "build": "boost-v2",
+  "shell": "pocketvm-shell-v104",
+  "automatedChecks": 65,
+  "viewportChecks": [
+    "PASS · 1024 × 768 · camera-toggle 73×44, pause-button 44×44, joystick 126×126, slide-touch 65×65, jump-touch 76×76, boost-touch 88×88 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 768 × 1024 · camera-toggle 73×44, pause-button 44×44, joystick 126×126, slide-touch 65×65, jump-touch 76×76, boost-touch 88×88 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 1366 × 1024 · camera-toggle 73×44, pause-button 44×44, joystick 126×126, slide-touch 65×65, jump-touch 76×76, boost-touch 88×88 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 507 × 768 · camera-toggle 54×44, pause-button 44×44, joystick 106×106, slide-touch 48×48, jump-touch 59×59, boost-touch 66×66 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 390 × 844 · camera-toggle 54×44, pause-button 44×44, joystick 106×106, slide-touch 48×48, jump-touch 59×59, boost-touch 66×66 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 740 × 390 · camera-toggle 65×44, pause-button 44×44, joystick 100×100, slide-touch 54×54, jump-touch 62×62, boost-touch 72×72 · 0 outside, 0 undersized, no overlaps"
+  ],
+  "liveVerified": [
+    "Customized teams, stadium, body and paint persist on reload.",
+    "A 3v3 match launches, its kickoff ends, its timer advances and the ball and AI cars move.",
+    "Keyboard boost lowers the displayed fuel; Pause opens the pit-stop menu.",
+    "Free play displays unlimited time and boost, and its Reset ball button responds.",
+    "Tablet and phone HUD/touch controls stay in bounds with no overlapping controls."
+  ],
+  "gameURL": "https://phillycheese704.github.io/PocketVM-Cheese/store/boostleague/game.html?v=boost-v2",
+  "screenshot": "tests/boostleague-live-1791717062520.jpg",
+  "phoneScreenshot": "tests/boostleague-phone-1791716960400.jpg",
+  "gameErrors": []
+}
