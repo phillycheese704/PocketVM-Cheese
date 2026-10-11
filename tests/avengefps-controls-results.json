@@ -1,0 +1,16 @@
+{
+  "checks": 11,
+  "tests": [
+    "Menu choices persist across consecutive saves and configure the actual match",
+    "Keyboard movement and jumping reach the physics engine",
+    "Pause freezes the match and resumes without stuck movement",
+    "Independent movement and fire touches combine and clear on cancellation",
+    "Swipe aiming turns the first-person view in both axes",
+    "Resizing releases controls; losing focus and rotating pause safely",
+    "Weapon trim and controls save correctly; practice has no running match timer",
+    "Finished matches record stats and XP exactly once",
+    "Hero selection, F main ability, E secondary and number-key weapon switching reach gameplay",
+    "Real card reward screen freezes match, selects a spell and resumes",
+    "Touch ability cancellation and weapon switching leave no stuck controls"
+  ]
+}

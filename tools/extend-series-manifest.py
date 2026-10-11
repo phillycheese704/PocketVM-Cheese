@@ -1,7 +1,7 @@
 from pathlib import Path
 import json,base64,hashlib,sys
 root=Path(__file__).resolve().parents[1];p=Path(sys.argv[1]);manifest=json.loads(p.read_text());known={f['path'] for f in manifest}
-files=[x for x in (root/'tests').glob('series-*') if x.suffix in ['.cjs','.json']]+[x for x in (root/'tests').glob('*-live-*.jpg')]
+files=[x for x in (root/'tests').glob('series-*') if x.suffix in ['.cjs','.json']]+[x for x in (root/'tests').glob('*-live-*.jpg')]+[x for x in (root/'tests').glob('*-live-results.json')]
 for x in files:
  rel=str(x.relative_to(root))
  if rel in known:continue

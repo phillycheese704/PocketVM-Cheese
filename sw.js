@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v115';
+const CACHE = 'pocketvm-shell-v117';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -45,6 +45,26 @@ const ASSETS = [
   "./store/subwaysurfers/render.js?v=subwaysurfers-v1",
   "./store/subwaysurfers/game.js?v=subwaysurfers-v1",
   "./store/subwaysurfers/icon.svg?v=illustrated-v1",
+  "./store/avengefps/game.html",
+  "./store/avengefps/three.min.js",
+  "./store/avengefps/software-renderer.js",
+  "./store/avengefps/engine.js",
+  "./store/avengefps/core.js",
+  "./store/avengefps/render.js",
+  "./store/avengefps/game.js",
+  "./store/avengefps/THREE-LICENSE.txt",
+  "./store/avengefps/icon.svg",
+  "./store/avengefps/favicon-32.png",
+  "./store/avengefps/icon-180.png",
+  "./store/avengefps/icon-512.png",
+  "./store/avengefps/game.html?v=avengefps-v1",
+  "./store/avengefps/three.min.js?v=avengefps-v1",
+  "./store/avengefps/software-renderer.js?v=avengefps-v1",
+  "./store/avengefps/engine.js?v=avengefps-v1",
+  "./store/avengefps/core.js?v=avengefps-v1",
+  "./store/avengefps/render.js?v=avengefps-v1",
+  "./store/avengefps/game.js?v=avengefps-v1",
+  "./store/avengefps/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
   "./store/knockout/game.html",
@@ -142,8 +162,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=115",
-  "./store.js?v=115",
+  "./app.js?v=117",
+  "./store.js?v=117",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

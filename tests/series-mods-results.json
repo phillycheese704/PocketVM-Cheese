@@ -1,5 +1,5 @@
 {
-  "checks": 9,
+  "checks": 12,
   "tests": [
     "Shoot / shootmoon: real download, renamed-file activation, isolated progress and clean removal",
     "Shoot / shootbottomless: real download, renamed-file activation, isolated progress and clean removal",
@@ -9,6 +9,9 @@
     "Match Survival / matchberserk: real download, renamed-file activation, isolated progress and clean removal",
     "Subway Surfers / surfersmagnet: real download, renamed-file activation, isolated progress and clean removal",
     "Subway Surfers / surfersmoon: real download, renamed-file activation, isolated progress and clean removal",
-    "Subway Surfers / surfersrush: real download, renamed-file activation, isolated progress and clean removal"
+    "Subway Surfers / surfersrush: real download, renamed-file activation, isolated progress and clean removal",
+    "Avenge FPS / avengemoon: real download, renamed-file activation, isolated progress and clean removal",
+    "Avenge FPS / avengeammo: real download, renamed-file activation, isolated progress and clean removal",
+    "Avenge FPS / avengequick: real download, renamed-file activation, isolated progress and clean removal"
   ]
 }

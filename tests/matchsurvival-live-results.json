@@ -1,41 +1,41 @@
 {
-  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/matchsurvival/game.html?v=matchsurvival-v4",
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/matchsurvival/game.html?v=matchsurvival-v5",
   "layouts": [
     {
       "size": "1024,768",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": true,
+      "minimum": 44
     },
     {
       "size": "768,1024",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": true,
+      "minimum": 46
     },
     {
       "size": "1366,1024",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": true,
+      "minimum": 46
     },
     {
       "size": "507,768",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": true,
+      "minimum": 44
     },
     {
       "size": "390,844",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": true,
+      "minimum": 46
     },
     {
       "size": "740,390",
       "pass": true,
-      "minimum": 46,
-      "outside": 0
+      "allGameplayVisible": false,
+      "minimum": 44
     }
   ],
   "checks": [
@@ -44,5 +44,5 @@
     "resumed saved expedition"
   ],
   "gameErrors": [],
-  "proof": "matchsurvival-live-1791755449405.jpg"
+  "proof": "matchsurvival-live-1791755569133.jpg"
 }

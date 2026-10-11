@@ -223,5 +223,83 @@
         "Run 30% faster; course spacing scales with your speed."
       ]
     ]
+  },
+  "avengefps": {
+    "name": "Avenge FPS",
+    "symbol": "\u2726",
+    "revision": "avengefps-v1",
+    "package": [
+      "game.html",
+      "three.min.js",
+      "software-renderer.js",
+      "engine.js",
+      "core.js",
+      "render.js",
+      "game.js",
+      "THREE-LICENSE.txt"
+    ],
+    "category": "Hero arena FPS",
+    "summary": "Four heroes \u00b7 eight weapons \u00b7 spells \u00b7 four objective modes",
+    "controls": "WASD \u00b7 mouse \u00b7 hero abilities \u00b7 big touch controls",
+    "variants": [
+      {
+        "kicker": "PICK YOUR HERO",
+        "title": "Abilities change everything.",
+        "copy": "Four heroes with grenades, shurikens, axes, grapples, dashes and totem traps. Build your spell deck during each match.",
+        "tone": "night"
+      },
+      {
+        "kicker": "PLAY THE OBJECTIVE",
+        "title": "Own the ring. Bank the coins.",
+        "copy": "Point control, Black Coin, Gun Game and a three-versus-three cart escort. Four original arenas and three AI levels.",
+        "tone": "night"
+      },
+      {
+        "kicker": "BUILD YOUR SPELL DECK",
+        "title": "One card. A different fight.",
+        "copy": "Earn tier XP, pause to select a card, and imbue your hero ability with frost, venom, shock or other effects.",
+        "tone": "night"
+      },
+      {
+        "kicker": "EVERY DEVICE. EVERY ARENA.",
+        "title": "Your thumbs are welcome.",
+        "copy": "Large independent touch controls, drag or locked mouse aiming, eight weapon choices and a no-stakes practice range.",
+        "tone": "night"
+      }
+    ],
+    "features": [
+      [
+        "Heroes with character",
+        "Four ability pairs, bouncing grenades, trap totems, grappling and wall-safe dashing."
+      ],
+      [
+        "A match worth playing",
+        "Four objective modes, original maps, weapon progression, AI rivals and spell cards."
+      ],
+      [
+        "Play your way",
+        "Keyboard, mouse and large touch controls. Career XP, local saves and three native mods."
+      ]
+    ],
+    "mods": [
+      [
+        "avengemoon",
+        "Moon Gravity",
+        "\u263e",
+        "Lower gravity increases airtime for every hero."
+      ],
+      [
+        "avengeammo",
+        "Endless Ammunition",
+        "\u221e",
+        "Weapons never run out of loaded ammunition. Both sides keep normal fire rates."
+      ],
+      [
+        "avengequick",
+        "Quick Casting",
+        "\u2726",
+        "Both hero abilities have half their normal cooldown."
+      ]
+    ]
   }
 }

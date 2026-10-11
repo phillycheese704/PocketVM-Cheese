@@ -1,0 +1,37 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/subwaysurfers/game.html?v=subwaysurfers-v1",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true
+    },
+    {
+      "size": "768,1024",
+      "pass": true
+    },
+    {
+      "size": "1366,1024",
+      "pass": true
+    },
+    {
+      "size": "507,768",
+      "pass": true
+    },
+    {
+      "size": "390,844",
+      "pass": true
+    },
+    {
+      "size": "740,390",
+      "pass": true
+    }
+  ],
+  "checks": [
+    "keyboard lane change and jump",
+    "hoverboard activation and crash absorption",
+    "31 coins banked after real crash",
+    "key continuation into same run"
+  ],
+  "gameErrors": [],
+  "proof": "subwaysurfers-live-1791756731298.jpg"
+}

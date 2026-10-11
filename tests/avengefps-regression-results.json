@@ -1,0 +1,22 @@
+{
+  "checks": 17,
+  "tests": [
+    "Grenades travel under gravity, bounce, explode with falloff and respect cooldown",
+    "Three travelling shurikens hit independently and recharge",
+    "Throwing axe deals damage; grapple needs a surface and pulls upward",
+    "Totems arm after two seconds; Stormbringer casts before area damage",
+    "Dash hits each enemy once and stops at a wall",
+    "Hammer requires a visible close target and obeys cooldown",
+    "Tier rewards offer three real cards and freeze the arena until selection",
+    "Main ability cards apply poison, frost, shock, curse and healing; melee stays unimbued",
+    "Point occupancy earns personal score and card XP without team scoring",
+    "Black Coin drops carried coins, collects them and banks a batch bonus once",
+    "Gun Game advances through eight weapons and ends on the final elimination",
+    "Payload uses two teams of three, pushes by team and stops when contested",
+    "Weapon switching retains ammunition instead of granting free refills",
+    "All three downloadable mods change real ammunition, cooldown or gravity physics",
+    "Sixteen complete AI matches finish with bounded objects, finite physics and objective activity",
+    "Career sanitizer rejects invalid heroes, weapons and non-finite statistics",
+    "Production 3D renderer draws all four arenas, heroes and ability objects with accurate aiming"
+  ]
+}
