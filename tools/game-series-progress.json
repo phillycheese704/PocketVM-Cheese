@@ -39,5 +39,25 @@
     }
   },
   "active": "footyphysics",
-  "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
+  "existingMods": "pending: add 3 to every original game with 0–3 packages (Deadwave has 4 including skin packs)",
+  "deployedAwaitingLiveQA": {
+    "footyphysics": {
+      "commit": "df4622a748353c9e58417bbd51b5ff7b5ba96957",
+      "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/footyphysics/game.html?v=footyphysics-v1",
+      "checks": 21,
+      "mods": 3,
+      "pages": "success",
+      "pending": "Live two/four-player six-device layout verification"
+    }
+  },
+  "blocked": {
+    "reason": "Workspace and cloud browser environment disconnected during Footy Physics live QA (environment_offline).",
+    "remaining": [
+      "Footy Physics live QA",
+      "Swarm Sim implementation/deployment",
+      "Bouncemasters implementation/deployment",
+      "39 new mods for original eligible games"
+    ],
+    "next": "Resume Footy Physics live QA, then Swarm Sim. Keep current main and completed games."
+  }
 }
