@@ -1,0 +1,16 @@
+from pathlib import Path
+root=Path(__file__).resolve().parents[1]
+p=root/'store/matchsurvival/game.js';s=p.read_text()
+s=s.replace("mode=id||'play';selected=-1;", "mode=id||'play';$('game').inert=mode!=='play';$('pauseButton').disabled=mode!=='play';$('guideButton').disabled=mode!=='play';selected=-1;")
+s=s.replace("lastSave=0;const art", "lastSave=0,resourceMarkup='';const art")
+s=s.replace("$('resources').innerHTML=C.TYPES.map", "const nextResources=C.TYPES.map")
+s=s.replace("+'</span>').join('');const markup=", "+'</span>').join('');if(nextResources!==resourceMarkup){resourceMarkup=nextResources;$('resources').innerHTML=nextResources;}const markup=")
+s=s.replace(";update();}\nfunction finish", ";update();}\nfunction finish")
+s=s.replace("}update();}\nfunction finish", "}if(run.clock-lastUI>=.1||mode!=='play'){lastUI=run.clock;update();}}\nfunction finish")
+s=s.replace("resourceMarkup='';const art", "resourceMarkup='',lastUI=0;const art")
+p.write_text(s)
+p=root/'store/matchsurvival/core.js';s=p.read_text()
+s=s.replace("difficulty:['calm','classic','fierce'].includes(r.difficulty)", "settle:f(r.settle,0,.5),chain:n(r.chain,30),pending:(Array.isArray(r.pending)?r.pending:[]).filter(v=>Number.isInteger(v)&&v>=0&&v<56).slice(0,56),difficulty:['calm','classic','fierce'].includes(r.difficulty)")
+s=s.replace("'enemies','difficulty'];", "'enemies','difficulty','settle','chain','pending'];")
+s=s.replace("if(matches(this.board).length||!moves(this.board).length)this.refresh();", "const m=matches(this.board);if(this.settle>0&&m.length){this.pending=m;this.chain=Math.max(1,this.chain);}else if(m.length||!moves(this.board).length){this.settle=0;this.pending=[];this.chain=0;this.refresh();}")
+p.write_text(s)

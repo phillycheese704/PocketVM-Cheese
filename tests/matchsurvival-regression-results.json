@@ -1,5 +1,5 @@
 {
-  "checks": 11,
+  "checks": 12,
   "tests": [
     "150 generated boards have no free matches and at least one legal move",
     "Nonadjacent and invalid swaps revert without spending daylight",
@@ -11,6 +11,7 @@
     "All three mods change actual harvest, night duration and sword damage",
     "Full expeditions resume exactly and corrupted saves are sanitised",
     "Completing twenty-five nights continues into an endless expedition",
-    "Production art renders both day and night, all village upgrades and boss sprites"
+    "Production art renders both day and night, all village upgrades and boss sprites",
+    "Pausing during a cascade preserves and completes the pending match on resume"
   ]
 }

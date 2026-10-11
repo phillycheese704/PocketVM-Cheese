@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v109';
+const CACHE = 'pocketvm-shell-v110';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -27,10 +27,10 @@ const ASSETS = [
   "./store/matchsurvival/favicon-32.png",
   "./store/matchsurvival/icon-180.png",
   "./store/matchsurvival/icon-512.png",
-  "./store/matchsurvival/game.html?v=matchsurvival-v1",
-  "./store/matchsurvival/core.js?v=matchsurvival-v1",
-  "./store/matchsurvival/render.js?v=matchsurvival-v1",
-  "./store/matchsurvival/game.js?v=matchsurvival-v1",
+  "./store/matchsurvival/game.html?v=matchsurvival-v2",
+  "./store/matchsurvival/core.js?v=matchsurvival-v2",
+  "./store/matchsurvival/render.js?v=matchsurvival-v2",
+  "./store/matchsurvival/game.js?v=matchsurvival-v2",
   "./store/matchsurvival/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
@@ -129,8 +129,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=109",
-  "./store.js?v=109",
+  "./app.js?v=110",
+  "./store.js?v=110",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",
