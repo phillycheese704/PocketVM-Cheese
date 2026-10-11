@@ -1,5 +1,5 @@
 {
-  "checks": 17,
+  "checks": 18,
   "tests": [
     "Grenades travel under gravity, bounce, explode with falloff and respect cooldown",
     "Three travelling shurikens hit independently and recharge",
@@ -17,6 +17,7 @@
     "All three downloadable mods change real ammunition, cooldown or gravity physics",
     "Sixteen complete AI matches finish with bounded objects, finite physics and objective activity",
     "Career sanitizer rejects invalid heroes, weapons and non-finite statistics",
+    "A posthumous spell reward can be chosen before respawning without freezing the run",
     "Production 3D renderer draws all four arenas, heroes and ability objects with accurate aiming"
   ]
 }
