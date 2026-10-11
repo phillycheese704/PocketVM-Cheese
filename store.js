@@ -205,7 +205,7 @@
 
 
 
-  const BOOST_ID='boostleague',BOOST_NAME='Boost League',BOOST_ROOT='/home/user/Downloads/Boost League',BOOST_SOURCE='./store/boostleague/',BOOST_ICON_URL=BOOST_SOURCE+'icon.svg?v=illustrated-v1',BOOST_GAME_REVISION='boost-v1',BOOST_SAVE_KEY='pocketvm.game.boostleague',BOOST_PIN_KEY='pocketvm.store.boostleague.desktop';
+  const BOOST_ID='boostleague',BOOST_NAME='Boost League',BOOST_ROOT='/home/user/Downloads/Boost League',BOOST_SOURCE='./store/boostleague/',BOOST_ICON_URL=BOOST_SOURCE+'icon.svg?v=illustrated-v1',BOOST_GAME_REVISION='boost-v2',BOOST_SAVE_KEY='pocketvm.game.boostleague',BOOST_PIN_KEY='pocketvm.store.boostleague.desktop';
   const BOOST_FILES=[{"name":"game.html","size":20918,"mime":"text/html"},{"name":"core.js","size":14951,"mime":"text/javascript"},{"name":"render.js","size":14999,"mime":"text/javascript"},{"name":"game.js","size":14910,"mime":"text/javascript"}];
   const BOOST_TOTAL_BYTES=BOOST_FILES.reduce((n,f)=>n+f.size,0)+82954+BOOST_NAME.length;
   const boostFeatureVariants=[{kicker:'NEW RELEASE',title:'Four wheels. One ball.',copy:'A 3D car football stadium. Boost into a shot, jump into an aerial and win in sudden-death overtime.',tone:'night'},{kicker:'CAR FOOTBALL',title:'Take the shot. Take flight.',copy:'Exhibition 1v1, 2v2 and 3v3. Three stadiums, AI difficulties, custom cars and unlimited-boost free play.',tone:'night'},{kicker:'BUILT FOR TOUCH',title:'Your stadium. Your setup.',copy:'Big iPad driving controls, keyboard and controller support. Paint your car and choose your match.',tone:'night'},{kicker:'PHYSICS',title:'Make the ball fly.',copy:'Momentum, jumps, dodges, aerial boost, banked walls and demolitions. Every goal has to cross the line.',tone:'night'}];
