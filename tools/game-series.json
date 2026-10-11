@@ -227,7 +227,7 @@
   "avengefps": {
     "name": "Avenge FPS",
     "symbol": "\u2726",
-    "revision": "avengefps-v2",
+    "revision": "avengefps-v3",
     "package": [
       "game.html",
       "three.min.js",

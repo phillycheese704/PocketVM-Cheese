@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v119';
+const CACHE = 'pocketvm-shell-v120';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -57,13 +57,13 @@ const ASSETS = [
   "./store/avengefps/favicon-32.png",
   "./store/avengefps/icon-180.png",
   "./store/avengefps/icon-512.png",
-  "./store/avengefps/game.html?v=avengefps-v2",
-  "./store/avengefps/three.min.js?v=avengefps-v2",
-  "./store/avengefps/software-renderer.js?v=avengefps-v2",
-  "./store/avengefps/engine.js?v=avengefps-v2",
-  "./store/avengefps/core.js?v=avengefps-v2",
-  "./store/avengefps/render.js?v=avengefps-v2",
-  "./store/avengefps/game.js?v=avengefps-v2",
+  "./store/avengefps/game.html?v=avengefps-v3",
+  "./store/avengefps/three.min.js?v=avengefps-v3",
+  "./store/avengefps/software-renderer.js?v=avengefps-v3",
+  "./store/avengefps/engine.js?v=avengefps-v3",
+  "./store/avengefps/core.js?v=avengefps-v3",
+  "./store/avengefps/render.js?v=avengefps-v3",
+  "./store/avengefps/game.js?v=avengefps-v3",
   "./store/avengefps/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
@@ -162,8 +162,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=119",
-  "./store.js?v=119",
+  "./app.js?v=120",
+  "./store.js?v=120",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",
