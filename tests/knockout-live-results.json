@@ -1,0 +1,23 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/knockout/game.html?v=knock-v1",
+  "checks": [
+    "Live menu and sixteen-penguin match",
+    "Direction and power input",
+    "Lock-in launches penguins",
+    "Crossing into water eliminates the player",
+    "Spectating continues with shrink and rival eliminations"
+  ],
+  "layouts": [
+    "PASS · 1024 × 768 · pauseButton 48×48, power 440×44, lockButton 320×56 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 768 × 1024 · pauseButton 48×48, power 388×44, lockButton 320×56 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 1366 × 1024 · pauseButton 48×48, power 440×44, lockButton 320×56 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 507 × 768 · pauseButton 48×48, power 320×44, lockButton 145×56 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 390 × 844 · pauseButton 48×48, power 203×44, lockButton 145×56 · 0 outside, 0 undersized, no overlaps",
+    "PASS · 740 × 390 · pauseButton 48×48, power 364×44, lockButton 320×48 · 0 outside, 0 undersized, no overlaps"
+  ],
+  "errors": [],
+  "screenshots": [
+    "knockout-live-1791740022241.jpg",
+    "knockout-phone-1791740148734.jpg"
+  ]
+}
