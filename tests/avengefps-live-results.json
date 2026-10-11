@@ -1,0 +1,42 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/avengefps/game.html?v=avengefps-v3",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true,
+      "overlap": false
+    },
+    {
+      "size": "768,1024",
+      "pass": true,
+      "overlap": false
+    },
+    {
+      "size": "1366,1024",
+      "pass": true,
+      "overlap": false
+    },
+    {
+      "size": "507,768",
+      "pass": true,
+      "overlap": false
+    },
+    {
+      "size": "390,844",
+      "pass": true,
+      "overlap": false
+    },
+    {
+      "size": "740,390",
+      "pass": true,
+      "overlap": false
+    }
+  ],
+  "checks": [
+    "main and secondary ability controls",
+    "live Point and Payload rounds",
+    "open-route spawn view"
+  ],
+  "renderer": "software fallback verified; cloud browser has no WebGL",
+  "proof": "avengefps-live-1791757799627.jpg"
+}

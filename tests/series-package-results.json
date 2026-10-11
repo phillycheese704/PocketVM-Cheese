@@ -1,5 +1,5 @@
 {
-  "checks": 12,
+  "checks": 15,
   "tests": [
     "Shoot: complete package, exact bytes, offline inline scripts",
     "Shoot: source-checked sanitised saves, safe repair, offline launch, preserved progress",
@@ -12,6 +12,9 @@
     "Subway Surfers: truncated downloads and interrupted writes leave no partial installation",
     "Avenge FPS: complete package, exact bytes, offline inline scripts",
     "Avenge FPS: source-checked sanitised saves, safe repair, offline launch, preserved progress",
-    "Avenge FPS: truncated downloads and interrupted writes leave no partial installation"
+    "Avenge FPS: truncated downloads and interrupted writes leave no partial installation",
+    "Footy Physics: complete package, exact bytes, offline inline scripts",
+    "Footy Physics: source-checked sanitised saves, safe repair, offline launch, preserved progress",
+    "Footy Physics: truncated downloads and interrupted writes leave no partial installation"
   ]
 }

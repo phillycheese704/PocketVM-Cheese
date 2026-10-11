@@ -1,0 +1,14 @@
+{
+  "checks": 9,
+  "tests": [
+    "Consecutive saved menu choices configure the actual match",
+    "Blue and red keyboard buttons independently drive both teammates",
+    "Pause, blur and orientation freeze physics and release controls",
+    "Four-player mode forces separate controls and targets only the selected player",
+    "Independent touches combine and clear on cancellation without stuck hopping",
+    "Resizing safely releases held inputs",
+    "Solo practice hides human red controls and does not end at the winning score",
+    "Finished results bank wins, goals and XP exactly once",
+    "Sound and motion persist; earned kit controls enforce unlocks"
+  ]
+}

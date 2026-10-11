@@ -29,8 +29,15 @@
       "checks": 23,
       "layouts": 6,
       "proof": "tests/subwaysurfers-live-1791756731298.jpg"
+    },
+    "avengefps": {
+      "commit": "b9b9fd5b81ccecb168e988106508c100ce50c0ca",
+      "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/avengefps/game.html?v=avengefps-v3",
+      "checks": 29,
+      "layouts": 6,
+      "proof": "tests/avengefps-live-1791757799627.jpg"
     }
   },
-  "active": "avengefps",
+  "active": "footyphysics",
   "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
 }

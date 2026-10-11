@@ -301,5 +301,79 @@
         "Both hero abilities have half their normal cooldown."
       ]
     ]
+  },
+  "footyphysics": {
+    "name": "Footy Physics",
+    "symbol": "\u26bd",
+    "revision": "footyphysics-v1",
+    "package": [
+      "game.html",
+      "core.js",
+      "render.js",
+      "game.js"
+    ],
+    "category": "One-button physics football",
+    "summary": "Floppy legs \u00b7 first to five \u00b7 random rounds \u00b7 couch multiplayer",
+    "controls": "Up / W \u00b7 separate Left\u2013Right / A\u2013D \u00b7 big touch buttons",
+    "variants": [
+      {
+        "kicker": "ONE BUTTON. TWO LEFT FEET.",
+        "title": "Jump. Flop. Somehow score.",
+        "copy": "Floppy teammates, swinging legs and a real bouncing ball. First to five wins.",
+        "tone": "night"
+      },
+      {
+        "kicker": "A MATCH THAT CHANGES",
+        "title": "Slippery business. Moon league.",
+        "copy": "Eight round twists change the ground, gravity, player size, ball or goals after every score.",
+        "tone": "night"
+      },
+      {
+        "kicker": "A LITTLE COUCH COMPETITION",
+        "title": "One device. Four players.",
+        "copy": "Solo AI or local multiplayer. Control your whole team, or share the separate-player buttons with friends.",
+        "tone": "night"
+      },
+      {
+        "kicker": "KITS EARNED ON THE PITCH",
+        "title": "A team of your own.",
+        "copy": "Earn six cosmetic kits, track wins and streaks, practise physics and try three downloadable mods.",
+        "tone": "night"
+      }
+    ],
+    "features": [
+      [
+        "Actual floppy physics",
+        "Hinged legs, rotating bodies, angular collision impulses and a bouncing ball."
+      ],
+      [
+        "Couch chaos",
+        "One-button or separate-player input, solo AI, two- and four-player local games, eight random round twists."
+      ],
+      [
+        "Big buttons, little legends",
+        "Touch and keyboard, earned cosmetic kits, saved career records, practice and three native mods."
+      ]
+    ],
+    "mods": [
+      [
+        "footymoon",
+        "Moon Gravity",
+        "\u263e",
+        "Every pitch has low gravity and longer airtime."
+      ],
+      [
+        "footygiant",
+        "Giant Ball",
+        "\u26bd",
+        "Increase the real ball collision radius by 80%."
+      ],
+      [
+        "footyturbo",
+        "Turbo Hops",
+        "\u219f",
+        "Jump and forward impulses are 35% stronger."
+      ]
+    ]
   }
 }

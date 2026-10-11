@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v120';
+const CACHE = 'pocketvm-shell-v122';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -65,6 +65,19 @@ const ASSETS = [
   "./store/avengefps/render.js?v=avengefps-v3",
   "./store/avengefps/game.js?v=avengefps-v3",
   "./store/avengefps/icon.svg?v=illustrated-v1",
+  "./store/footyphysics/game.html",
+  "./store/footyphysics/core.js",
+  "./store/footyphysics/render.js",
+  "./store/footyphysics/game.js",
+  "./store/footyphysics/icon.svg",
+  "./store/footyphysics/favicon-32.png",
+  "./store/footyphysics/icon-180.png",
+  "./store/footyphysics/icon-512.png",
+  "./store/footyphysics/game.html?v=footyphysics-v1",
+  "./store/footyphysics/core.js?v=footyphysics-v1",
+  "./store/footyphysics/render.js?v=footyphysics-v1",
+  "./store/footyphysics/game.js?v=footyphysics-v1",
+  "./store/footyphysics/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
   "./store/knockout/game.html",
@@ -162,8 +175,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=120",
-  "./store.js?v=120",
+  "./app.js?v=122",
+  "./store.js?v=122",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

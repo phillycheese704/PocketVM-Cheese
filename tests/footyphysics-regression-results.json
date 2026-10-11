@@ -1,0 +1,17 @@
+{
+  "checks": 12,
+  "tests": [
+    "Hinged legs remain attached after settling on the actual pitch",
+    "One press jumps both teammates and swings independently hinged legs",
+    "Separate-player control jumps only the intended teammate",
+    "Ball collisions transfer momentum into body motion and rotation",
+    "Floor contact bounces the ball rather than passing through the ground",
+    "Goal detection scores once, celebrates and resets into a different random round",
+    "Chosen winning score ends the match once and freezes the result",
+    "A ball above the crossbar does not count as a goal",
+    "Moon, Giant Ball and Turbo Hops mods change actual gravity, geometry and impulses",
+    "Eight long physics matches stay finite with attached limbs, tumbles and real goals",
+    "All AI levels act; local multiplayer never injects opponent inputs",
+    "Production art renders all eight pitches with true rotating body and leg transforms"
+  ]
+}
