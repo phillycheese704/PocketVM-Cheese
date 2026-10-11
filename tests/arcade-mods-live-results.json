@@ -1,0 +1,25 @@
+{
+  "shell": "pocketvm-shell-v102",
+  "implementation_commit": "b6b93b9fa512480e904493a84868a21af6571d9c",
+  "automated_checks_passed": 101,
+  "catalog_packages": 16,
+  "new_game_mods": {
+    "Flappy Bird": "Featherweight Flight",
+    "Penguin Pull": "Moon Gravity",
+    "Apex Rush": "Nitro Overdrive",
+    "Ball vs Ball": "Pinball Frenzy"
+  },
+  "browser_scope": "Actual built-in Pocket Browser and production Store code in an isolated memory-drive test window. No account or persistent user drive accessed.",
+  "browser_verified": [
+    "Entered pocket:mods through the actual Browser address bar and opened the local mod index.",
+    "Each new named game filter displays its matching mod.",
+    "Each mod downloads as Ready to move and becomes Active after moving into its matching game folder.",
+    "All four actual Store-built game packages launch and display their mod labels.",
+    "Penguin Pull starts at Tower 1 with Moon Gravity active.",
+    "Ball vs Ball proceeds through ball selection, aim selection and match countdown with Pinball Frenzy active.",
+    "Removing Pinball Frenzy returns its catalog card to Available; downloading and moving it again restores Active."
+  ],
+  "save_behavior_verified_automatically": "Modded saves remain separate; malformed, unsupported and wrong-folder packages do not activate; removing a mod preserves both save histories.",
+  "screenshot": "tests/pocket-mods-catalog-1791713892722.jpg",
+  "preview_layout_commit": "2def19a39f2222864bb31102f7a72da71dd6d11e"
+}
