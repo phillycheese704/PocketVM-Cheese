@@ -73,3 +73,6 @@ Grade School is an original classroom comedy inspired by mobile teacher-and-pape
 Ball vs Ball replaces the cancelled Fisch game with a physics auto-battler inspired by Roblox Ball VS Ball. Choose one of three balls, lock a launch direction, and watch its automatic ability fight for three-heart matches. There are 60 balls, AI 1v1/2v2/4v4, local two-player duels, six arenas, unlocks, capsules and saved progression. The supplied first track is menu music; the second plays during matches. See [the guide](store/ballvsball/GUIDE.md).
 
 Boost League adds original 3D car football inspired by Rocket League: local 1v1, 2v2 and 3v3, jumps and dodges, aerial boost, banked walls, boost pads, demolitions and sudden-death overtime. Customize paint, body and decals, or practice with unlimited boost. Keyboard, touch and gamepad support; install it from Store. See [the guide](store/boostleague/README.md).
+
+## Knockout
+New penguin ice survival game: secret aim/power, simultaneous launches, 8–16 AI penguins, shrinking floes, collision knockouts, three arenas, three difficulties, Random, practice and earned cosmetics. Touch and keyboard controls; saved career and offline Store installation. [Play Knockout](./store/knockout/game.html).

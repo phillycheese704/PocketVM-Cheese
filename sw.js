@@ -1,5 +1,19 @@
-const CACHE = 'pocketvm-shell-v104';
+const CACHE = 'pocketvm-shell-v105';
 const ASSETS = [
+  "./store/knockout/game.html",
+  "./store/knockout/core.js",
+  "./store/knockout/render.js",
+  "./store/knockout/game.js",
+  "./store/knockout/icon.svg",
+  "./store/knockout/favicon-32.png",
+  "./store/knockout/icon-180.png",
+  "./store/knockout/icon-512.png",
+  "./store/knockout/game.html?v=knock-v1",
+  "./store/knockout/core.js?v=knock-v1",
+  "./store/knockout/render.js?v=knock-v1",
+  "./store/knockout/game.js?v=knock-v1",
+  "./store/knockout/icon.svg?v=illustrated-v1",
+
   "./store/boostleague/game.html",
   "./store/boostleague/core.js",
   "./store/boostleague/render.js",
@@ -81,8 +95,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=104",
-  "./store.js?v=104",
+  "./app.js?v=105",
+  "./store.js?v=105",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

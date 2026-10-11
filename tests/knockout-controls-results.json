@@ -1,0 +1,14 @@
+{
+  "checks": 9,
+  "tests": [
+    "Real menu settings survive repeated saves and start the requested match",
+    "Keyboard aiming and the touch power slider update the actual plan",
+    "Aim pointer capture ignores second touches and clears canceled drags",
+    "Space locks power and launches a simultaneous physical slide",
+    "Pause freezes physics and timers, then resumes cleanly",
+    "Backgrounding and device rotation safely pause without losing the match",
+    "Wardrobe prevents unaffordable purchases and persists free hats into practice",
+    "Practice pays nothing; a ranked result pays and records once",
+    "Wardrobe returns to the correct result screen or main menu"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "checks": 12,
+  "tests": [
+    "Every spawn fits the arena without overlapping rivals",
+    "Planning stays still; locked plans launch everyone simultaneously",
+    "Equal-mass collision transfers momentum and attributes the hitter",
+    "Crossing the edge immediately eliminates and credits exactly one knockout",
+    "An unassisted fall gives no knockout and records the player placement",
+    "Diamond boundaries use the ice outline, not an invisible circular platform",
+    "The next edge is announced during planning and shrinks during the slide",
+    "Practice ends normally without granting currency",
+    "Save cleaning bounds progress and repairs invalid cosmetics and options",
+    "27 complete matches across all stages and AI levels stay finite and reach a winner",
+    "Seeded Random chooses valid, reproducible game settings",
+    "All three ice scenes render and screen aiming inverts the camera projection"
+  ]
+}

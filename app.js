@@ -307,6 +307,7 @@
     pvz: { name: 'Plants vs Zombies', icon: '🌻', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildPvz(win, options, storeAppContext()) },
     flappy: { name: 'Flappy Bird', icon: '🐦', width: 760, height: 820, singleton: true, build: (win, options) => PocketStoreApp.buildFlappy(win, options, storeAppContext()) },
     penguinpull: { name: 'Penguin Pull', icon: '🐧', width: 960, height: 920, singleton: true, build: (win, options) => PocketStoreApp.buildPenguin(win, options, storeAppContext()) },
+    knockout: { name: 'Knockout', icon: '❄', width: 1250, height: 850, singleton: true, build: (win, options) => PocketStoreApp.buildKnockout(win, options, storeAppContext()) },
     boostleague: { name: 'Boost League', icon: 'ϟ', width: 1300, height: 850, singleton: true, build: (win, options) => PocketStoreApp.buildBoost(win, options, storeAppContext()) },
     stickwar: { name: 'Stick War', icon: '⚑', width: 1300, height: 840, singleton: true, build: (win, options) => PocketStoreApp.buildStick(win, options, storeAppContext()) },
     ballvsball: { name: 'Ball vs Ball', icon: '●', width: 1180, height: 780, singleton: true, build: (win, options) => PocketStoreApp.buildBall(win, options, storeAppContext()) },
@@ -322,7 +323,7 @@
   function openApp(appId, options = {}) {
     const app = apps[appId];
     if (!app) return;
-    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast' || appId === 'crumbclicker' || appId === 'pvz' || appId === 'flappy' || appId === 'penguinpull' || appId === 'apexrush' || appId === 'wobblebay' || appId === 'gradeschool' || appId === 'ballvsball' || appId === 'stickwar' || appId === 'boostleague';
+    const autoMaximize = appId === 'snake' || appId === 'deadwave' || appId === 'blockblast' || appId === 'crumbclicker' || appId === 'pvz' || appId === 'flappy' || appId === 'penguinpull' || appId === 'apexrush' || appId === 'wobblebay' || appId === 'gradeschool' || appId === 'ballvsball' || appId === 'stickwar' || appId === 'boostleague' || appId === 'knockout';
     if (app.singleton) {
       const existing = [...state.windows.values()].find(w => w.appId === appId);
       if (existing) {
@@ -1388,7 +1389,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
             applyWallpaper();
           }
           for (const w of [...state.windows.values()]) {
-            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','ballvsball','stickwar','boostleague'].includes(w.appId)) closeWindow(w.id, { force:true });
+            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','ballvsball','stickwar','boostleague','knockout'].includes(w.appId)) closeWindow(w.id, { force:true });
           }
           renderStorage();
           notify('Drive erased', 'PocketVM files were deleted. System folders were recreated.', '◫');
