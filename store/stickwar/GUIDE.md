@@ -31,4 +31,4 @@ Articulated knees and elbows, grounded strides tied to distance, idle breathing 
 
 Core mechanics were informed by the developer's [official game site](https://www.stickwar.com/), [official Legacy listing](https://play.google.com/store/apps/details?id=com.maxgames.stickwarlegacy) and [creator-authored original-game strategy guide](https://www.stickpage.com/stickwarguide.shtml). Campaign text, maps, code, balance, graphics and audio in this package are original.
 
-Build: `stick-v5`.
+Build: `stick-v6`.
