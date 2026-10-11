@@ -1,0 +1,48 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/matchsurvival/game.html?v=matchsurvival-v4",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    },
+    {
+      "size": "768,1024",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    },
+    {
+      "size": "1366,1024",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    },
+    {
+      "size": "507,768",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    },
+    {
+      "size": "390,844",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    },
+    {
+      "size": "740,390",
+      "pass": true,
+      "minimum": 46,
+      "outside": 0
+    }
+  ],
+  "checks": [
+    "real legal swap",
+    "cascade scoring and resources",
+    "resumed saved expedition"
+  ],
+  "gameErrors": [],
+  "proof": "matchsurvival-live-1791755449405.jpg"
+}

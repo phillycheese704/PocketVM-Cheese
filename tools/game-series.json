@@ -79,7 +79,7 @@
   "matchsurvival": {
     "name": "Match Survival",
     "symbol": "\u25a6",
-    "revision": "matchsurvival-v4",
+    "revision": "matchsurvival-v5",
     "package": [
       "game.html",
       "core.js",
