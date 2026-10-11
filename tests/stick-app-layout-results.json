@@ -1,0 +1,1394 @@
+{
+  "build": "stick-v6",
+  "checks": 231,
+  "passed": 231,
+  "failed": [],
+  "results": [
+    {
+      "state": "menu",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 302,
+      "height": 518,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 342,
+      "height": 618,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 357,
+      "height": 545,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 372,
+      "height": 722,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 412,
+      "height": 810,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 550,
+      "height": 198,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 649,
+      "height": 251,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 722,
+      "height": 236,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 826,
+      "height": 266,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 914,
+      "height": 306,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 750,
+      "height": 900,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 792,
+      "height": 956,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 802,
+      "height": 1056,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 816,
+      "height": 1070,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1006,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1062,
+      "height": 686,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1162,
+      "height": 696,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1176,
+      "height": 710,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1262,
+      "height": 596,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "menu",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "campaign",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "forge",
+      "width": 1348,
+      "height": 644,
+      "issues": []
+    },
+    {
+      "state": "settings",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "brief",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "battle",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "battle-queued",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "control-basic",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "control-special",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "army-open",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    },
+    {
+      "state": "pause",
+      "width": 1422,
+      "height": 776,
+      "issues": []
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "build": "stick-v6",
+  "codeCommit": "bffd92233ac4f6afd45b6a1bb0efde296517a6e4",
+  "pagesRun": 38124289550,
+  "pagesConclusion": "success",
+  "automatedChecks": 34,
+  "campaignSimulations": 12,
+  "appLayoutChecks": 231,
+  "appLayoutPassed": 231,
+  "appViewportSizes": 21,
+  "layoutMethod": "Actual Store-built sandboxed package inside the production PocketVM app-window CSS. Direct-control layout cases use test-only paused DOM fixtures; live unit selection is verified separately.",
+  "liveChecks": [
+    "Published game metadata is stick-v6",
+    "Paid spearman training completes inside the app package",
+    "Canvas selection opens actual miner and spearman controls",
+    "Portrait Army tray opens training and hides direct controls",
+    "Closing Army and rotating to landscape restores selected-unit controls",
+    "Live spearman layout has no overlap or overflow",
+    "Minimap markers stay inside the minimap panel"
+  ],
+  "screenshot": "tests/stick-war-app-hud-1791706836766.jpg"
+}
