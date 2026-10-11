@@ -4,7 +4,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png"><link rel="icon" type="image/svg+xml" href="./icon.svg?v=illustrated-v1"><link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="pocketvm-flappy-build" content="flight-v3">
+<meta name="pocketvm-flappy-build" content="flight-v4-mods">
 <title>Flappy Bird</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#091a25;color:#fff;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -25,7 +25,7 @@ canvas{display:block;width:100%;height:100%;background:#72c8d4}
 <div class="score" id="score">0</div>
 <div class="top"><div class="best"><span id="bestLabel">CLASSIC BEST</span> <b id="best">0</b></div><div class="top-actions"><button class="pill" id="music" aria-label="Toggle music" aria-pressed="true" title="Music">♫</button><button class="pill" id="sound" aria-label="Toggle sound effects" aria-pressed="true" title="Sound effects">◉</button><button class="pill" id="pause" aria-label="Pause" title="Pause (P)" disabled>Ⅱ</button></div></div>
 <div class="toast" id="toast" hidden></div><div class="mode-pill" id="modePill">CLASSIC · TAP / SPACE TO FLAP</div>
-<section class="card" id="startCard" aria-label="Flappy Bird menu"><div class="eyebrow">A LITTLE BIRD. A LONG WAY HOME.</div><div class="logo">FLAPPY <span>BIRD</span></div><p>Find your rhythm. Slip through the pipes.<br>Stay for just one more flight.</p><div class="mode-select" role="group" aria-label="Game mode"><button id="classicBtn" aria-pressed="true">Classic<small>One life. Chase your best.</small></button><button id="practiceBtn" aria-pressed="false">Practice<small>Checkpoints. Keep learning.</small></button></div><p class="mode-copy" id="modeCopy"></p><div class="flock-label"><span>YOUR FLOCK</span><strong id="skinName">Sunny</strong></div><div class="flock" id="flock" role="group" aria-label="Bird colour"></div><div class="stats"><div><span>CLASSIC BEST</span><strong id="startBest">0</strong></div><div><span>CLEAN STREAK</span><strong id="startStreak">0</strong></div><div><span>FLIGHTS</span><strong id="startRuns">0</strong></div></div><button class="play" id="playBtn">Let's fly</button><div class="sub">Tap / click · Space / ↑ · P pauses · R restarts<br>New skies every 12 pipes. Colours unlock with Classic scores.</div></section>
+<section class="card" id="startCard" aria-label="Flappy Bird menu"><div class="eyebrow" id="mod-label">A LITTLE BIRD. A LONG WAY HOME.</div><div class="logo">FLAPPY <span>BIRD</span></div><p>Find your rhythm. Slip through the pipes.<br>Stay for just one more flight.</p><div class="mode-select" role="group" aria-label="Game mode"><button id="classicBtn" aria-pressed="true">Classic<small>One life. Chase your best.</small></button><button id="practiceBtn" aria-pressed="false">Practice<small>Checkpoints. Keep learning.</small></button></div><p class="mode-copy" id="modeCopy"></p><div class="flock-label"><span>YOUR FLOCK</span><strong id="skinName">Sunny</strong></div><div class="flock" id="flock" role="group" aria-label="Bird colour"></div><div class="stats"><div><span>CLASSIC BEST</span><strong id="startBest">0</strong></div><div><span>CLEAN STREAK</span><strong id="startStreak">0</strong></div><div><span>FLIGHTS</span><strong id="startRuns">0</strong></div></div><button class="play" id="playBtn">Let's fly</button><div class="sub">Tap / click · Space / ↑ · P pauses · R restarts<br>New skies every 12 pipes. Colours unlock with Classic scores.</div></section>
 <section class="card" id="overCard" aria-label="Flight results" hidden><div class="eyebrow" id="resultBadge">FLIGHT COMPLETE</div><div class="medal" id="medal" data-rank="bronze">✦</div><h1 class="result-title" id="resultTitle">One more flight?</h1><div class="result-note" id="resultNote"></div><div class="results"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>CLASSIC BEST</span><strong id="finalBest">0</strong></div><div><span>CLEAN PASSES</span><strong id="finalClean">0</strong></div></div><p id="nextMedal"></p><div class="buttons"><button id="menuBtn">My flock</button><button class="primary" id="againBtn">Fly again</button></div><div class="sub">Space / tap retries · R starts a fresh flight</div></section>
 <section class="card" id="practiceCard" aria-label="Practice checkpoint" hidden><div class="eyebrow">PRACTICE · NO LIVES LOST</div><h2 class="result-title">Try that gap again</h2><p id="practiceCopy">Your last cleared pipe is saved. Take a breath, then find your rhythm.</p><button class="play" id="checkpointBtn">Retry checkpoint</button><div class="buttons" style="margin-top:12px"><button id="practiceMenu">My flock</button><button id="practiceFresh">Fresh flight</button></div><div class="sub">Space / tap retries the checkpoint.</div></section>
 <div class="pause-cover" id="paused" hidden><section class="card"><div class="eyebrow">TAKE A BREATH</div><h2 class="result-title">Paused</h2><p>Your flight will wait for you.</p><button class="play" id="resumeBtn">Resume flight</button><div class="buttons" style="margin-top:12px"><button id="pauseMenu">My flock</button></div><div class="sub">P / Escape resumes · tap / Space resumes and flaps</div></section></div>
@@ -35,7 +35,9 @@ canvas{display:block;width:100%;height:100%;background:#72c8d4}
 <script>
 (()=>{
 'use strict';
-const W=576,H=768,FLOOR=662,BIRD_X=164,PIPE_W=82,LIP=6,GRAVITY=1320,FLAP=-430,STEP=1/120,TAU=Math.PI*2;
+const hasFeatherweight=window.__POCKETVM_MODS?.featherweight===true,SAVE_KEY=window.__POCKETVM_SAVE_KEY||(hasFeatherweight?'pocketvm.game.flappy.mods.featherweight':'pocketvm.game.flappy');
+if(hasFeatherweight)document.getElementById('mod-label').textContent='FEATHERWEIGHT FLIGHT · MODDED RECORDS';
+const W=576,H=768,FLOOR=662,BIRD_X=164,PIPE_W=82,LIP=6,GRAVITY=hasFeatherweight?858:1320,FLAP=hasFeatherweight?-350:-430,STEP=1/120,TAU=Math.PI*2;
 const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>lerp(a,b,Math.random());
 const SKINS=[
@@ -51,7 +53,7 @@ const THEMES=[
  {name:'Moonlight Coast',sky:[[34,53,94],[99,137,165]],far:[77,115,145],hill:[58,94,119],city:[65,105,140],sun:[218,232,235],night:1}
 ];
 let injected=window.__POCKETVM_SAVE;
-if(!injected){try{injected=JSON.parse(localStorage.getItem('pocketvm.game.flappy')||'{}')}catch{injected={}}}
+if(!injected){try{injected=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}')}catch{injected={}}}
 const number=v=>clamp(Math.floor(Number(v)||0),0,1e9);
 let save={best:number(injected.best),practiceBest:number(injected.practiceBest),bestStreak:number(injected.bestStreak),runs:number(injected.runs),totalPipes:number(injected.totalPipes),skin:injected.skin||'sunny',mode:injected.mode==='practice'?'practice':'classic',music:injected.music!==false,sfx:injected.sfx!==false};
 if(!SKINS.some(s=>s.id===save.skin&&s.unlock<=save.best))save.skin='sunny';
@@ -63,7 +65,7 @@ function sfx(freq,dur=.07,type='triangle',vol=.025,end=0){
  try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(Math.max(40,freq+end),t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+dur)}catch{}
 }
 function syncAudio(){if(save.music&&state==='play'&&!paused)audio.play().catch(()=>{});else audio.pause();$('music').setAttribute('aria-pressed',String(save.music));$('sound').setAttribute('aria-pressed',String(save.sfx))}
-function persist(){try{localStorage.setItem('pocketvm.game.flappy',JSON.stringify(save))}catch{}parent.postMessage({type:'pocketvm-flappy-save',data:{...save}},'*')}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch{}parent.postMessage({type:'pocketvm-flappy-save',data:{...save}},'*')}
 function announce(text){$('announcer').textContent=text}
 function toast(text){$('toast').textContent=text;$('toast').hidden=false;toastTime=2.4}
 function updateHUD(){
@@ -73,7 +75,7 @@ function updateHUD(){
 }
 function setMode(next){if(state!=='menu')return;mode=next==='practice'?'practice':'classic';save.mode=mode;$('classicBtn').setAttribute('aria-pressed',String(mode==='classic'));$('practiceBtn').setAttribute('aria-pressed',String(mode==='practice'));$('modeCopy').textContent=mode==='practice'?'Wider gaps, slower pipes, and a checkpoint after every pass. Practice has its own best score.':'One life, one point per pipe. Pass close to the centre to build a clean streak.';persist();updateHUD()}
 function resetBird(){bird={x:BIRD_X,y:330,vy:0,rot:0,wing:0}}
-function difficulty(n=score,m=mode){const s=Math.min(40,n);return m==='practice'?{speed:142+s*.9,gap:232-Math.min(18,s*.45),interval:1.8-Math.min(.12,s*.003),delta:92}:{speed:178+s*1.6,gap:198-Math.min(24,s*.6),interval:1.6-Math.min(.14,s*.0035),delta:100+Math.min(16,s*.4)}}
+function difficulty(n=score,m=mode){const s=Math.min(40,n),d= m==='practice'?{speed:142+s*.9,gap:232-Math.min(18,s*.45),interval:1.8-Math.min(.12,s*.003),delta:92}:{speed:178+s*1.6,gap:198-Math.min(24,s*.6),interval:1.6-Math.min(.14,s*.0035),delta:100+Math.min(16,s*.4)};return hasFeatherweight?{...d,speed:d.speed*.8,gap:d.gap+42,delta:d.delta*.8}:d}
 function resetRun(){score=streak=cleanPasses=elapsed=worldDistance=deathTime=shake=flash=pop=practiceAttempts=0;pipes=[];fx=[];checkpoint=null;spawn=.95;worldSpeed=difficulty(0).speed;themeFrom=themeTo=0;themeBlend=1;pipeId=1;toastTime=0;$('toast').hidden=true;$('score').classList.remove('pop');resetBird();updateHUD()}
 function focusGame(){canvas.focus({preventScroll:true})}
 function startRun(){resetRun();state='play';paused=false;last=performance.now();accumulator=0;runBest=save.best;if(mode==='classic'){save.runs=number(save.runs+1);persist()}$('startCard').hidden=$('overCard').hidden=$('practiceCard').hidden=true;updateHUD();focusGame();flap();if(mode==='practice')rememberCheckpoint();syncAudio();announce(mode==='practice'?'Practice flight started. Checkpoints are on.':'Classic flight started.')}

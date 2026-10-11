@@ -4,7 +4,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png"><link rel="icon" type="image/svg+xml" href="./icon.svg?v=illustrated-v1"><link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="pocketvm-penguin-build" content="endless-v4">
+<meta name="pocketvm-penguin-build" content="endless-v5-mods">
 <title>Penguin Pull</title>
 <style>
 *{box-sizing:border-box}
@@ -48,7 +48,7 @@ canvas.dragging{cursor:grabbing}
 <div class="tip" id="tip">Pull a penguin free, then drop that penguin into the sea.</div>
 <div class="overlay" id="start"><div class="card">
   <div class="royal"><i class="body"></i><i class="belly"></i><i class="beak"></i><i class="eye"></i><i class="crown"></i><i class="z">Zz</i></div>
-  <div class="logo">PENGUIN <span>PULL</span></div>
+  <div class="logo">PENGUIN <span>PULL</span></div><small id="mod-label" hidden style="color:#d2f2ff;font:700 11px system-ui;letter-spacing:1px">Moon Gravity</small>
   <p>An endless rescue adventure. Clear twenty penguins to sail into a new, random stage. Every splash counts — keep the sleeping royal dry to keep your run going.</p>
   <div class="rules"><div><b>☝</b><span>Drag one</span></div><div><b>≋</b><span>Drop in sea</span></div><div><b>♛</b><span>Keep royal dry</span></div></div>
   <div class="stats"><div><b id="startBest">0</b><span>best endless run</span></div><div><b id="crownPerfects">0</b><span>crown-perfect towers</span></div></div>
@@ -66,6 +66,8 @@ canvas.dragging{cursor:grabbing}
 <script>
 (()=>{
 'use strict';
+const hasMoonGravity=window.__POCKETVM_MODS?.moongravity===true,LOOSE_GRAVITY=hasMoonGravity?288:720;
+if(hasMoonGravity){const label=document.getElementById('mod-label');label.hidden=false;label.textContent='MOON GRAVITY · SEPARATE ENDLESS RECORD';}
 const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
 const W=960,H=920,CX=480,WATER=790,BASE_Y=716,PW=67,PH=78,SHELF_H=18,ROWS=4,COLS=5;
 let ROW_GAP=126,SHELF_W=410,LAYER_DROP=ROW_GAP-SHELF_H-8;
@@ -294,7 +296,7 @@ function updateLoose(dt){
  for(const p of penguins){
   if(p.state==='swimming'){p.waterTime+=dt;p.x=clamp(p.x+p.vx*dt,20,W-20);p.vx*=Math.exp(-dt*2);p.y=waterLine(p.x)-12+Math.sin(simTime*4+p.id)*4;p.a=Math.sin(simTime*3+p.id)*.12;if(p.waterTime>1.4)p.state='rescued';continue}
   if(p.state!=='loose')continue;
-  const prevX=p.x,prevY=p.y;p.vy+=720*dt;p.vx+=stage.wind*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.exp(-dt*.24);p.av*=Math.exp(-dt*.5);p.impactVy=p.vy;
+  const prevX=p.x,prevY=p.y;p.vy+=LOOSE_GRAVITY*dt;p.vx+=stage.wind*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.exp(-dt*(hasMoonGravity?.12:.24));p.av*=Math.exp(-dt*.5);p.impactVy=p.vy;
   if(p.x<25){p.x=25;p.vx=Math.abs(p.vx)*.32}else if(p.x>W-25){p.x=W-25;p.vx=-Math.abs(p.vx)*.32}
   if(waterContact(p,prevX,prevY))continue;
   collideShelves(p,prevY);bumpStack(p,dt);

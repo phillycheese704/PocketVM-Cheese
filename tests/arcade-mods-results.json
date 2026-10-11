@@ -1,0 +1,23 @@
+{
+  "checks": 18,
+  "tests": [
+    "Four new game filters and packages join all twelve existing mods",
+    "Flappy Bird: Download creates a data-only .pvmod without activating it",
+    "Flappy Bird: Wrong folders, nested files, malformed data and unsupported versions cannot enable a mod",
+    "Flappy Bird: Renamed package activates the actual sandbox and keeps modded saves separate",
+    "Flappy Bird: Remove closes the modded game, preserves both saves and restores normal play",
+    "Penguin Pull: Download creates a data-only .pvmod without activating it",
+    "Penguin Pull: Wrong folders, nested files, malformed data and unsupported versions cannot enable a mod",
+    "Penguin Pull: Renamed package activates the actual sandbox and keeps modded saves separate",
+    "Penguin Pull: Remove closes the modded game, preserves both saves and restores normal play",
+    "Apex Rush: Download creates a data-only .pvmod without activating it",
+    "Apex Rush: Wrong folders, nested files, malformed data and unsupported versions cannot enable a mod",
+    "Apex Rush: Renamed package activates the actual sandbox and keeps modded saves separate",
+    "Apex Rush: Remove closes the modded game, preserves both saves and restores normal play",
+    "Ball vs Ball: Download creates a data-only .pvmod without activating it",
+    "Ball vs Ball: Wrong folders, nested files, malformed data and unsupported versions cannot enable a mod",
+    "Ball vs Ball: Renamed package activates the actual sandbox and keeps modded saves separate",
+    "Ball vs Ball: Remove closes the modded game, preserves both saves and restores normal play",
+    "Unknown requests and conflicting download names never overwrite custom files"
+  ]
+}

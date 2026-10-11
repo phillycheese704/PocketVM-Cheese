@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v101';
+const CACHE = 'pocketvm-shell-v102';
 const ASSETS = [
   "./store/stickwar/game.html",
   "./store/stickwar/core.js",
@@ -17,9 +17,9 @@ const ASSETS = [
   "./store/ballvsball/game.js",
   "./store/ballvsball/menu.mp3",
   "./store/ballvsball/battle.mp3",
-  "./store/ballvsball/game.html?v=ball-v4",
-  "./store/ballvsball/core.js?v=ball-v4",
-  "./store/ballvsball/game.js?v=ball-v4",
+  "./store/ballvsball/game.html?v=ball-v5-mods",
+  "./store/ballvsball/core.js?v=ball-v5-mods",
+  "./store/ballvsball/game.js?v=ball-v5-mods",
   "./store/ballvsball/icon.svg",
   "./store/ballvsball/icon.svg?v=illustrated-v1",
   "./store/ballvsball/favicon-32.png",
@@ -67,8 +67,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=101",
-  "./store.js?v=101",
+  "./app.js?v=102",
+  "./store.js?v=102",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head><link rel="icon" type="image/png" sizes="32x32" href="https://phillycheese704.github.io/PocketVM-Cheese/store/penguinpull/favicon-32.png"><link rel="icon" type="image/svg+xml" href="https://phillycheese704.github.io/PocketVM-Cheese/store/penguinpull/icon.svg"><link rel="apple-touch-icon" sizes="180x180" href="https://phillycheese704.github.io/PocketVM-Cheese/store/penguinpull/icon-180.png"><script>window.__POCKETVM_MODS={"moongravity":true};window.__POCKETVM_SAVE_KEY="pocketvm.game.penguinpull.mods.moongravity";window.__POCKETVM_SAVE={"bestTowers":2,"best":12,"perfects":0,"crownPerfects":0,"sound":true};</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="pocketvm-penguin-build" content="endless-v5-mods">
+<title>Penguin Pull</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061622;color:#fff;font-family:Inter,ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;touch-action:none}
+button{font:inherit;color:inherit}
+#app{position:relative;width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 12%,rgba(198,245,255,.16),transparent 36%),linear-gradient(#0c2b42,#061622)}
+#frame{position:relative;width:min(100%,calc(100vh * 24 / 23),960px);height:auto;aspect-ratio:24/23;max-height:100vh;overflow:hidden;border-radius:24px;background:#9ee2f2;box-shadow:0 30px 95px #0008,inset 0 0 0 1px #ffffff18}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.hud{position:absolute;z-index:6;left:16px;right:16px;top:14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:10px;pointer-events:none;text-shadow:0 2px 8px #05314b88}
+.scorebox,.bestbox,.statusbox{background:#082c47c9;border:1px solid #d8f7ff30;border-radius:15px;padding:9px 13px;backdrop-filter:blur(10px);box-shadow:0 8px 26px #04243835}
+.scorebox{justify-self:start}.bestbox{justify-self:end;text-align:right}
+.scorebox b,.bestbox b{display:block;font-size:24px;line-height:1}.scorebox span,.bestbox span{display:block;margin-top:3px;color:#bde7f3;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.statusbox{min-width:180px;text-align:center;padding:8px 12px}.statusbox strong{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ddf8ff}.meter{height:7px;margin-top:6px;border-radius:99px;overflow:hidden;background:#031d2eaa;border:1px solid #ffffff14}.meter i{display:block;width:9%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ceab9,#ffe271,#ff7567);transition:width .12s linear}.statusbox small{display:block;margin-top:4px;font-size:9px;color:#add9e5}
+.top-actions{position:absolute;z-index:9;right:16px;top:84px;display:flex;gap:8px}.top-actions button{width:42px;height:42px;border-radius:12px;border:1px solid #d7f4ff34;background:#082e4bc9;box-shadow:0 7px 20px #05223842;cursor:pointer;font-weight:900}.top-actions button:hover{background:#174d70}
+.tip{position:absolute;z-index:7;left:50%;bottom:18px;translate:-50% 0;max-width:84%;padding:9px 15px;border-radius:999px;background:#061a2bcf;border:1px solid #cbefff28;font-size:12px;font-weight:780;color:#e1f8ff;text-align:center;pointer-events:none;transition:.25s opacity}.tip.fade{opacity:0}
+.crown-pill{position:absolute;z-index:7;left:16px;top:88px;padding:7px 10px;border-radius:999px;background:#082e4bc9;border:1px solid #d7f4ff25;font-size:10px;font-weight:900;color:#ffe884;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+.overlay{position:absolute;z-index:30;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(#06192b62,#020c15df);backdrop-filter:blur(5px)}.overlay.hidden{display:none}
+.card{width:min(500px,92%);padding:28px;border-radius:30px;background:linear-gradient(150deg,#123c5bf4,#071b2df7);border:1px solid #d7f5ff30;box-shadow:0 32px 90px #00101e8c;text-align:center}
+.logo{font-weight:1000;font-size:clamp(44px,9vw,76px);letter-spacing:-.06em;line-height:.84}.logo span{display:block;color:#90eaff;text-shadow:0 5px 0 #0a5c75,0 11px 27px #001d2b99}
+.royal{position:relative;width:122px;height:136px;margin:4px auto 14px}.royal .body{position:absolute;left:24px;top:30px;width:74px;height:96px;border-radius:49% 49% 44% 44%;background:#111b24}.royal .belly{position:absolute;left:38px;top:56px;width:48px;height:62px;border-radius:50%;background:#f4faf7}.royal .beak{position:absolute;left:86px;top:59px;border-left:25px solid #f1a128;border-top:10px solid transparent;border-bottom:10px solid transparent}.royal .eye{position:absolute;left:72px;top:49px;width:9px;height:9px;border-radius:50%;background:#f9ffff;box-shadow:inset -2px -1px #727f84}.royal .crown{position:absolute;left:36px;top:3px;width:52px;height:36px;background:#f2c745;clip-path:polygon(0 25%,18% 50%,32% 0,50% 47%,68% 0,82% 50%,100% 25%,90% 100%,10% 100%);filter:drop-shadow(0 3px #76580f)}.royal .z{position:absolute;right:-1px;top:7px;font-weight:1000;color:#dff8ff;transform:rotate(-9deg)}
+.card p{margin:13px auto 20px;max-width:380px;color:#c7e6ef;font-size:14px;line-height:1.48}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0 18px}.rules div{padding:10px 7px;border-radius:14px;background:#061a2c91;border:1px solid #d9f6ff14}.rules b{display:block;font-size:17px}.rules span{display:block;margin-top:4px;color:#a9d7e4;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 20px}.stats div{padding:12px;border-radius:14px;background:#071b2f9e;border:1px solid #d9f6ff14}.stats b{display:block;font-size:25px}.stats span{font-size:9px;color:#acd8e5;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.play{width:100%;padding:14px 18px;border:0;border-radius:15px;background:linear-gradient(#a7f0ff,#55c7e4);color:#073049;font-weight:1000;font-size:16px;box-shadow:0 8px 0 #187894,0 14px 25px #001b2c6b;cursor:pointer}.play:active{transform:translateY(4px);box-shadow:0 4px 0 #187894,0 8px 17px #001b2c6b}
+.rating{margin:3px 0 5px;font-size:24px;font-weight:1000;color:#ffe07d}.subrating{font-size:11px;font-weight:900;color:#9de8ff;text-transform:uppercase;letter-spacing:.09em}.pause-card .logo{font-size:52px}
+@media(max-width:700px){#frame{border-radius:0}.hud{top:9px;left:9px;right:9px;grid-template-columns:1fr 120px 1fr}.scorebox,.bestbox{padding:7px 10px}.scorebox b,.bestbox b{font-size:21px}.statusbox{min-width:0;padding:7px}.statusbox small{display:none}.top-actions{right:9px;top:72px}.crown-pill{left:9px;top:76px}.card{padding:21px}.rules{gap:5px}.rules div{padding:8px 4px}.tip{bottom:12px}}
+@media(max-height:650px){.overlay{display:block;overflow:auto}.overlay.hidden{display:none}.card{margin:10px auto;padding:17px}.royal{display:none}.logo{font-size:42px}.card p{margin:8px auto 11px}.rules{margin:8px 0 11px}.stats{margin:8px 0 13px}.top-actions{top:68px}.crown-pill{top:72px}}
+</style>
+</head>
+<body>
+<div id="app"><div id="frame">
+<canvas id="game" width="960" height="920" aria-label="Penguin Pull game"></canvas>
+<div class="hud">
+  <div class="scorebox"><b id="score">0</b><span id="stageProgress">tower 1 · 0 / 20</span></div>
+  <div class="statusbox"><strong id="stabilityText">Tower steady</strong><div class="meter"><i id="stabilityBar"></i></div><small id="stabilityHint">Pull slowly. Lower rows carry more weight.</small></div>
+  <div class="bestbox"><b id="best">0</b><span>best endless run</span></div>
+</div>
+<div class="crown-pill" id="crownState">♛ Crown secure</div>
+<div class="top-actions"><button id="pause" title="Pause" aria-label="Pause">Ⅱ</button><button id="restart" title="Restart" aria-label="Restart">↻</button><button id="sound" title="Sound" aria-label="Toggle sound">♪</button></div>
+<div class="tip" id="tip">Pull a penguin free, then drop that penguin into the sea.</div>
+<div class="overlay" id="start"><div class="card">
+  <div class="royal"><i class="body"></i><i class="belly"></i><i class="beak"></i><i class="eye"></i><i class="crown"></i><i class="z">Zz</i></div>
+  <div class="logo">PENGUIN <span>PULL</span></div><small id="mod-label" hidden style="color:#d2f2ff;font:700 11px system-ui;letter-spacing:1px">Moon Gravity</small>
+  <p>An endless rescue adventure. Clear twenty penguins to sail into a new, random stage. Every splash counts — keep the sleeping royal dry to keep your run going.</p>
+  <div class="rules"><div><b>☝</b><span>Drag one</span></div><div><b>≋</b><span>Drop in sea</span></div><div><b>♛</b><span>Keep royal dry</span></div></div>
+  <div class="stats"><div><b id="startBest">0</b><span>best endless run</span></div><div><b id="crownPerfects">0</b><span>crown-perfect towers</span></div></div>
+  <button class="play" id="play">Start pulling</button>
+</div></div>
+<div class="overlay hidden" id="over"><div class="card">
+  <div class="rating" id="rating">GOOD RESCUE</div><div class="subrating" id="subrating"></div>
+  <div class="logo" style="font-size:50px">RUN <span>OVER</span></div>
+  <p id="overText">The royal got wet.</p>
+  <div class="stats"><div><b id="finalScore">0</b><span>rescued</span></div><div><b id="finalBest">0</b><span>best</span></div></div>
+  <button class="play" id="again">Play again</button>
+</div></div>
+<div class="overlay hidden" id="paused"><div class="card pause-card"><div class="logo">PAUSED</div><p>The tower is frozen exactly where you left it.</p><button class="play" id="resume">Resume</button></div></div>
+</div></div>
+<script>
+(()=>{
+'use strict';
+const hasMoonGravity=window.__POCKETVM_MODS?.moongravity===true,LOOSE_GRAVITY=hasMoonGravity?288:720;
+if(hasMoonGravity){const label=document.getElementById('mod-label');label.hidden=false;label.textContent='MOON GRAVITY · SEPARATE ENDLESS RECORD';}
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
+const W=960,H=920,CX=480,WATER=790,BASE_Y=716,PW=67,PH=78,SHELF_H=18,ROWS=4,COLS=5;
+let ROW_GAP=126,SHELF_W=410,LAYER_DROP=ROW_GAP-SHELF_H-8;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rand=(a,b)=>a+Math.random()*(b-a);
+const SCARVES=['#ef5d6b','#e9bb4d','#50a8dc','#7ac77a','#ae79d8'];
+const save=Object.assign({best:0,perfects:0,crownPerfects:0,bestTowers:0,sound:true},window.__POCKETVM_SAVE||{});
+let running=false,paused=false,score=0,last=performance.now(),runToken=0,penguins=[],shelves=[],king=null,crown=null,drag=null,hover=null,collapse=null,lastMoved=-1,compression=Array(ROWS).fill(0),compressedRows=Array(ROWS).fill(false),settle=null;
+let stress={row:0,ratio:0,angle:0,angularVelocity:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100},lastDragSpeed=0,creakCooldown=0,endDelay=0,victoryDelay=0,shake=0,tipTimer=0;
+let splashes=[],particles=[],snow=[],audioCtx=null;
+
+const STAGES=[
+ {id:'blue',name:'Bluewater Bay',sky:['#51bddc','#d7f7fa'],sea:['#2499b9','#075d7b'],ice:'#e7fbff',shift:[0,7,-6,4],spacing:73,width:410,gap:126,wind:0,friction:.82},
+ {id:'aurora',name:'Aurora Fjord',sky:['#18365b','#82bfc9'],sea:['#397e9c','#123954'],ice:'#d4edff',shift:[-7,12,-10,5],spacing:70,width:398,gap:124,wind:8,friction:.86},
+ {id:'sunset',name:'Coral Sunset',sky:['#ee9aa9','#ffecc9'],sea:['#6aa9b4','#346786'],ice:'#fff1e4',shift:[8,-8,10,-6],spacing:76,width:426,gap:128,wind:-7,friction:.79},
+ {id:'glacier',name:'Crystal Glacier',sky:['#70abe0','#e6f7ff'],sea:['#358cac','#164869'],ice:'#d9f6ff',shift:[-4,14,4,-12],spacing:68,width:386,gap:122,wind:5,friction:.9},
+ {id:'moon',name:'Moonlit Lagoon',sky:['#172342','#627899'],sea:['#425d94','#152442'],ice:'#d3e2fc',shift:[10,-5,-12,8],spacing:74,width:420,gap:125,wind:-9,friction:.84},
+ {id:'mint',name:'Mint Icefields',sky:['#77cdbf','#e9fff4'],sea:['#369a97','#16646e'],ice:'#e3fff3',shift:[-9,4,12,-4],spacing:72,width:406,gap:123,wind:4,friction:.8}
+];
+let stage=STAGES[0],stageIndex=1,towersCleared=0,stageScore=0,stageBag=[],transition=null,physicsAcc=0,simTime=0;
+
+function pickStage(){
+ if(!stageBag.length){stageBag=[...STAGES];for(let i=stageBag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[stageBag[i],stageBag[j]]=[stageBag[j],stageBag[i]]}}
+ let index=stageBag.findIndex(s=>s.id!==stage.id);if(index<0){stageBag=[];return pickStage()}return stageBag.splice(index,1)[0];
+}
+function beginTransition(){
+ if(transition||stageScore<ROWS*COLS)return;
+ releaseCapture();drag=null;hover=null;canvas.classList.remove('dragging');
+ towersCleared++;save.perfects=(save.perfects||0)+1;if(crown.attached&&!crown.everLost&&!king.wet)save.crownPerfects=(save.crownPerfects||0)+1;
+ save.bestTowers=Math.max(save.bestTowers||0,towersCleared);transition={t:0,duration:2,next:pickStage(),swapped:false};endDelay=0;victoryDelay=0;persist();setTip('Tower cleared! Sailing to the next stage…',3);tone(640,.15,'triangle',.035,180);haptic([20,40,30]);
+}
+function releaseCapture(){if(drag)try{canvas.releasePointerCapture(drag.pointerId)}catch{}}
+function waterLine(x){return Math.abs(x-CX)>315?WATER-60:WATER}
+function waterContact(p,prevX=p.x,prevY=p.y){
+ if(p.state==='rescued'||p.state==='swimming')return false;
+ // The bottom of the rotated body touches the visible sea, not a hidden centre threshold.
+ const extent=Math.abs(Math.cos(p.a||0))*PH*.47+Math.abs(Math.sin(p.a||0))*PW*.43;
+ const bottom=p.y+extent,previousBottom=prevY+extent;
+ const surface=waterLine(p.x);if(bottom<surface-3)return false;
+ const fraction=bottom!==previousBottom?clamp((surface-previousBottom)/(bottom-previousBottom),0,1):1;
+ p.x=clamp(lerp(prevX,p.x,fraction),15,W-15);p.y=surface-extent+5;rescue(p);return true;
+}
+function rr(x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function persist(){save.best=Math.max(save.best,score);parent.postMessage({type:'pocketvm-penguin-save',data:save},'*');updateHud()}
+function updateHud(){
+  $('score').textContent=score;$('stageProgress').textContent='Tower '+stageIndex+' · '+stageScore+' / 20';$('best').textContent=save.best;$('startBest').textContent=save.best;$('crownPerfects').textContent=save.crownPerfects||0;
+  const danger=Math.min(1,Math.max(Math.abs(stress.ratio),stress.danger*1.15)),pct=Math.round(8+danger*92);
+  $('stabilityBar').style.width=pct+'%';
+  $('stabilityText').textContent=transition?'TOWER CLEARED':collapse?'TOWER FALLING':settle?'ICE SETTLING':danger>.93?'DANGER':danger>.68?'WOBBLING':danger>.42?'UNDER LOAD':'TOWER STEADY';
+  $('stabilityHint').textContent=transition?transition.next.name+' is next.':settle?'A cleared layer can drop safely when the load stays centred.':drag?(drag.p.row===0?'Bottom row: maximum load. Pull gently.':drag.p.row===1?'Heavy load. Keep it smooth.':'Upper row: lighter, but still structural.'):'Pull slowly. Lower rows carry more weight.';
+  $('crownState').textContent=crown&&crown.attached?'♛ Crown secure':'♛ Crown lost';
+  $('crownState').style.color=crown&&crown.attached?'#ffe884':'#ff9f94'
+}
+function setTip(text,seconds=2.4){$('tip').textContent=text;$('tip').classList.remove('fade');tipTimer=seconds}
+function haptic(pattern){try{window.navigator&&window.navigator.vibrate&&window.navigator.vibrate(pattern)}catch{}}
+function tone(freq=400,dur=.05,type='sine',gain=.025,slide=0){
+  if(!save.sound)return;
+  try{audioCtx??=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,freq+slide),t+dur);g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur+.02)}catch{}
+}
+function splash(x,power=1){const water=waterLine(x);splashes.push({x,y:water+3,t:0,power});for(let i=0;i<8;i++)particles.push({x:x+rand(-8,8),y:water,vx:rand(-70,70)*power,vy:rand(-180,-70)*power,t:0,life:rand(.45,.8),r:rand(2,5),kind:'water'});tone(180+power*25,.09,'triangle',.025,-45)}
+function iceDust(x,y,n=5){for(let i=0;i<n;i++)particles.push({x:x+rand(-12,12),y:y+rand(-7,7),vx:rand(-45,45),vy:rand(-45,5),t:0,life:rand(.25,.55),r:rand(1,3),kind:'ice'})}
+
+function buildTower(next=stage){
+  stage=next;ROW_GAP=stage.gap;SHELF_W=stage.width;LAYER_DROP=ROW_GAP-SHELF_H-8;stageScore=0;
+  penguins=[];shelves=[];splashes=[];particles=[];collapse=null;drag=null;hover=null;lastMoved=-1;compression=Array(ROWS).fill(0);compressedRows=Array(ROWS).fill(false);settle=null;endDelay=0;victoryDelay=0;shake=0;lastDragSpeed=0;
+  stress={row:0,ratio:0,angle:0,angularVelocity:0,target:0,danger:0,pivotX:CX,min:CX-100,max:CX+100};
+  const rowShift=stage.shift;
+  for(let r=0;r<ROWS;r++){
+    const sy=BASE_Y-r*ROW_GAP;shelves.push({row:r,x:CX,y:sy});
+    for(let i=0;i<COLS;i++){
+      const x=CX+(i-2)*stage.spacing+rowShift[r],y=sy-PH/2-11;
+      penguins.push({id:r*COLS+i,row:r,slot:i,x,y,homeX:x,homeY:y,state:'stacked',vx:0,vy:0,a:rand(-.012,.012),av:0,scarf:SCARVES[(i+r*2)%SCARVES.length],dir:(i+r)%2?1:-1,restShelf:-1,counted:false,waterTime:0});
+    }
+  }
+  shelves.push({row:ROWS,x:CX,y:BASE_Y-ROWS*ROW_GAP});
+  king={x:CX+2,y:shelves[ROWS].y-68,wet:false};
+  crown={attached:true,everLost:false,state:'attached',x:0,y:0,vx:0,vy:0,a:0,av:0};
+}
+function startGame(){releaseCapture();runToken++;score=0;stageIndex=1;towersCleared=0;stageScore=0;stageBag=[];transition=null;physicsAcc=0;simTime=0;buildTower(pickStage());running=true;paused=false;$('start').classList.add('hidden');$('over').classList.add('hidden');$('paused').classList.add('hidden');$('tip').classList.remove('fade');setTip('Pull a penguin free, then drop that penguin into the sea.',4);updateHud();last=performance.now();const token=runToken;requestAnimationFrame(n=>loop(n,token))}
+function shelfY(row){return BASE_Y-row*ROW_GAP}
+function compressionOffset(level){let off=0;for(let r=0;r<ROWS;r++)if(level>r)off+=compression[r];return off}
+function startSettle(row){
+  if(settle||collapse||compressedRows[row])return;
+  settle={row,t:0,duration:.42,start:compression[row],target:LAYER_DROP};stress.danger=0;stress.angularVelocity*=.25;stress.angle*=.35;
+  setTip('Clean layer! The ice shelf is settling down.',1.9);tone(175,.09,'triangle',.018,-45);haptic(16)
+}
+function contactFactor(p){
+  if(p.state==='stacked')return clamp(1-Math.abs(p.x-p.homeX)/125-Math.abs(p.y-p.homeY)/150,.55,1);
+  if(p.state!=='held'||!drag||drag.p!==p||!drag.fromStack)return 0;
+  const dx=Math.abs(p.x-p.homeX),dy=Math.abs(p.y-p.homeY);
+  return clamp(1-Math.max(dx/(PW*.94),dy/(PH*.9)),0,1)
+}
+function supportData(row){
+  const contacts=[];
+  for(const p of penguins)if(p.row===row&&(p.state==='stacked'||p.state==='held')){
+    const f=contactFactor(p);if(f>.035)contacts.push({p,f,l:p.x-PW*.48*f,r:p.x+PW*.48*f})
+  }
+  if(!contacts.length)return null;
+  return{min:Math.min(...contacts.map(c=>c.l)),max:Math.max(...contacts.map(c=>c.r)),contacts}
+}
+function upperCOM(row){
+  let sum=0,mass=0;
+  for(const p of penguins)if(p.row>row&&(p.state==='stacked'||p.state==='held')){sum+=p.x;mass+=1}
+  for(let s=row+1;s<shelves.length;s++){sum+=CX*1.35;mass+=1.35}
+  sum+=(king?king.x:CX)*1.9;mass+=1.9;
+  if(crown&&crown.attached){sum+=CX*.25;mass+=.25}
+  return mass?sum/mass:CX
+}
+function evaluateStability(dt=0){
+  let weak={row:0,ratio:0,abs:0,pivotX:CX,min:CX-100,max:CX+100};
+  for(let row=0;row<ROWS;row++){
+    if(compressedRows[row]||settle&&settle.row===row)continue;
+    const s=supportData(row),com=upperCOM(row);
+    let ratio,min,max,pivotX;
+    if(!s){
+      const structural=penguins.some(p=>p.row===row&&(p.state==='stacked'||(p.state==='held'&&contactFactor(p)>.035)));
+      if(!structural&&!settle&&!collapse&&Math.abs(com-CX)<80){startSettle(row);continue}
+      ratio=com<CX?-2.2:2.2;min=max=pivotX=CX
+    }else{min=s.min;max=s.max;const center=(min+max)/2,half=Math.max(28,(max-min)/2+10);ratio=(com-center)/half;pivotX=ratio<0?min:max;
+      const clearing=s.contacts.length===1&&s.contacts[0].p.state==='held'&&Math.abs(com-CX)<80;
+      if(clearing){if(s.contacts[0].f<.38&&!settle&&!collapse){startSettle(row);continue}ratio=clamp(ratio,-.82,.82)}
+    }
+    if(Math.abs(ratio)>weak.abs)weak={row,ratio,abs:Math.abs(ratio),pivotX,min,max}
+  }
+  stress.row=weak.row;stress.ratio=weak.ratio;stress.pivotX=weak.pivotX;stress.min=weak.min;stress.max=weak.max;
+  const yank=clamp(lastDragSpeed/850,0,1),target=clamp(weak.ratio,-1.2,1.2)*(.052+yank*.018);
+  stress.target=target;
+  if(dt>0){
+    const stiffness=weak.abs>.8?23:28,damping=weak.abs>.9?5.2:8;
+    stress.angularVelocity+=((target-stress.angle)*stiffness-stress.angularVelocity*damping)*dt;
+    stress.angularVelocity=clamp(stress.angularVelocity,-1.8,1.8);
+    stress.angle=clamp(stress.angle+stress.angularVelocity*dt,-.22,.22);
+    if(weak.abs>.96){
+      const rate=1+yank*1.8+(weak.abs>1.3?2.5:0);stress.danger+=dt*(rate+Math.min(.6,Math.abs(stress.angularVelocity)*2))
+    }else stress.danger=Math.max(0,stress.danger-dt*2.8);
+    if(weak.abs>.72&&creakCooldown<=0){tone(95+weak.abs*35,.16,'sawtooth',.009,-18);creakCooldown=.55+Math.random()*.35}
+    const threshold=weak.abs>1.55?.10:Math.max(.20,.48-yank*.22);
+    if(!collapse&&stress.danger>threshold)startCollapse(weak)
+  }
+  updateHud();return weak
+}
+function worldTransform(x,y,level){
+  y+=compressionOffset(level);let angle=0,pivotX=CX,pivotY=shelfY(stress.row+1)+compressionOffset(stress.row+1),dx=0,dy=0,row=stress.row;
+  if(collapse){row=collapse.row;if(level<=row)return{x,y,a:0};angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1);dx=collapse.dx;dy=collapse.dy}
+  else{if(level<=row)return{x,y,a:0};angle=stress.angle;pivotX=stress.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1)}
+  const rx=x-pivotX,ry=y-pivotY,c=Math.cos(angle),s=Math.sin(angle);
+  return{x:pivotX+c*rx-s*ry+dx,y:pivotY+s*rx+c*ry+dy,a:angle}
+}
+function localPoint(x,y,level){
+  let row=stress.row,angle=stress.angle,pivotX=stress.pivotX,pivotY=shelfY(row+1)+compressionOffset(row+1),dx=0,dy=0;
+  if(collapse){row=collapse.row;angle=collapse.angle;pivotX=collapse.pivotX;pivotY=shelfY(row+1)+compressionOffset(row+1);dx=collapse.dx;dy=collapse.dy}
+  if(level<=row)return{x,y:y-compressionOffset(level)};
+  const X=x-pivotX-dx,Y=y-pivotY-dy,c=Math.cos(angle),s=Math.sin(angle),off=compressionOffset(level);
+  return{x:pivotX+c*X+s*Y,y:pivotY-s*X+c*Y-off}
+}
+function startCollapse(weak){
+  if(collapse)return;
+  const dir=weak.ratio<0?-1:1;collapse={row:weak.row,dir,pivotX:weak.pivotX,angle:stress.angle,av:dir*(.22+Math.abs(stress.angle)*1.8),dx:0,dy:0,vy:0};
+  setTip('Tower falling! Keep rescuing — every splash counts.',3);shake=9;haptic([35,40,55]);tone(82,.34,'sawtooth',.045,-30);detachCrown(true)
+}
+function crownWorld(){
+  if(!crown)return{x:CX,y:100,a:0};
+  if(!crown.attached)return{x:crown.x,y:crown.y,a:crown.a};
+  return worldTransform(king.x-5,king.y-59,ROWS+1)
+}
+function detachCrown(force=false){
+  if(!crown||!crown.attached)return;
+  const t=crownWorld();crown.attached=false;crown.everLost=true;crown.state='loose';crown.x=t.x;crown.y=t.y;crown.a=t.a;crown.vx=(collapse?collapse.dir:Math.sign(stress.ratio||1))*rand(90,170)+(force?rand(-30,30):0);crown.vy=rand(-95,-35);crown.av=rand(-3.4,3.4);
+  setTip('The crown came off — the run can continue.',2.4);tone(620,.08,'square',.018,-180);haptic(25);updateHud()
+}
+function penguinAt(x,y){
+  for(let i=penguins.length-1;i>=0;i--){const p=penguins[i];if(p.state!=='stacked'&&p.state!=='loose')continue;const t=p.state==='stacked'?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y};if(Math.abs(x-t.x)<PW*.57&&Math.abs(y-t.y)<PH*.57)return p}
+  return null
+}
+function pointer(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+function onDown(e){
+  if(!running||paused||transition||settle||drag)return;const pt=pointer(e),p=penguinAt(pt.x,pt.y);if(!p)return;e.preventDefault();
+  const fromStack=p.state==='stacked',lp=fromStack?localPoint(pt.x,pt.y,p.row):pt;p.state='held';p.vx=p.vy=0;drag={p,fromStack,pointerId:e.pointerId,targetX:lp.x,targetY:lp.y,worldX:pt.x,worldY:pt.y,startX:p.x,startY:p.y,offsetX:p.x-lp.x,offsetY:p.y-lp.y,vx:0,vy:0,lastPX:pt.x,lastPY:pt.y,lastT:performance.now(),speed:0,moved:false,committed:false};
+  canvas.classList.add('dragging');try{canvas.setPointerCapture(e.pointerId)}catch{}tone(320,.035,'triangle',.013);iceDust(p.x,p.y+30,3)
+}
+function onMove(e){
+  const pt=pointer(e);if(!drag){hover=running&&!paused&&!transition?penguinAt(pt.x,pt.y):null;return}
+  if(drag.pointerId!==e.pointerId||paused)return;e.preventDefault();const now=performance.now(),dt=Math.max(8,now-drag.lastT),dx=pt.x-drag.lastPX,dy=pt.y-drag.lastPY;
+  drag.vx=lerp(drag.vx,dx/dt*1000,.6);drag.vy=lerp(drag.vy,dy/dt*1000,.6);drag.speed=clamp(Math.hypot(drag.vx,drag.vy),0,1600);lastDragSpeed=lerp(lastDragSpeed,drag.speed,.35);drag.lastPX=pt.x;drag.lastPY=pt.y;drag.lastT=now;drag.worldX=pt.x;drag.worldY=pt.y;const lp=drag.fromStack?localPoint(pt.x,pt.y,drag.p.row):pt;drag.targetX=clamp(lp.x+drag.offsetX,-60,W+60);drag.targetY=clamp(lp.y+drag.offsetY,-40,H+60);
+  if(!drag.committed&&Math.hypot(pt.x-drag.startX,pt.y-drag.startY)>9){drag.committed=true;drag.moved=true}
+}
+function releaseDrag(e,cancel=false){
+ if(!drag||(!cancel&&drag.pointerId!==e.pointerId))return;if(!cancel)e.preventDefault();
+ const d=drag,p=d.p;releaseCapture();drag=null;canvas.classList.remove('dragging');
+ if(cancel||!d.committed){if(d.fromStack){p.state='stacked';p.x=p.homeX;p.y=p.homeY;p.vx=p.vy=p.av=0}else p.state='loose';lastDragSpeed=0;evaluateStability(0);return}
+ const t=d.fromStack?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
+ const returnedHome=d.fromStack&&Math.hypot(d.targetX-p.homeX,d.targetY-p.homeY)<30&&Math.hypot(p.x-p.homeX,p.y-p.homeY)<45;
+ if(returnedHome){p.state='stacked';p.x=p.homeX;p.y=p.homeY;p.vx=p.vy=p.av=0;setTip('Settled back into place.',1.1);lastDragSpeed=0;evaluateStability(0);return}
+ p.x=t.x;p.y=t.y;p.a=t.a||p.a;p.state='loose';lastMoved=p.id;p.restShelf=-1;
+ // Use recent pointer velocity; a long hold has no leftover fling momentum.
+ const fresh=performance.now()-d.lastT<110;p.vx=fresh?clamp(d.vx||0,-920,920):0;p.vy=fresh?clamp(d.vy||0,-780,860):0;p.av=clamp(p.vx*.005,-4.8,4.8);
+ p.impactVy=p.vy;
+ if(waterContact(p)){lastDragSpeed=0;evaluateStability(0);return}
+ iceDust(p.x,p.y,5);evaluateStability(0);lastDragSpeed*=.5;
+}
+
+function onUp(e){releaseDrag(e,false)}
+function onCancel(e){releaseDrag(e,true)}
+function rescue(p){
+ if(p.counted)return;p.counted=true;p.state='swimming';p.waterTime=0;p.y=waterLine(p.x)-12;p.vx=clamp(p.vx||0,-150,150);p.vy=0;p.av=0;
+ score++;stageScore++;save.best=Math.max(save.best,score);const power=clamp(.8+Math.abs(p.impactVy||0)/800,.8,1.8);splash(clamp(p.x,15,W-15),power);shake=Math.max(shake,2.3);tone(520+stageScore*8,.07,'sine',.024,80);haptic(18);
+ particles.push({x:p.x,y:waterLine(p.x)-42,vx:0,vy:-38,t:0,life:.8,r:0,kind:'point'});
+ if(drag?.p===p){releaseCapture();drag=null;canvas.classList.remove('dragging')}
+ if(stageScore===ROWS*COLS){beginTransition();return}
+ setTip('Safe! '+(ROWS*COLS-stageScore)+' left in this tower.',1.5);persist();
+}
+
+function bumpStack(loose,dt){
+  const speed=Math.hypot(loose.vx,loose.vy);if(speed<95)return;
+  for(const q of penguins){if(q.state!=='stacked')continue;const t=worldTransform(q.x,q.y,q.row),dx=t.x-loose.x,dy=t.y-loose.y;if(Math.abs(dx)>58||Math.abs(dy)>60)continue;
+    const push=Math.sign(loose.vx||dx||1)*Math.min(24,speed*.018);q.x=clamp(q.x+push*dt*14,q.homeX-34,q.homeX+34);iceDust(q.x,q.y,2);
+    if(speed>430&&Math.abs(q.x-q.homeX)>25){q.state='loose';q.vx=loose.vx*.34;q.vy=Math.min(-35,loose.vy*.16);q.av=rand(-2.6,2.6);q.restShelf=-1}
+    loose.vx*=.78;shake=Math.max(shake,1.5);evaluateStability(0)
+  }
+}
+function collideShelves(p,prevY){
+ if(p.vy<=0||collapse)return;
+ for(let r=shelves.length-1;r>=0;r--){const wt=worldTransform(shelves[r].x,shelfY(r),r),localX=p.x-wt.x,sy=wt.y+Math.sin(wt.a)*localX-PH*.44;if(Math.abs(localX)<SHELF_W*.5-10&&prevY<=sy+2&&p.y>=sy){p.y=sy;p.vy=Math.abs(p.vy)>115?-Math.abs(p.vy)*.18:0;p.vx*=stage.friction;p.av*=.6;p.restShelf=r;if(Math.abs(p.vy)<18)p.a*=Math.exp(-.8);return}}
+}
+
+function updateLoose(dt){
+ for(const p of penguins){
+  if(p.state==='swimming'){p.waterTime+=dt;p.x=clamp(p.x+p.vx*dt,20,W-20);p.vx*=Math.exp(-dt*2);p.y=waterLine(p.x)-12+Math.sin(simTime*4+p.id)*4;p.a=Math.sin(simTime*3+p.id)*.12;if(p.waterTime>1.4)p.state='rescued';continue}
+  if(p.state!=='loose')continue;
+  const prevX=p.x,prevY=p.y;p.vy+=LOOSE_GRAVITY*dt;p.vx+=stage.wind*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.av*dt;p.vx*=Math.exp(-dt*(hasMoonGravity?.12:.24));p.av*=Math.exp(-dt*.5);p.impactVy=p.vy;
+  if(p.x<25){p.x=25;p.vx=Math.abs(p.vx)*.32}else if(p.x>W-25){p.x=W-25;p.vx=-Math.abs(p.vx)*.32}
+  if(waterContact(p,prevX,prevY))continue;
+  collideShelves(p,prevY);bumpStack(p,dt);
+ }
+ // Equal-mass impulses keep loose penguins from passing through each other.
+ const loose=penguins.filter(p=>p.state==='loose');
+ for(let i=0;i<loose.length;i++)for(let j=i+1;j<loose.length;j++){const a=loose[i],b=loose[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),radius=48;if(d>=radius)continue;const nx=d>0?dx/d:1,ny=d>0?dy/d:0,overlap=(radius-d)*.5;a.x-=nx*overlap;a.y-=ny*overlap;b.x+=nx*overlap;b.y+=ny*overlap;const vn=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(vn<0){const impulse=-vn*.58;a.vx-=nx*impulse;a.vy-=ny*impulse;b.vx+=nx*impulse;b.vy+=ny*impulse}waterContact(a);waterContact(b)}
+}
+
+function updateHeld(dt){
+ if(!drag)return;const p=drag.p,load=drag.fromStack?1+(ROWS-1-p.row)*.3:1,response=18/load,blend=1-Math.exp(-response*dt);
+ p.x+=(drag.targetX-p.x)*blend;p.y+=(drag.targetY-p.y)*blend;
+ const movement=Math.hypot(p.x-p.homeX,p.y-p.homeY);if(movement>12&&!drag.committed){drag.moved=true;drag.committed=true}
+ for(const q of penguins){if(q===p||q.state!=='stacked'||(drag.fromStack&&q.row!==p.row))continue;const qt=worldTransform(q.x,q.y,q.row),pt=drag.fromStack?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y},dx=qt.x-pt.x,dy=qt.y-pt.y;if(Math.abs(dx)<PW*.84&&Math.abs(dy)<PH*.68){const push=Math.sign(dx||1)*(PW*.84-Math.abs(dx))*(1-Math.exp(-dt*3));q.x=clamp(q.x+push,q.homeX-30,q.homeX+30);if(!drag.fromStack&&drag.speed>650&&Math.abs(q.x-q.homeX)>24){q.state='loose';q.vx=Math.sign(push)*drag.speed*.2;q.vy=-35;q.av=rand(-2,2);q.restShelf=-1;shake=Math.max(shake,2)}}}
+ const t=drag.fromStack?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
+ if(drag.committed&&t.y+PH*.47>=waterLine(t.x)-3){p.x=t.x;p.y=t.y;p.a=t.a;rescue(p);evaluateStability(0);return}
+ if(movement>20&&Math.random()<dt*7)iceDust(p.x,p.y+PH*.35,1);
+ // Stability integrates exactly once per fixed step, in update().
+ if(!collapse&&crown.attached&&Math.abs(stress.angle)>.065&&drag.speed>850)detachCrown(false);
+}
+
+function updateCrown(dt){
+  if(!crown||crown.attached)return;
+  if(crown.state==='loose'){crown.vy+=660*dt;crown.x+=crown.vx*dt;crown.y+=crown.vy*dt;crown.a+=crown.av*dt;crown.vx*=Math.pow(.997,dt*60);if(crown.y>WATER){crown.state='sunk';splash(crown.x,.65)}}
+}
+function update(dt){
+  if(!running||paused)return;simTime+=dt;for(const f of snow){f.y+=f.s*60*dt;f.x+=stage.wind*.15*dt;if(f.y>WATER){f.y=-5;f.x=Math.random()*W}}
+  if(transition){transition.t+=dt;if(!transition.swapped&&transition.t>=transition.duration*.5){const saved=transition;stageIndex++;buildTower(saved.next);transition=saved;transition.swapped=true;setTip(stage.name+' · Tower '+stageIndex+' · keep rescuing!',3)}if(transition.t>=transition.duration){transition=null;physicsAcc=0}updateHud();return}
+  if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)$('tip').classList.add('fade')}
+  creakCooldown=Math.max(0,creakCooldown-dt);shake=Math.max(0,shake-dt*15);lastDragSpeed*=Math.exp(-dt*5);
+  for(const p of penguins)if(p.state==='stacked'&&(!drag||drag.p!==p)){p.x+= (p.homeX-p.x)*Math.min(1,dt*.65);p.y+=(p.homeY-p.y)*Math.min(1,dt*.8)}
+  updateHeld(dt);
+  if(settle){
+    settle.t+=dt;const u=clamp(settle.t/settle.duration,0,1),e=1-Math.pow(1-u,3);compression[settle.row]=lerp(settle.start,settle.target,e);
+    if(u>=1){compression[settle.row]=settle.target;compressedRows[settle.row]=true;const row=settle.row;settle=null;shake=Math.max(shake,4);iceDust(CX,shelfY(row+1)+compressionOffset(row+1),12);tone(118,.13,'triangle',.026,-28);haptic([18,22,28]);evaluateStability(0)}
+  }else if(!collapse&&!transition)evaluateStability(dt);
+  updateLoose(dt);updateCrown(dt);if(transition)return;
+  if(collapse){
+    collapse.av+=collapse.dir*.82*dt;collapse.angle=clamp(collapse.angle+collapse.av*dt,-1.62,1.62);collapse.vy+=245*dt;collapse.dy+=collapse.vy*dt;collapse.dx+=collapse.dir*34*dt;
+    if(crown.attached&&Math.abs(collapse.angle)>.16)detachCrown(true);
+    for(const p of penguins){if(p.state!=='stacked')continue;const t=worldTransform(p.x,p.y,p.row);if(t.y+PH*.47>=waterLine(t.x)-3){p.x=t.x;p.y=t.y;p.a=t.a;rescue(p)}}if(transition)return;const k=worldTransform(king.x,king.y,ROWS+1);if(k.y+48>WATER&&!king.wet){king.wet=true;splash(k.x,1.35);shake=12;haptic([65,50,90]);tone(72,.46,'sawtooth',.05,-28);endDelay=1.4}
+  }
+  if(endDelay>0){endDelay-=dt;if(endDelay<=0)finish(false)}
+  if(stageScore===20&&!transition)beginTransition();
+  for(const s of splashes)s.t+=dt;splashes=splashes.filter(s=>s.t<1);
+  for(const p of particles){p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=(p.kind==='water'?300:170)*dt}particles=particles.filter(p=>p.t<p.life);
+}
+function finish(perfect=false){
+  if(!running)return;releaseCapture();drag=null;canvas.classList.remove('dragging');running=false;paused=false;runToken++;physicsAcc=0;transition=null;persist();
+  $('finalScore').textContent=score;$('finalBest').textContent=save.best;
+  let rating=perfect?'EMPEROR PENGUIN!':score>=16?'ROYAL RESCUER':score>=11?'ICE EXPERT':score>=6?'BRAVE WADDLER':'SLIPPERY START';
+  $('rating').textContent=rating;
+  $('subrating').textContent=perfect?(crown.attached&&!crown.everLost?'CROWN INTACT · FLAWLESS RUN':'ALL TWENTY RESCUED'):(crown&&crown.attached?'THE CROWN SURVIVED':'THE CROWN WAS LOST');
+  $('overText').textContent=score+' penguins rescued across '+towersCleared+' cleared tower'+(towersCleared===1?'':'s')+'. The royal took a swim in '+stage.name+'.';
+  $('over').classList.remove('hidden')
+}
+function drawBackground(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,stage.sky[0]);g.addColorStop(.69,stage.sky[1]);g.addColorStop(.691,stage.sea[0]);g.addColorStop(1,stage.sea[1]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=.34;ctx.fillStyle='#dffcff';ctx.beginPath();ctx.ellipse(175,115,250,70,-.18,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d9f1ff';ctx.beginPath();ctx.ellipse(720,145,290,76,.22,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  ctx.fillStyle='#eaf8fb';ctx.beginPath();ctx.moveTo(0,555);for(let x=0;x<=W;x+=64)ctx.lineTo(x,510+Math.sin(x*.016)*36+Math.cos(x*.007)*18);ctx.lineTo(W,688);ctx.lineTo(0,688);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c7e9ef';ctx.beginPath();ctx.moveTo(0,616);for(let x=0;x<=W;x+=56)ctx.lineTo(x,578+Math.cos(x*.019)*22);ctx.lineTo(W,706);ctx.lineTo(0,706);ctx.closePath();ctx.fill();
+  ctx.fillStyle=stage.ice;ctx.beginPath();ctx.ellipse(CX,720,310,54,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#bfeaf2';ctx.beginPath();ctx.ellipse(CX,737,275,30,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(225,250,255,.27)';ctx.lineWidth=2;for(let y=WATER+24;y<H;y+=34){ctx.beginPath();for(let x=0;x<=W;x+=26){const yy=y+Math.sin(x*.035+performance.now()*.0012+y*.01)*3;x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}ctx.stroke()}
+  for(const f of snow){ctx.globalAlpha=f.o;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1
+  if(drag){const pulse=.12+Math.sin(performance.now()*.007)*.025;ctx.fillStyle='rgba(142,239,255,'+pulse+')';ctx.fillRect(0,WATER-18,W,138);ctx.fillStyle='#eaffff';ctx.globalAlpha=.9;ctx.font='900 14px system-ui';ctx.textAlign='center';ctx.fillText('DROP INTO THE SEA TO RESCUE',CX,WATER+50);ctx.globalAlpha=1}
+}
+function drawShelf(s){
+  const t=worldTransform(s.x,s.y,s.row);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);
+  ctx.shadowColor='rgba(9,75,98,.22)';ctx.shadowBlur=14;ctx.shadowOffsetY=8;ctx.fillStyle=stage.ice;rr(-SHELF_W/2,-SHELF_H/2,SHELF_W,SHELF_H,8);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#85d9e9';rr(-SHELF_W/2+5,3,SHELF_W-10,9,5);ctx.fill();
+  ctx.strokeStyle='#ffffffa8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-170,-3);ctx.lineTo(-85,-4);ctx.moveTo(-38,-4);ctx.lineTo(23,-3);ctx.moveTo(78,-3);ctx.lineTo(155,-4);ctx.stroke();
+  ctx.strokeStyle='#78c8da';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(-105,1);ctx.lineTo(-82,8);ctx.lineTo(-62,2);ctx.moveTo(54,1);ctx.lineTo(75,8);ctx.lineTo(96,2);ctx.stroke();ctx.restore()
+}
+function drawPenguin(p){
+  if(p.state==='rescued'||p.state==='lost')return;
+  const towerHeld=p.state==='held'&&drag&&drag.p===p&&drag.fromStack,t=(p.state==='stacked'||towerHeld)?worldTransform(p.x,p.y,p.row):{x:p.x,y:p.y,a:p.a};
+  const held=drag&&drag.p===p;ctx.save();if(p.state==='swimming')ctx.globalAlpha=clamp(1.7-p.waterTime,.2,1);ctx.translate(t.x,t.y);ctx.rotate(p.state==='stacked'||towerHeld?t.a+p.a:p.a);ctx.scale(p.dir,1);
+  if(held){ctx.shadowColor='#fff8a8';ctx.shadowBlur=20}else{ctx.shadowColor='rgba(3,37,52,.24)';ctx.shadowBlur=8}ctx.shadowOffsetY=5;
+  const bodyGradient=ctx.createLinearGradient(-30,-35,29,38);bodyGradient.addColorStop(0,'#354859');bodyGradient.addColorStop(.45,'#111e2b');bodyGradient.addColorStop(1,'#0a131c');ctx.fillStyle=bodyGradient;ctx.beginPath();ctx.ellipse(0,2,29,38,0,0,Math.PI*2);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#f8fbf6';ctx.beginPath();ctx.ellipse(7,11,20,28,-.14,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#203342';ctx.beginPath();ctx.ellipse(-23,5,9,23,p.state==='loose'||p.state==='swimming'?-.8+Math.sin(simTime*16+p.id)*.35:-.58,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#f0a128';ctx.beginPath();ctx.moveTo(21,-8);ctx.lineTo(42,-1);ctx.lineTo(21,6);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(13,-14,6.5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#14212a';ctx.beginPath();ctx.arc(held?16:p.state==='loose'?14:15,-13,p.state==='loose'?3:2.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=p.scarf;ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,-2,25,.16,Math.PI-.18);ctx.stroke();ctx.fillStyle=p.scarf;rr(-23,-1,12,28,5);ctx.fill();ctx.strokeStyle='#ffffff66';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-20,6);ctx.lineTo(-14,6);ctx.moveTo(-20,15);ctx.lineTo(-14,15);ctx.stroke();ctx.fillStyle='#ffffff36';ctx.beginPath();ctx.ellipse(-8,-26,5,9,.4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#ed9d28';ctx.beginPath();ctx.ellipse(-12,37,13,5,-.14,0,Math.PI*2);ctx.ellipse(12,37,13,5,.14,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  if(hover===p&&!drag){ctx.save();ctx.strokeStyle='#fff8b0';ctx.lineWidth=3;ctx.globalAlpha=.72;ctx.beginPath();ctx.ellipse(t.x,t.y,39,48,0,0,Math.PI*2);ctx.stroke();ctx.restore()}
+}
+function drawKing(){
+  if(!king)return;const t=worldTransform(king.x,king.y,ROWS+1);ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);
+  ctx.shadowColor='rgba(3,37,52,.28)';ctx.shadowBlur=11;ctx.shadowOffsetY=6;ctx.fillStyle='#0c151d';ctx.beginPath();ctx.ellipse(0,8,41,52,0,0,Math.PI*2);ctx.fill();ctx.shadowColor='transparent';
+  ctx.fillStyle='#f8fbf6';ctx.beginPath();ctx.ellipse(9,18,28,37,-.1,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f2a12c';ctx.beginPath();ctx.moveTo(29,-6);ctx.lineTo(59,3);ctx.lineTo(30,13);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(19,-15,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#273540';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(14,-14);ctx.lineTo(24,-14);ctx.stroke();
+  ctx.fillStyle='#dff8ff';ctx.font='900 21px system-ui';ctx.textAlign='left';ctx.fillText('Z',46,-39);ctx.font='900 13px system-ui';ctx.fillText('z',64,-55);ctx.restore()
+}
+function drawCrownShape(x,y,a,alpha=1){
+  ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.globalAlpha=alpha;ctx.fillStyle='#f5cc45';ctx.strokeStyle='#9b7215';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-26,10);ctx.lineTo(-23,-16);ctx.lineTo(-10,-3);ctx.lineTo(0,-26);ctx.lineTo(12,-2);ctx.lineTo(25,-17);ctx.lineTo(24,11);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#fff0a1';for(const px of [-18,0,18]){ctx.beginPath();ctx.arc(px,7,3.2,0,Math.PI*2);ctx.fill()}ctx.restore()
+}
+function drawCrown(){if(!crown||crown.state==='sunk')return;const t=crownWorld();drawCrownShape(t.x,t.y,t.a)}
+function drawEffects(){
+  for(const s of splashes){const a=1-s.t;ctx.globalAlpha=a;ctx.strokeStyle='#dffbff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(s.x,s.y+4,s.t*70*s.power+8,s.t*17+3,0,0,Math.PI*2);ctx.stroke()}
+  for(const p of particles){ctx.globalAlpha=1-p.t/p.life;ctx.fillStyle=p.kind==='water'?'#ddfbff':'#effdff';if(p.kind==='point'){ctx.font='900 24px system-ui';ctx.textAlign='center';ctx.fillText('+1',p.x,p.y)}else{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}}ctx.globalAlpha=1
+}
+function draw(){
+  ctx.save();if(shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();for(const s of shelves)drawShelf(s);for(const p of penguins)drawPenguin(p);drawKing();drawCrown();drawEffects();ctx.fillStyle='#ecfaffcc';ctx.font='800 15px system-ui';ctx.textAlign='center';ctx.fillText(stage.name.toUpperCase()+' · TOWER '+stageIndex,CX,H-28);if(transition){const u=transition.t/transition.duration,alpha=Math.sin(Math.PI*u);ctx.fillStyle='rgba(9,30,49,'+Math.min(1,alpha*1.35)+')';ctx.fillRect(0,0,W,H);ctx.globalAlpha=clamp(alpha*2,0,1);ctx.fillStyle='#fff2bd';ctx.font='900 40px system-ui';ctx.fillText('TOWER CLEARED',CX,H*.4);ctx.fillStyle='#e2f9ff';ctx.font='800 23px system-ui';ctx.fillText(transition.next.name,CX,H*.4+48);ctx.font='700 17px system-ui';ctx.fillText(score+' rescued · '+towersCleared+' tower'+(towersCleared===1?'':'s')+' cleared',CX,H*.4+81);ctx.globalAlpha=1}ctx.restore()
+}
+function loop(now,token){
+ if(token!==runToken)return;const dt=Math.min(.25,Math.max(0,(now-last)/1000));last=now;
+ if(running&&!paused){physicsAcc+=dt;let steps=0;while(physicsAcc>=1/120&&steps++<30){update(1/120);physicsAcc-=1/120;if(!running){physicsAcc=0;break}}}else physicsAcc=0;
+ draw();if(running)requestAnimationFrame(n=>loop(n,token));
+}
+
+function togglePause(force){if(!running)return;paused=force===undefined?!paused:force;$('paused').classList.toggle('hidden',!paused);physicsAcc=0;if(!paused)last=performance.now()}
+canvas.addEventListener('pointerdown',onDown);canvas.addEventListener('pointermove',onMove);canvas.addEventListener('pointerup',onUp);canvas.addEventListener('pointercancel',onCancel);canvas.addEventListener('pointerleave',()=>{if(!drag)hover=null});
+$('play').onclick=startGame;$('again').onclick=startGame;$('restart').onclick=()=>startGame();$('pause').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);
+$('sound').onclick=()=>{save.sound=!save.sound;$('sound').textContent=save.sound?'♪':'×';persist();if(save.sound)tone(510,.05,'sine',.02)};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key.toLowerCase()==='p')togglePause();if(e.key.toLowerCase()==='r')startGame()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+for(let i=0;i<78;i++)snow.push({x:Math.random()*W,y:Math.random()*WATER,r:rand(.8,2.6),s:rand(.15,.55),o:rand(.2,.65)});
+buildTower();$('sound').textContent=save.sound?'♪':'×';updateHud();draw();parent.postMessage({type:'pocketvm-penguin-ready'},'*');
+})();
+</script>
+</body>
+</html>

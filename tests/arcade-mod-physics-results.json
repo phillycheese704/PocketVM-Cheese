@@ -1,0 +1,11 @@
+{
+  "checks": 6,
+  "tests": [
+    "Featherweight changes gravity, flap strength, speed and gaps in both modes, while normal flight stays exact",
+    "Nitro Overdrive keeps player energy full and preserves ordinary AI nitro consumption",
+    "Pinball Frenzy applies faster movement and abilities equally to both teams and settles 1v1, 2v2 and 4v4 safely",
+    "Pinball ability recharge remains 40% faster after each actual cast",
+    "Moon Gravity gives loose penguins 40% gravity and lower air drag in the shipped engine",
+    "Moon Gravity still credits a water rescue exactly once and renders the resulting splash"
+  ]
+}
