@@ -8,7 +8,15 @@
     "swarmsim",
     "bouncemasters"
   ],
-  "completed": {},
-  "active": "shoot",
+  "completed": {
+    "shoot": {
+      "commit": "4d6fcc22e8da2cba08064407536ab4c935aa9860",
+      "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/shoot/game.html?v=shoot-v2",
+      "checks": 31,
+      "layouts": 6,
+      "proof": "tests/shoot-live-1791754336067.jpg"
+    }
+  },
+  "active": "matchsurvival",
   "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
 }

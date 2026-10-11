@@ -1,0 +1,16 @@
+{
+  "checks": 11,
+  "tests": [
+    "150 generated boards have no free matches and at least one legal move",
+    "Nonadjacent and invalid swaps revert without spending daylight",
+    "Day waits for the player, cascades collect resources and twelve moves start night",
+    "All six building chains complete, unlock resources and improve equipment",
+    "Night resource mapping equips the survivor, summons creatures and fuels real combat",
+    "Every fifth night has a boss that blocks dawn until defeated",
+    "Freeze stops night and enemies; healing and bombs consume items and affect the world",
+    "All three mods change actual harvest, night duration and sword damage",
+    "Full expeditions resume exactly and corrupted saves are sanitised",
+    "Completing twenty-five nights continues into an endless expedition",
+    "Production art renders both day and night, all village upgrades and boss sprites"
+  ]
+}

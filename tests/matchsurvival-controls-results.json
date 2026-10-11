@@ -1,0 +1,11 @@
+{
+  "checks": 6,
+  "tests": [
+    "Opening the menu preserves existing expeditions and Continue restores the real run",
+    "Pause, blur and orientation freeze the actual night and resume safely",
+    "Accessible keyboard button activation swaps the actual grid",
+    "Touch swipes reach the match engine and cancelled gestures spend no move",
+    "Field guide pauses simulation and returns to the same expedition",
+    "Defeat records the expedition once and clears only the resumable run"
+  ]
+}

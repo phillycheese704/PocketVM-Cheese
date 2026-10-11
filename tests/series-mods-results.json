@@ -1,8 +1,11 @@
 {
-  "checks": 3,
+  "checks": 6,
   "tests": [
     "Shoot / shootmoon: real download, renamed-file activation, isolated progress and clean removal",
     "Shoot / shootbottomless: real download, renamed-file activation, isolated progress and clean removal",
-    "Shoot / shootoverdrive: real download, renamed-file activation, isolated progress and clean removal"
+    "Shoot / shootoverdrive: real download, renamed-file activation, isolated progress and clean removal",
+    "Match Survival / matchharvest: real download, renamed-file activation, isolated progress and clean removal",
+    "Match Survival / matchlongnight: real download, renamed-file activation, isolated progress and clean removal",
+    "Match Survival / matchberserk: real download, renamed-file activation, isolated progress and clean removal"
   ]
 }
