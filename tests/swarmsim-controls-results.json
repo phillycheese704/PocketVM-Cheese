@@ -1,0 +1,15 @@
+{
+  "checks": 10,
+  "tests": [
+    "Production purchase buttons and quantity selector hatch the affordable number of real drones",
+    "Visible Undo restores the purchase and removes only its production",
+    "Mouse/touch tabs and keyboard shortcuts open actual brood and energy sections",
+    "Options save preferences and prevent section shortcuts behind the modal",
+    "Backup download contains a genuine versioned and sanitized colony snapshot",
+    "Import previews the backup before replacing the colony and applying catch-up once",
+    "Invalid import files leave the current colony intact",
+    "Queen sacrifices, producer upgrades and hatchery buttons change actual colony state",
+    "Ascension requires a visible review and final action, resets once and preserves activated mutagen",
+    "Visibility and unload save elapsed production without adding the same interval twice"
+  ]
+}

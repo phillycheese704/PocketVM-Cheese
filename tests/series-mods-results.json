@@ -1,5 +1,5 @@
 {
-  "checks": 15,
+  "checks": 18,
   "tests": [
     "Shoot / shootmoon: real download, renamed-file activation, isolated progress and clean removal",
     "Shoot / shootbottomless: real download, renamed-file activation, isolated progress and clean removal",
@@ -15,6 +15,9 @@
     "Avenge FPS / avengequick: real download, renamed-file activation, isolated progress and clean removal",
     "Footy Physics / footymoon: real download, renamed-file activation, isolated progress and clean removal",
     "Footy Physics / footygiant: real download, renamed-file activation, isolated progress and clean removal",
-    "Footy Physics / footyturbo: real download, renamed-file activation, isolated progress and clean removal"
+    "Footy Physics / footyturbo: real download, renamed-file activation, isolated progress and clean removal",
+    "Swarm Sim / swarmharvest: real download, renamed-file activation, isolated progress and clean removal",
+    "Swarm Sim / swarmlarvae: real download, renamed-file activation, isolated progress and clean removal",
+    "Swarm Sim / swarmenergy: real download, renamed-file activation, isolated progress and clean removal"
   ]
 }

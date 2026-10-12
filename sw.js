@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v122';
+const CACHE = 'pocketvm-shell-v124';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -78,6 +78,21 @@ const ASSETS = [
   "./store/footyphysics/render.js?v=footyphysics-v1",
   "./store/footyphysics/game.js?v=footyphysics-v1",
   "./store/footyphysics/icon.svg?v=illustrated-v1",
+  "./store/swarmsim/game.html",
+  "./store/swarmsim/data.js",
+  "./store/swarmsim/core.js",
+  "./store/swarmsim/render.js",
+  "./store/swarmsim/game.js",
+  "./store/swarmsim/icon.svg",
+  "./store/swarmsim/favicon-32.png",
+  "./store/swarmsim/icon-180.png",
+  "./store/swarmsim/icon-512.png",
+  "./store/swarmsim/game.html?v=swarmsim-v1",
+  "./store/swarmsim/data.js?v=swarmsim-v1",
+  "./store/swarmsim/core.js?v=swarmsim-v1",
+  "./store/swarmsim/render.js?v=swarmsim-v1",
+  "./store/swarmsim/game.js?v=swarmsim-v1",
+  "./store/swarmsim/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
   "./store/knockout/game.html",
@@ -175,8 +190,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=122",
-  "./store.js?v=122",
+  "./app.js?v=124",
+  "./store.js?v=124",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

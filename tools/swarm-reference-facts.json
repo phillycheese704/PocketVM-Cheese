@@ -1,0 +1,985 @@
+[
+  {
+    "id": "drone",
+    "name": "drone",
+    "category": "meat",
+    "tier": 1,
+    "output": [
+      "meat",
+      1
+    ],
+    "cost": [
+      [
+        "meat",
+        10
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        0,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "queen",
+    "name": "queen",
+    "category": "meat",
+    "tier": 2,
+    "output": [
+      "drone",
+      2
+    ],
+    "cost": [
+      [
+        "meat",
+        810
+      ],
+      [
+        "drone",
+        100
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "ascension",
+        1,
+        "OR"
+      ],
+      [
+        "drone",
+        10,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "nest",
+    "name": "nest",
+    "category": "meat",
+    "tier": 3,
+    "output": [
+      "queen",
+      3
+    ],
+    "cost": [
+      [
+        "meat",
+        72900
+      ],
+      [
+        "queen",
+        1000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "ascension",
+        1,
+        "OR"
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ],
+      [
+        "territory",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "greaterqueen",
+    "name": "greater queen",
+    "category": "meat",
+    "tier": 4,
+    "output": [
+      "nest",
+      4
+    ],
+    "cost": [
+      [
+        "meat",
+        6561000
+      ],
+      [
+        "nest",
+        10000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "nest",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "hive",
+    "name": "hive",
+    "category": "meat",
+    "tier": 5,
+    "output": [
+      "greaterqueen",
+      5
+    ],
+    "cost": [
+      [
+        "meat",
+        590490000
+      ],
+      [
+        "greaterqueen",
+        100000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "greaterqueen",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "hivequeen",
+    "name": "hive queen",
+    "category": "meat",
+    "tier": 6,
+    "output": [
+      "hive",
+      6
+    ],
+    "cost": [
+      [
+        "meat",
+        53144100000
+      ],
+      [
+        "hive",
+        1000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "hive",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "empress",
+    "name": "hive empress",
+    "category": "meat",
+    "tier": 7,
+    "output": [
+      "hivequeen",
+      7
+    ],
+    "cost": [
+      [
+        "meat",
+        4782969000000
+      ],
+      [
+        "hivequeen",
+        10000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "hivequeen",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "prophet",
+    "name": "neuroprophet",
+    "category": "meat",
+    "tier": 8,
+    "output": [
+      "empress",
+      8
+    ],
+    "cost": [
+      [
+        "meat",
+        430467210000000
+      ],
+      [
+        "empress",
+        100000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "empress",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "goddess",
+    "name": "hive neuron",
+    "category": "meat",
+    "tier": 9,
+    "output": [
+      "prophet",
+      9
+    ],
+    "cost": [
+      [
+        "meat",
+        38742000000000000
+      ],
+      [
+        "prophet",
+        1000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "prophet",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "pantheon",
+    "name": "neural cluster",
+    "category": "meat",
+    "tier": 10,
+    "output": [
+      "goddess",
+      10
+    ],
+    "cost": [
+      [
+        "meat",
+        3486780000000000000
+      ],
+      [
+        "goddess",
+        10000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "goddess",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "pantheon2",
+    "name": "hive network",
+    "category": "meat",
+    "tier": 11,
+    "output": [
+      "pantheon",
+      11
+    ],
+    "cost": [
+      [
+        "meat",
+        313811000000000000000
+      ],
+      [
+        "pantheon",
+        1000000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "pantheon",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "pantheon3",
+    "name": "lesser hive mind",
+    "category": "meat",
+    "tier": 12,
+    "output": [
+      "pantheon2",
+      12
+    ],
+    "cost": [
+      [
+        "meat",
+        2.8243e+22
+      ],
+      [
+        "pantheon2",
+        100000000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "pantheon2",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "pantheon4",
+    "name": "hive mind",
+    "category": "meat",
+    "tier": 13,
+    "output": [
+      "pantheon3",
+      13
+    ],
+    "cost": [
+      [
+        "meat",
+        2.54187e+24
+      ],
+      [
+        "pantheon3",
+        10000000000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "pantheon3",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "pantheon5",
+    "name": "arch-mind",
+    "category": "meat",
+    "tier": 14,
+    "output": [
+      "pantheon4",
+      14
+    ],
+    "cost": [
+      [
+        "meat",
+        2.28768e+26
+      ],
+      [
+        "pantheon4",
+        10000000000000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "pantheon4",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind",
+    "name": "overmind",
+    "category": "meat",
+    "tier": 15,
+    "output": [
+      "pantheon5",
+      15
+    ],
+    "cost": [
+      [
+        "meat",
+        2.05891e+28
+      ],
+      [
+        "pantheon5",
+        1e+23
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "pantheon5",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind2",
+    "name": "overmind II",
+    "category": "meat",
+    "tier": 16,
+    "output": [
+      "overmind",
+      16
+    ],
+    "cost": [
+      [
+        "meat",
+        1.85302e+30
+      ],
+      [
+        "overmind",
+        1e+28
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "overmind",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind3",
+    "name": "overmind III",
+    "category": "meat",
+    "tier": 17,
+    "output": [
+      "overmind2",
+      17
+    ],
+    "cost": [
+      [
+        "meat",
+        1.66772e+32
+      ],
+      [
+        "overmind2",
+        1e+34
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "overmind2",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind4",
+    "name": "overmind IV",
+    "category": "meat",
+    "tier": 18,
+    "output": [
+      "overmind3",
+      18
+    ],
+    "cost": [
+      [
+        "meat",
+        1.50095e+34
+      ],
+      [
+        "overmind3",
+        1e+41
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "overmind3",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind5",
+    "name": "overmind V",
+    "category": "meat",
+    "tier": 19,
+    "output": [
+      "overmind4",
+      19
+    ],
+    "cost": [
+      [
+        "meat",
+        1.35085e+36
+      ],
+      [
+        "overmind4",
+        1e+49
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "overmind4",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "overmind6",
+    "name": "overmind VI",
+    "category": "meat",
+    "tier": 20,
+    "output": [
+      "overmind5",
+      20
+    ],
+    "cost": [
+      [
+        "meat",
+        1.21577e+38
+      ],
+      [
+        "overmind5",
+        1e+58
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "overmind5",
+        1,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "swarmling",
+    "name": "swarmling",
+    "category": "territory",
+    "tier": 1,
+    "output": [
+      "territory",
+      0.07
+    ],
+    "cost": [
+      [
+        "meat",
+        750
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        225,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "stinger",
+    "name": "stinger",
+    "category": "territory",
+    "tier": 2,
+    "output": [
+      "territory",
+      3.15
+    ],
+    "cost": [
+      [
+        "meat",
+        337500
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        101250,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "spider",
+    "name": "arachnomorph",
+    "category": "territory",
+    "tier": 3,
+    "output": [
+      "territory",
+      141.75
+    ],
+    "cost": [
+      [
+        "meat",
+        151875000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        45562500,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "mosquito",
+    "name": "culicimorph",
+    "category": "territory",
+    "tier": 4,
+    "output": [
+      "territory",
+      6378.75
+    ],
+    "cost": [
+      [
+        "meat",
+        68343750000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        20503125000,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "locust",
+    "name": "locust",
+    "category": "territory",
+    "tier": 5,
+    "output": [
+      "territory",
+      287043.75
+    ],
+    "cost": [
+      [
+        "meat",
+        30754687500000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        9226406250000,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "roach",
+    "name": "roach",
+    "category": "territory",
+    "tier": 6,
+    "output": [
+      "territory",
+      12916968.75
+    ],
+    "cost": [
+      [
+        "meat",
+        13839600000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        4151880000000000,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "giantspider",
+    "name": "giant arachnomorph",
+    "category": "territory",
+    "tier": 7,
+    "output": [
+      "territory",
+      581263593.8
+    ],
+    "cost": [
+      [
+        "meat",
+        6227820000000000000
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        1868350000000000000,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "centipede",
+    "name": "chilopodomorph",
+    "category": "territory",
+    "tier": 8,
+    "output": [
+      "territory",
+      26156861719
+    ],
+    "cost": [
+      [
+        "meat",
+        2.80252e+21
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        840756000000000000000,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "wasp",
+    "name": "wasp",
+    "category": "territory",
+    "tier": 9,
+    "output": [
+      "territory",
+      1177058777344
+    ],
+    "cost": [
+      [
+        "meat",
+        1.26113e+24
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        3.7834e+23,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "devourer",
+    "name": "devourer",
+    "category": "territory",
+    "tier": 10,
+    "output": [
+      "territory",
+      52967644980469
+    ],
+    "cost": [
+      [
+        "meat",
+        5.6751e+26
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        1.70253e+26,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  },
+  {
+    "id": "goon",
+    "name": "goon",
+    "category": "territory",
+    "tier": 11,
+    "output": [
+      "territory",
+      2383540000000000
+    ],
+    "cost": [
+      [
+        "meat",
+        2.5538e+29
+      ],
+      [
+        "larva",
+        1
+      ]
+    ],
+    "requires": [
+      [
+        "meat",
+        7.66139e+28,
+        ""
+      ],
+      [
+        "queen",
+        5,
+        ""
+      ]
+    ]
+  }
+]

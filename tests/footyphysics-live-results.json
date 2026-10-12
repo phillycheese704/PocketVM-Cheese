@@ -1,0 +1,38 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/footyphysics/game.html?v=footyphysics-v1",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true
+    },
+    {
+      "size": "768,1024",
+      "pass": true
+    },
+    {
+      "size": "1366,1024",
+      "pass": true
+    },
+    {
+      "size": "507,768",
+      "pass": true
+    },
+    {
+      "size": "390,844",
+      "pass": true
+    },
+    {
+      "size": "740,390",
+      "pass": true
+    }
+  ],
+  "checks": [
+    "two-player simultaneous whole-team keyboard input",
+    "four-player separate controls",
+    "solo hides red controls",
+    "live ball and hinged-leg rendering",
+    "pause and menu transitions"
+  ],
+  "gameErrors": [],
+  "proof": "footyphysics-live-1791787870443.jpg"
+}

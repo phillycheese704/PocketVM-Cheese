@@ -375,5 +375,80 @@
         "Jump and forward impulses are 35% stronger."
       ]
     ]
+  },
+  "swarmsim": {
+    "name": "Swarm Sim",
+    "symbol": "\u2726",
+    "revision": "swarmsim-v1",
+    "package": [
+      "game.html",
+      "data.js",
+      "core.js",
+      "render.js",
+      "game.js"
+    ],
+    "category": "Insect colony idle strategy",
+    "summary": "20 producer tiers \u00b7 11 army tiers \u00b7 energy abilities \u00b7 ascension",
+    "controls": "Tap to hatch \u00b7 quantity selector \u00b7 keyboard sections",
+    "variants": [
+      {
+        "kicker": "A LITTLE COLONY. A BIG WORLD.",
+        "title": "From three drones to a hive mind.",
+        "copy": "Start with meat and larvae. Hatch queens, nests and twenty producer tiers while an original animated colony grows.",
+        "tone": "night"
+      },
+      {
+        "kicker": "THE CLASSIC GROWTH LOOP",
+        "title": "Sacrifice. Regrow. Multiply.",
+        "copy": "Queens consume drones and then make new drones. Plan purchases, build hatcheries, expand territory and buy twin upgrades.",
+        "tone": "night"
+      },
+      {
+        "kicker": "ENERGY CHANGES THE PLAN",
+        "title": "Rush. Clone. Warp. Ascend.",
+        "copy": "Five nexus, six energy abilities, eleven troop tiers and ten permanent mutations. Spend energy to lower the cost of the next world.",
+        "tone": "night"
+      },
+      {
+        "kicker": "YOUR COLONY KEEPS GROWING",
+        "title": "Close the tab. Come back stronger.",
+        "copy": "Analytic offline catch-up, readable huge numbers, purchase undo, backup import/export, touch-friendly controls and three native mods.",
+        "tone": "night"
+      }
+    ],
+    "features": [
+      [
+        "Keep the producer chain growing",
+        "Twenty meat tiers, eleven military tiers, creature sacrifices, twin upgrades, hatcheries and expansions."
+      ],
+      [
+        "A new world remembers",
+        "Energy storage and generation creatures, six spells, cocoon storage, ascension and ten mutation categories."
+      ],
+      [
+        "An idle colony you can keep",
+        "Original insect artwork, analytic catch-up, keyboard and touch, clear purchase costs, backups and three isolated mods."
+      ]
+    ],
+    "mods": [
+      [
+        "swarmharvest",
+        "Double Harvest",
+        "\u2726",
+        "Drones gather twice as much meat. Producer sacrifices and prices stay the same."
+      ],
+      [
+        "swarmlarvae",
+        "Extra Hatchlings",
+        "\u25d2",
+        "Double the real rate of passive larvae production."
+      ],
+      [
+        "swarmenergy",
+        "Charged Nexus",
+        "\u03df",
+        "Nexus generate energy five times faster; energy capacity and spell costs still apply."
+      ]
+    ]
   }
 }

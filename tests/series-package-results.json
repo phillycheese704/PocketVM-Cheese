@@ -1,5 +1,5 @@
 {
-  "checks": 15,
+  "checks": 18,
   "tests": [
     "Shoot: complete package, exact bytes, offline inline scripts",
     "Shoot: source-checked sanitised saves, safe repair, offline launch, preserved progress",
@@ -15,6 +15,9 @@
     "Avenge FPS: truncated downloads and interrupted writes leave no partial installation",
     "Footy Physics: complete package, exact bytes, offline inline scripts",
     "Footy Physics: source-checked sanitised saves, safe repair, offline launch, preserved progress",
-    "Footy Physics: truncated downloads and interrupted writes leave no partial installation"
+    "Footy Physics: truncated downloads and interrupted writes leave no partial installation",
+    "Swarm Sim: complete package, exact bytes, offline inline scripts",
+    "Swarm Sim: source-checked sanitised saves, safe repair, offline launch, preserved progress",
+    "Swarm Sim: truncated downloads and interrupted writes leave no partial installation"
   ]
 }

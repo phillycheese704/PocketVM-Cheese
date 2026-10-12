@@ -313,6 +313,7 @@
     subwaysurfers: { name: "Subway Surfers", icon: "\u219f", width: 1300, height: 860, singleton: true, build: (win, options) => PocketStoreApp.buildSeries('subwaysurfers', win, options, storeAppContext()) },
     avengefps: { name: "Avenge FPS", icon: "\u2726", width: 1300, height: 860, singleton: true, build: (win, options) => PocketStoreApp.buildSeries('avengefps', win, options, storeAppContext()) },
     footyphysics: { name: "Footy Physics", icon: "\u26bd", width: 1300, height: 860, singleton: true, build: (win, options) => PocketStoreApp.buildSeries('footyphysics', win, options, storeAppContext()) },
+    swarmsim: { name: "Swarm Sim", icon: "\u2726", width: 1300, height: 860, singleton: true, build: (win, options) => PocketStoreApp.buildSeries('swarmsim', win, options, storeAppContext()) },
     // SERIES_APPS_END
     knockout: { name: 'Knockout', icon: '❄', width: 1250, height: 850, singleton: true, build: (win, options) => PocketStoreApp.buildKnockout(win, options, storeAppContext()) },
     boostleague: { name: 'Boost League', icon: 'ϟ', width: 1300, height: 850, singleton: true, build: (win, options) => PocketStoreApp.buildBoost(win, options, storeAppContext()) },
@@ -1396,7 +1397,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
             applyWallpaper();
           }
           for (const w of [...state.windows.values()]) {
-            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','ballvsball','stickwar','boostleague','knockout','shoot','matchsurvival','subwaysurfers','avengefps','footyphysics'].includes(w.appId)) closeWindow(w.id, { force:true });
+            if (['editor','preview','imageviewer','pocketcode','snake','deadwave','blockblast','crumbclicker','pvz','flappy','penguinpull','apexrush','wobblebay','gradeschool','ballvsball','stickwar','boostleague','knockout','shoot','matchsurvival','subwaysurfers','avengefps','footyphysics','swarmsim'].includes(w.appId)) closeWindow(w.id, { force:true });
           }
           renderStorage();
           notify('Drive erased', 'PocketVM files were deleted. System folders were recreated.', '◫');

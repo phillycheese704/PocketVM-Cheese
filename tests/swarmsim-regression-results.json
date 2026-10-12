@@ -1,0 +1,24 @@
+{
+  "checks": 19,
+  "tests": [
+    "Original opening resources, drone prices and production are preserved",
+    "Queen purchase sacrifices 100 drones and then regrows drones and meat",
+    "Analytic chain integration agrees with repeated one-second updates",
+    "Twin drone upgrades also multiply drones born through queen production",
+    "Faster producers consume their own units; hatcheries and expansions change real production",
+    "Military unlocks require queens and consume meat plus larvae; troops capture territory",
+    "Nexus construction grants energy, regeneration respects capacity and spells need the right nexus",
+    "Nightbugs increase energy storage, lepidoptera generation and bats spell power",
+    "Swarmwarp advances the full chain without refunding spell energy",
+    "All six energy abilities change the resources or populations described by their UI",
+    "Cocoon research permits reversible larvae storage and cloning",
+    "Spending lowers ascension energy; ascension activates mutagen and restarts the ordinary colony once",
+    "Mutation unlocks escalate, investment spends free mutagen and respec refunds only investment",
+    "Purchase undo restores the prior colony while retaining elapsed production",
+    "Offline growth is analytic and credits each elapsed interval once",
+    "All three downloadable mods alter actual meat, larvae or energy production",
+    "Extreme late-game values remain finite; sanitizer rejects invalid quantities and settings",
+    "All twenty producer tiers and eleven military tiers have readable large-number displays",
+    "Production colony art draws opening, queens, hives and nexus with distinct creature icons"
+  ]
+}

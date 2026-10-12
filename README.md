@@ -88,3 +88,5 @@ Subway Surfers is an original fan-inspired three-lane railway runner. Four origi
 Avenge FPS is an original hero arena inspired by Venge.io: four heroes, eight weapons, twelve spell cards, four maps and Point, Black Coin, Gun Game or three-versus-three Payload. Projectile grenades, shurikens, axes, explosive traps, close combat, wall-safe dashes and surface grapples. AI opponents, keyboard/mouse/touch, career XP and three native mods. [Play Avenge FPS](./store/avengefps/game.html).
 
 Footy Physics adds original one-button football with hinged legs, angular collision physics, eight changing round twists, solo AI and two/four-player local play. Big touch buttons, separate-player controls, earned kits, saved career and three native mods. [Play Footy Physics](./store/footyphysics/game.html).
+
+Swarm Sim preserves the classic idle insect growth structure with 20 meat tiers, 11 troop tiers, sacrifices, hatcheries, expansions, energy spells, cocoon storage, mutations and ascension. Original colony illustration, clear buy quantities/costs, analytic offline growth, backup import/export and three native mods. [Play Swarm Sim](./store/swarmsim/game.html).
