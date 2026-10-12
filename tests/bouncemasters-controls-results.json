@@ -1,0 +1,14 @@
+{
+  "checks": 9,
+  "tests": [
+    "Space starts a drop and launches with real timing; held-key repeats cannot fire extra actions",
+    "Pause, blur and rotation freeze the flight and resume without advancing hidden time",
+    "Large touch actions launch and cancelled pointer IDs can be reused without stuck input",
+    "Real ended flights record once and continue to a cumulative progress map",
+    "The visible daily gift awards once and disables after collection",
+    "Upgrade buttons debit exact prices and configure the next actual flight",
+    "Locker previews use the matching bat renderer; selecting equipment returns to the original map and carries into play",
+    "Timing, sound and reduced particles save and settings opened from pause return safely",
+    "Timing practice launches real physics without currency or career rewards"
+  ]
+}

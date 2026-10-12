@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v126';
+const CACHE = 'pocketvm-shell-v128';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -93,6 +93,19 @@ const ASSETS = [
   "./store/swarmsim/render.js?v=swarmsim-v3",
   "./store/swarmsim/game.js?v=swarmsim-v3",
   "./store/swarmsim/icon.svg?v=illustrated-v1",
+  "./store/bouncemasters/game.html",
+  "./store/bouncemasters/core.js",
+  "./store/bouncemasters/render.js",
+  "./store/bouncemasters/game.js",
+  "./store/bouncemasters/icon.svg",
+  "./store/bouncemasters/favicon-32.png",
+  "./store/bouncemasters/icon-180.png",
+  "./store/bouncemasters/icon-512.png",
+  "./store/bouncemasters/game.html?v=bouncemasters-v1",
+  "./store/bouncemasters/core.js?v=bouncemasters-v1",
+  "./store/bouncemasters/render.js?v=bouncemasters-v1",
+  "./store/bouncemasters/game.js?v=bouncemasters-v1",
+  "./store/bouncemasters/icon.svg?v=illustrated-v1",
   // SERIES_CACHE_END
 
   "./store/knockout/game.html",
@@ -190,8 +203,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=126",
-  "./store.js?v=126",
+  "./app.js?v=128",
+  "./store.js?v=128",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

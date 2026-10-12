@@ -1,0 +1,43 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/swarmsim/game.html?v=swarmsim-v3",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true,
+      "firstPurchaseVisible": true
+    },
+    {
+      "size": "768,1024",
+      "pass": true,
+      "firstPurchaseVisible": true
+    },
+    {
+      "size": "1366,1024",
+      "pass": true,
+      "firstPurchaseVisible": true
+    },
+    {
+      "size": "507,768",
+      "pass": true,
+      "firstPurchaseVisible": true
+    },
+    {
+      "size": "390,844",
+      "pass": true,
+      "firstPurchaseVisible": true
+    },
+    {
+      "size": "740,390",
+      "pass": true,
+      "firstPurchaseVisible": false
+    }
+  ],
+  "checks": [
+    "real three-drone opening purchase",
+    "native option changes and brood tab",
+    "100-drone batch purchase",
+    "queen sacrifices 100 drones and grows new drones"
+  ],
+  "gameErrors": [],
+  "proof": "swarmsim-live-1791790130816.jpg"
+}

@@ -1,0 +1,23 @@
+{
+  "checks": 17,
+  "tests": [
+    "Tap drops the penguin, premature taps wait, and a well-timed swing launches a real flight",
+    "Opening timing changes actual launch speed and height",
+    "Missing the opening swing ends with zero distance instead of inventing flight earnings",
+    "Buffered animal taps boost only near descending contact and chain real bounces",
+    "Untimed snow landings lose momentum, skid and finish cleanly",
+    "Coins, gems and chests award the correct pickup currency once",
+    "Magnet, Double Treasures and Moon Bounce change real collection and gravity",
+    "Upgrade prices debit exact currency, unlock by trophies and change launch physics",
+    "Extreme Beat Force respects the speed cap and still generates reachable high-flight pads",
+    "Run earnings and cumulative milestone rewards bank once; practice changes no career",
+    "Daily gifts award once per date and become available on the next day",
+    "Distinct bats and outfits unlock with gems, equip and never charge twice",
+    "Seeded routes and physics remain deterministic",
+    "Twelve long runs across upgrade extremes and mod combinations keep attainable pads and bounded objects",
+    "The endless course transitions through three scenery regions",
+    "Save sanitizer rejects invalid currency, levels and preferences",
+    "Production art draws bear swing, penguin flight, animals, all biomes and distinct bat previews"
+  ],
+  "maxObjects": 21
+}

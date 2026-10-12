@@ -450,5 +450,79 @@
         "Nexus generate energy five times faster; energy capacity and spell costs still apply."
       ]
     ]
+  },
+  "bouncemasters": {
+    "name": "Bouncemasters",
+    "symbol": "\u219f",
+    "revision": "bouncemasters-v1",
+    "package": [
+      "game.html",
+      "core.js",
+      "render.js",
+      "game.js"
+    ],
+    "category": "Penguin launch arcade",
+    "summary": "Timed bat swings \u00b7 animal bumps \u00b7 upgrades \u00b7 endless flight route",
+    "controls": "Tap \u00b7 click \u00b7 Space \u00b7 large flight action button",
+    "variants": [
+      {
+        "kicker": "A BEAR. A BAT. A BRAVE PENGUIN.",
+        "title": "One more bounce.",
+        "copy": "Drop from the ledge, time the bear's swing and keep your penguin flying with timed animal bumps.",
+        "tone": "night"
+      },
+      {
+        "kicker": "KEEP THE FLIGHT ALIVE",
+        "title": "Seals. Walruses. Mammoths.",
+        "copy": "Collect coins, gems and chests while physics carries you across three original winter regions.",
+        "tone": "night"
+      },
+      {
+        "kicker": "YOUR NEXT FLIGHT GOES FURTHER",
+        "title": "Power. Speed. Rebound. Beat Force.",
+        "copy": "Four earned upgrade paths, a cumulative progress map, trophy rewards and a free daily gift.",
+        "tone": "night"
+      },
+      {
+        "kicker": "A LITTLE PERSONALITY",
+        "title": "Choose your bat. Find your rhythm.",
+        "copy": "Five distinct bats, four penguin looks, classic or relaxed timing, practice and three downloadable mods.",
+        "tone": "night"
+      }
+    ],
+    "features": [
+      [
+        "Time the swing and the bump",
+        "Drop, bat and buffer a tap near a descending animal contact. Actual gravity, momentum, snow rebound and camera tracking."
+      ],
+      [
+        "A route with rewards",
+        "Three changing biomes, coins/gems/chests, four upgrades, cumulative trophy milestones and once-daily gifts."
+      ],
+      [
+        "Make it yours",
+        "Original bear, penguin and animal artwork. Earned bats/outfits, big touch input, keyboard, practice and three native mods."
+      ]
+    ],
+    "mods": [
+      [
+        "bouncemoon",
+        "Moon Bounce",
+        "\u263e",
+        "Lower gravity gives longer airtime. Landing targets still follow the actual trajectory."
+      ],
+      [
+        "bouncetreasures",
+        "Double Treasures",
+        "\u25c7",
+        "Coins, gems and chests award twice their ordinary pickup currency."
+      ],
+      [
+        "bouncemagnet",
+        "Penguin Magnet",
+        "U",
+        "A larger real collection radius pulls in nearby coins, gems and chests."
+      ]
+    ]
   }
 }

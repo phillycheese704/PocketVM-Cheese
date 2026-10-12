@@ -1,5 +1,5 @@
 {
-  "checks": 18,
+  "checks": 21,
   "tests": [
     "Shoot / shootmoon: real download, renamed-file activation, isolated progress and clean removal",
     "Shoot / shootbottomless: real download, renamed-file activation, isolated progress and clean removal",
@@ -18,6 +18,9 @@
     "Footy Physics / footyturbo: real download, renamed-file activation, isolated progress and clean removal",
     "Swarm Sim / swarmharvest: real download, renamed-file activation, isolated progress and clean removal",
     "Swarm Sim / swarmlarvae: real download, renamed-file activation, isolated progress and clean removal",
-    "Swarm Sim / swarmenergy: real download, renamed-file activation, isolated progress and clean removal"
+    "Swarm Sim / swarmenergy: real download, renamed-file activation, isolated progress and clean removal",
+    "Bouncemasters / bouncemoon: real download, renamed-file activation, isolated progress and clean removal",
+    "Bouncemasters / bouncetreasures: real download, renamed-file activation, isolated progress and clean removal",
+    "Bouncemasters / bouncemagnet: real download, renamed-file activation, isolated progress and clean removal"
   ]
 }

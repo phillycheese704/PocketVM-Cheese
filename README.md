@@ -90,3 +90,5 @@ Avenge FPS is an original hero arena inspired by Venge.io: four heroes, eight we
 Footy Physics adds original one-button football with hinged legs, angular collision physics, eight changing round twists, solo AI and two/four-player local play. Big touch buttons, separate-player controls, earned kits, saved career and three native mods. [Play Footy Physics](./store/footyphysics/game.html).
 
 Swarm Sim preserves the classic idle insect growth structure with 20 meat tiers, 11 troop tiers, sacrifices, hatcheries, expansions, energy spells, cocoon storage, mutations and ascension. Original colony illustration, clear buy quantities/costs, analytic offline growth, backup import/export and three native mods. [Play Swarm Sim](./store/swarmsim/game.html).
+
+Bouncemasters adds original polar-bear swings and penguin flights with timed animal bumps, realistic momentum, three endless scenery regions, coins/gems/chests, four earned upgrades, route trophies and five cosmetic bats. Touch/click/Space, relaxed timing, practice, saved progression and three native mods. [Play Bouncemasters](./store/bouncemasters/game.html).
