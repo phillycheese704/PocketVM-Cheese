@@ -379,7 +379,7 @@
   "swarmsim": {
     "name": "Swarm Sim",
     "symbol": "\u2726",
-    "revision": "swarmsim-v2",
+    "revision": "swarmsim-v3",
     "package": [
       "game.html",
       "data.js",
