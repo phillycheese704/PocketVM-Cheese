@@ -50,8 +50,17 @@
       "checks": 29,
       "layouts": 6,
       "proof": "tests/swarmsim-live-1791790130816.jpg"
+    },
+    "bouncemasters": {
+      "commit": "9de7f060aeb35737f053e1b33007db354027571c",
+      "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/bouncemasters/game.html?v=bouncemasters-v1",
+      "checks": 26,
+      "layouts": 6,
+      "proof": "tests/bouncemasters-live-1791792817399.jpg",
+      "proofPendingUpload": true
     }
   },
-  "active": "bouncemasters",
-  "existingMods": "pending: add 3 to every original game with 0\u20133 packages (Deadwave has 4 including skin packs)"
+  "active": "existing-mods",
+  "existingMods": "pending: 39 additional mods across 13 eligible original games; new seven games already each have 3",
+  "resumeNote": "Bouncemasters deployed and six live responsive layouts verified. Rapid flight input timing was unreliable in the cloud browser; 17 physics and 9 production-controller tests passed. Existing-mod expansion not published: workspace command execution became unresponsive during the source migration. Inspect local tools/expand-existing-mods.py and changes before resuming; its application was not confirmed."
 }

@@ -1,0 +1,40 @@
+{
+  "url": "https://phillycheese704.github.io/PocketVM-Cheese/store/bouncemasters/game.html?v=bouncemasters-v1",
+  "layouts": [
+    {
+      "size": "1024,768",
+      "pass": true
+    },
+    {
+      "size": "768,1024",
+      "pass": true
+    },
+    {
+      "size": "1366,1024",
+      "pass": true
+    },
+    {
+      "size": "507,768",
+      "pass": true
+    },
+    {
+      "size": "390,844",
+      "pass": true
+    },
+    {
+      "size": "740,390",
+      "pass": true
+    }
+  ],
+  "checks": [
+    "live menu and missed-launch result navigation",
+    "six responsive menus with at least 44px targets",
+    "six flight HUD layouts stay within viewport"
+  ],
+  "limitations": [
+    "Cloud browser animations did not advance reliably during rapid timing input batches; successful flight timing verified by production-controller and deterministic physics tests."
+  ],
+  "gameErrors": [],
+  "proof": "bouncemasters-live-1791792817399.jpg",
+  "proofPendingUpload": true
+}
