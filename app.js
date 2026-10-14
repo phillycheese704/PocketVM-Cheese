@@ -15,6 +15,7 @@
   };
 
   const initialFS = await PocketDisk.init();
+  let tutorialForNewProfile = localStorage.getItem('pocketvm.tutorial.pending') === '1';
 
   const state = {
     z: 20,
@@ -326,7 +327,7 @@
     monitor: { name: 'System', icon: '⌁', width: 820, height: 610, singleton: true, build: (win, options) => PocketSystemApps.buildSystem(win, options, systemAppContext()) },
     taskmanager: { name: 'Task Manager', icon: '▦', width: 820, height: 600, singleton: true, build: (win, options) => PocketSystemApps.buildTaskManager(win, options, systemAppContext()) },
     settings: { name: 'Settings', icon: '⚙', width: 720, height: 540, singleton: true, build: buildSettings },
-    about: { name: 'About PocketVM', icon: 'ⓘ', width: 500, height: 410, singleton: true, build: buildAbout }
+    about: { name: 'About PocketVM', icon: 'ⓘ', width: 680, height: 610, singleton: true, build: buildAbout }
   };
 
   function openApp(appId, options = {}) {
@@ -534,72 +535,20 @@
   // ---------- Terminal ----------
   function buildTerminal(win) {
     state.terminalCounter++;
-    win.content.innerHTML = `
-      <div class="terminal">
-        <div class="term-toolbar">
-          <span class="term-chip">PocketVM shell reset</span>
-          <span style="flex:1"></span>
-          <span class="term-chip">1 command</span>
-        </div>
-        <div class="term-output" role="log" aria-live="polite"></div>
-        <div class="term-promptline"><span class="term-prompt"></span><input class="term-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" /></div>
-      </div>`;
-
-    const term = {
-      win,
-      env: { USER: shellUser() }
-    };
-    win.term = term;
-    print(term, 'PocketVM Terminal 1.2', 'accent');
-    print(term, 'Available command: null.user', 'muted');
-    updatePrompt(term);
-
-    const input = $('.term-input', win.el);
-    setTimeout(() => input.focus({ preventScroll: true }), 0);
-    input.addEventListener('keydown', e => {
-      if (e.key !== 'Enter') return;
-      e.preventDefault();
-      const line = input.value;
-      input.value = '';
-      runLine(term, line);
+    win.term = PocketTerminal.mount(win, {
+      disk:PocketDisk, storage:localStorage, username:shellUser,
+      refresh:async()=>{await refreshFS();window.dispatchEvent(new CustomEvent('pocketdiskchange',{detail:{action:'terminal'}}));},
+      info:()=>({runtime:matchMedia('(display-mode: standalone)').matches?'Home Screen web app':'Browser tab',uptime:(Date.now()-state.bootedAt)/1000,display:innerWidth+' × '+innerHeight,online:navigator.onLine}),
+      reset:async()=>{
+        await PocketDisk.destroy();
+        for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key?.startsWith('pocketvm.'))localStorage.removeItem(key);}
+        location.reload();
+      }
     });
-
-    win.el.addEventListener('pointerdown', e => {
-      if (!e.target.closest('.term-output')) setTimeout(() => input.focus({ preventScroll: true }), 0);
-    });
+    win.cleanup=()=>win.term.dispose();
   }
 
-  function print(term, text = '', cls = '') {
-    const out = $('.term-output', term.win.el);
-    if (!out) return;
-    const div = document.createElement('div');
-    div.className = `term-line ${cls}`;
-    div.textContent = text;
-    out.appendChild(div);
-    out.scrollTop = out.scrollHeight;
-    return div;
-  }
-
-  function updatePrompt(term) {
-    $('.term-prompt', term.win.el).textContent = `${term.env.USER}@pocketvm:~$`;
-  }
-
-  function runLine(term, line) {
-    const raw = line.trim();
-    print(term, `${$('.term-prompt', term.win.el).textContent} ${line}`);
-    if (!raw) return;
-
-    if (raw.toLowerCase() === 'null.user') {
-      print(term, 'Erasing PocketVM local data and virtual drive…', 'error');
-      PocketDisk.destroy().catch(() => {}).finally(() => {
-        localStorage.clear();
-        setTimeout(() => location.reload(), 350);
-      });
-      return;
-    }
-
-    print(term, `${raw}: command not found`, 'error');
-  }
+  function updatePrompt(term) { term.updatePrompt(); }
 
   // ---------- Pocket Browser ----------
   function buildWebBrowser(win) {
@@ -1348,7 +1297,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
 
     function renderSystem() {
       const standalone=matchMedia('(display-mode: standalone)').matches;
-      page.innerHTML = pageHead('System', 'PocketVM device information and useful shortcuts.') + `
+      page.innerHTML = pageHead('System', 'Your browser-based virtual desktop.') + virtualDesktopInfo() + `<div class="setting-group"><div class="setting-row stack-on-small"><div><strong>A quick tour of PocketVM</strong><small>Explore the desktop, apps, Files, Store, personalisation and Terminal.</small></div><button class="soft-btn" id="replay-tutorial">Replay Tutorial</button></div></div>` + `
         <div class="setting-group">
           <div class="setting-row"><div><strong>PocketVM version</strong><small>Current web desktop release.</small></div><strong>2.1</strong></div>
           <div class="setting-row"><div><strong>App mode</strong><small>Whether PocketVM is running from the Home Screen.</small></div><strong>${standalone?'Installed':'Browser tab'}</strong></div>
@@ -1362,6 +1311,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           <div><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Esc</kbd><span>Task Manager</span></div>
           <div><kbd>⌘/Ctrl</kbd><kbd>← / →</kbd><span>Snap focused window</span></div>
         </div>`;
+      $('#replay-tutorial',page).onclick=openTutorial;
     }
 
     async function renderStorage() {
@@ -1382,7 +1332,7 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
           <div class="setting-row"><div><strong>Open drive</strong><small>Browse Desktop, Documents, Downloads and Pictures.</small></div><button class="soft-btn" id="open-drive">Open Files</button></div>
           <div class="setting-row"><div><strong>Erase virtual drive</strong><small>Deletes user files while keeping the PocketVM account and settings.</small></div><button class="danger-btn" id="reset-fs">Erase files</button></div>
         </div>
-        <p class="privacy-note">Files are stored in IndexedDB. Account preferences remain in local browser storage. <code>null.user</code> deletes both and returns PocketVM to first-time setup.</p>`;
+        <p class="privacy-note">Files are stored in IndexedDB; account preferences and game saves use local browser storage. Data can persist after closing the browser. Clearing site data or private browsing may remove it. The Terminal command <code>null.user</code> asks for confirmation before resetting PocketVM data.</p>`;
       $('#open-drive', page).addEventListener('click', () => openApp('files'));
       $('#reset-fs', page).addEventListener('click', async () => {
         if (!confirm('Erase every file on the PocketVM virtual drive? This cannot be undone.')) return;
@@ -1563,9 +1513,15 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     applyWallpaper();
     renderUserChrome();
     requestAnimationFrame(placeDesktopIcons);
+    if(tutorialForNewProfile&&!PocketWelcome.seen()){tutorialForNewProfile=false;openTutorial();}
+  }
+
+  function openTutorial(){
+    PocketWelcome.open({desktop:$('#desktop'),disk:PocketDisk,username:shellUser,onFinish:()=>{tutorialForNewProfile=false;try{localStorage.removeItem('pocketvm.tutorial.pending');}catch{}}});
   }
 
   function showAuthScreen(mode = state.auth ? 'login' : 'setup') {
+    PocketWelcome.close();
     if (authTicker) clearInterval(authTicker);
     authTicker = null;
     clearExpiredLockout();
@@ -1627,6 +1583,8 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
         return;
       }
       renderUserChrome();
+      tutorialForNewProfile = true;
+      try{localStorage.setItem('pocketvm.tutorial.pending','1');}catch{}
       enterDesktop();
     });
   }
@@ -1773,8 +1731,13 @@ background:rgba(255,255,255,.045);text-align:left;max-width:600px;box-shadow:0 2
     $('#back-to-login').addEventListener('click', () => showAuthScreen('login'));
   }
 
+  function virtualDesktopInfo(){
+    return `<section class="virtual-desktop-info"><span class="info-eyebrow">UNDER THE DESKTOP</span><h3>A desktop experience, inside your browser.</h3><p>PocketVM is a browser-based virtual desktop, rather than a hardware virtual machine. Everything runs inside the browser; it does not install or boot an operating system.</p><div class="virtual-info-grid"><div><b>Local browser storage</b><p>Files live in IndexedDB. Your local account, preferences and game saves use browser storage. Data can persist after you close the browser.</p></div><div><b>Your browser manages the data</b><p>Clearing site data, private browsing or browser storage cleanup can remove local data. Export important files to keep a copy.</p></div><div><b>Built for familiar everyday apps</b><p>The desktop, Terminal and virtual drive are web interfaces. PocketVM is not a secure sandbox for untrusted software.</p></div></div></section>`;
+  }
+
   function buildAbout(win) {
-    win.content.innerHTML = `<div class="app-pad"><div class="about-logo">PV</div><h2>PocketVM 2.1</h2><p>A touch-first browser PC built for iPad and static hosting.</p><p style="color:var(--muted)">PocketVM uses a 1 GB IndexedDB virtual drive and includes a windowed desktop, Files, image support, Browser, Store, games, Photos, Calculator, Task Manager, System, notifications and local accounts.</p><div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>null.user only</strong></div><div class="setting-row"><span>Virtual drive</span><strong>1 GB max</strong></div><div class="setting-row"><span>Files</span><strong>Text / code / images</strong></div><div class="setting-row"><span>PWA</span><strong>Offline ready</strong></div></div></div>`;
+    win.content.innerHTML = `<div class="app-pad about-pocketvm"><div class="about-mast"><div class="about-logo">PV</div><div><span class="info-eyebrow">BROWSER-BASED VIRTUAL DESKTOP</span><h2>PocketVM 2.1</h2><p>Your desktop. Your browser. Your space.</p></div></div>${virtualDesktopInfo()}<div class="setting-group"><div class="setting-row"><span>Desktop shell</span><strong>2.1</strong></div><div class="setting-row"><span>Terminal</span><strong>PocketVM Shell 2.0</strong></div><div class="setting-row"><span>Virtual drive</span><strong>Up to 1 GB · browser quota applies</strong></div><div class="setting-row"><span>Offline</span><strong>Cached apps and local files</strong></div></div><button class="soft-btn" id="about-tour">Take the PocketVM tour →</button></div>`;
+    $('#about-tour',win.el).onclick=openTutorial;
   }
 
   // ---------- PocketVM desktop layer ----------

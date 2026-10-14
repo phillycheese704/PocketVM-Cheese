@@ -1,0 +1,21 @@
+{
+  "checks": 16,
+  "tests": [
+    "Prompt and whoami use the current profile name",
+    "Quoted paths, quoted literal operators and unquoted redirection tokenize correctly",
+    "Help lists every supported command and reset confirmation",
+    "Relative, home, parent and previous directory navigation works",
+    "Touch preserves data; redirect confirms overwrite; append and cat use real drive contents",
+    "Missing parents, existing folders and file/directory mismatches produce realistic errors",
+    "Unknown commands, bad options, unmatched quotes and invalid redirection fail cleanly",
+    "Binary data and huge files are not dumped into the Terminal",
+    "ls, dir, long/hidden listings and tree reflect existing virtual files",
+    "Shell treats markup as text and never evaluates commands",
+    "All four themes persist without changing desktop preferences",
+    "Tab completion handles commands, quoted folders, themes, unmatched prefixes and cursor suffixes",
+    "Up/down history restores drafts and survives reopening",
+    "Date and coloured neofetch use actual runtime information",
+    "null.user does nothing without explicit confirmation and rejects argument bypasses",
+    "History and output clearing remain bounded and drive writes refresh Files"
+  ]
+}

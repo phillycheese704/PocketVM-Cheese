@@ -1,4 +1,4 @@
-const CACHE = 'pocketvm-shell-v128';
+const CACHE = 'pocketvm-shell-v129';
 const ASSETS = [
   // SERIES_CACHE_START
   "./store/shoot/game.html",
@@ -179,6 +179,11 @@ const ASSETS = [
   './styles.css',
   './app.js',
   './storage.js',
+  './terminal.js',
+  './welcome.js',
+  './terminal.js?v=129',
+  './welcome.js?v=129',
+  './styles.css?v=129',
   './files.js',
   './system.js',
   './store.js',
@@ -203,8 +208,8 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon.svg',
-  "./app.js?v=128",
-  "./store.js?v=128",
+  "./app.js?v=129",
+  "./store.js?v=129",
   "./icons/icon.svg?v=illustrated-v1",
   "./store/snake/icon.svg?v=illustrated-v1",
   "./store/deadwave/icon.svg?v=illustrated-v1",

@@ -48,13 +48,17 @@ Files and images live in IndexedDB. Small UI preferences and the local account r
 
 ## Terminal
 
-The terminal intentionally has one command:
+PocketVM Shell 2.0 reads and writes the existing virtual drive. Commands include `help`, `ls` / `dir`, `cd`, `pwd`, `mkdir`, `touch`, `cat`, `echo`, `clear` / `cls`, `whoami`, `date`, `neofetch`, `tree`, `history` and `theme`. Paths support `~`, `..`, quoted spaces and Tab completion. Arrow keys recall commands; the touch toolbar provides the same controls on iPad. Terminal colours are independent of the desktop theme.
 
-```text
-null.user
-```
+`echo text > file` creates a text file and asks before replacing existing contents; `>>` appends. `touch` preserves existing file contents. This is a virtual shell; commands do not execute host software.
 
-It erases both localStorage and the IndexedDB virtual drive, then returns PocketVM to first-time account setup.
+`null.user` opens a confirmation dialog. The user must type `RESET` and choose **Erase PocketVM data** before it deletes PocketVM's virtual drive and `pocketvm.*` browser preferences, account and game saves. Other site-storage keys are preserved. Cancelling leaves all data unchanged.
+
+## Welcome tour
+
+New profiles get an eight-step interactive tour after local account setup. Skip and Finish are remembered without altering files or game progress. An interrupted first tour is offered after the next login. Existing accounts keep their normal login. Replay it in **Settings → System → Replay Tutorial** or About. Practice activities use demonstration windows and never edit the virtual drive. The tutorial and Terminal modules are included in the offline shell cache.
+
+About and Settings → System explain that PocketVM runs in the browser, installs no operating system, uses browser storage, can persist data between browser sessions, and is not a secure sandbox for untrusted software.
 
 ## Security
 

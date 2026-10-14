@@ -1,0 +1,14 @@
+{
+  "checks": 9,
+  "tests": [
+    "Existing password hashing, verification, login and recovery are unchanged",
+    "App registry, games, window management, Files and Store contexts are unchanged",
+    "About and Settings share all five virtual-desktop disclosures",
+    "Existing accounts enter normally; a new or pending profile gets the tour once",
+    "Opening Terminal never resets data or changes account/game saves",
+    "Confirmed reset removes only PocketVM keys after the drive reset succeeds",
+    "A failed reset does not erase the account or reload",
+    "New modules load before app.js and are precached with matching shell revision",
+    "Offline fetch falls back to cached Terminal, tutorial and desktop modules"
+  ]
+}
